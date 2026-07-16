@@ -315,11 +315,8 @@ body{background:var(--bg);}
 <div class="ptag">D-Glopa Pharm LTD.</div>
 <div class="pdiv"></div>
 <div style="width:100%;max-width:300px;margin:0 auto;">
-<label style="font-size:11px;color:rgba(255,255,255,0.4);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:6px;">Email</label>
-<input class="fi" id="loginEmail" type="email" placeholder="owner@pbsrx.com" autocomplete="email" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#fff;font-size:15px;margin-bottom:12px;">
-<label style="font-size:11px;color:rgba(255,255,255,0.4);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:6px;">Password</label>
-<input class="fi" id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#fff;font-size:15px;margin-bottom:18px;" onkeydown="if(event.key==='Enter')doLogin()">
-<button onclick="doLogin()" style="width:100%;padding:16px;border-radius:14px;background:linear-gradient(135deg,var(--amb),#d97706);border:none;color:#000;font-size:16px;font-weight:800;cursor:pointer;font-family:var(--fb);">&#128274; Sign In</button>
+<div style="font-size:10px;font-weight:800;color:#f59e0b;text-align:center;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:6px;margin-bottom:12px;">RC1a TESTING BUILD — Auth bypassed</div>
+<button onclick="doLogin()" style="width:100%;padding:16px;border-radius:14px;background:linear-gradient(135deg,var(--amb),#d97706);border:none;color:#000;font-size:16px;font-weight:800;cursor:pointer;font-family:var(--fb);touch-action:manipulation;">&#128274; Sign In</button>
 <div id="perr" style="font-size:13px;color:#f87171;text-align:center;margin-top:12px;font-weight:600;min-height:20px;"></div>
 <div style="font-size:10px;color:rgba(255,255,255,0.2);text-align:center;margin-top:16px;">D-Glopa Pharm LTD. · v7.6.7-RC1</div>
 </div>
@@ -2957,29 +2954,64 @@ function pd2(){pinEnt=pinEnt.slice(0,-1);updDots();}
 function updDots(){for(var i=0;i<4;i++)document.getElementById('pd'+i).classList.toggle('f',i<pinEnt.length);}
 function chkPin(){/* legacy - not used */}
 function doLogin(){
-var email=(document.getElementById('loginEmail')||{value:''}).value.trim().toLowerCase();
-var pass=(document.getElementById('loginPass')||{value:''}).value;
-var errEl=document.getElementById('perr');
-if(!email||!pass){if(errEl)errEl.textContent='Enter your email and password.';return;}
-var saved=localStorage.getItem('pbsrx_owner_pass');
-var ok=false;
-if(email==='owner@pbsrx.com'){
-  if(!saved){localStorage.setItem('pbsrx_owner_pass',pass);ok=true;}
-  else if(pass===saved){ok=true;}
-}
-if(ok){
-  role='owner';
-  document.getElementById('pin').style.display='none';
-  document.getElementById('app').classList.add('on');
-  document.getElementById('hrole').textContent='OWNER';
-  iD('cd_d');iD('pm_d');updExpDL();renderAll();updBadges();
-  if(!localStorage.getItem('pbsrx_v2_seen')){
-    toast('Welcome to PBSRx — D-Glopa Pharm LTD.! 🎉',4500);
-    localStorage.setItem('pbsrx_v2_seen','1');
+  // ===== TEMPORARY RC1a AUTH BYPASS =====
+  // TESTING BUILD ONLY — Remove before production
+  // Set this flag to false to re-enable authentication
+  var RC1A_BYPASS_AUTH = true;
+
+  if(RC1A_BYPASS_AUTH){
+    // Set all session state exactly as a successful owner login would
+    role = 'owner';
+    document.getElementById('pin').style.display = 'none';
+    document.getElementById('app').classList.add('on');
+    document.getElementById('hrole').textContent = 'OWNER';
+    iD('cd_d'); iD('pm_d');
+    try{updExpDL();}catch(e){}
+    try{renderAll();}catch(e){console.error('RC1a renderAll:',e);}
+    try{updBadges();}catch(e){}
+    try{updReviewBadge();}catch(e){}
+    return; // Skip credential check entirely
   }
-}else{
-  if(errEl)errEl.textContent='Incorrect email or password.';
-}
+  // ===== END TEMPORARY RC1a AUTH BYPASS =====
+
+  // Real authentication (password-only, first-time sets password)
+  var errEl = document.getElementById('perr');
+  if(errEl) errEl.textContent = '';
+  var pass = (document.getElementById('loginPass')||{value:''}).value;
+  if(!pass){
+    if(errEl) errEl.textContent = 'Enter your password to continue.';
+    return;
+  }
+  var saved = localStorage.getItem('pbsrx_owner_pass');
+  var ok = false;
+  if(!saved){
+    localStorage.setItem('pbsrx_owner_pass', pass);
+    ok = true;
+  } else {
+    ok = (pass === saved);
+  }
+  if(ok){
+    role = 'owner';
+    document.getElementById('pin').style.display = 'none';
+    document.getElementById('app').classList.add('on');
+    document.getElementById('hrole').textContent = 'OWNER';
+    iD('cd_d'); iD('pm_d');
+    try{updExpDL();}catch(e){}
+    try{renderAll();}catch(e){console.error('renderAll:',e);}
+    try{updBadges();}catch(e){}
+    try{updReviewBadge();}catch(e){}
+    if(!localStorage.getItem('pbsrx_v2_seen')){
+      toast('Welcome to PBSRx - D-Glopa Pharm LTD.!', 4500);
+      localStorage.setItem('pbsrx_v2_seen','1');
+    }
+  } else {
+    if(errEl) errEl.textContent = 'Incorrect password.';
+    var inp = document.getElementById('loginPass');
+    if(inp){
+      inp.style.borderColor = '#f87171';
+      setTimeout(function(){ inp.style.borderColor = 'rgba(255,255,255,0.15)'; }, 1500);
+    }
+  }
 }
 function signOut(){
 if(camStream)stopScan();

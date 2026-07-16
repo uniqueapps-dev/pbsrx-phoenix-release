@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="v7.6.7-RC1">
+<meta name="version" content="v7.6.7-RC1b">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>PBSRx — Pharmacy Business System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -58,12 +58,11 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--bg)
 .hrole{font-size:9px;color:rgba(255,255,255,0.35);font-weight:800;letter-spacing:2.5px;text-transform:uppercase;background:rgba(255,255,255,0.06);padding:4px 10px;border-radius:99px;}
 .hso{background:none;border:none;color:rgba(255,255,255,0.35);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--fb);}
 .pages{flex:1;overflow:hidden;position:relative;}
-.pg{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 84px;display:none;-webkit-tap-highlight-color:transparent;}.pg.on{display:block;animation:pgFadeIn .15s ease;}
-@keyframes pgFadeIn{from{opacity:0.75}to{opacity:1}}
+.pg{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 84px;display:none;}.pg.on{display:block;}
 #appWrap{min-height:100vh;}
 .nav{height:62px;background:var(--card);border-top:1px solid var(--bdr);display:flex;align-items:stretch;flex-shrink:0;box-shadow:0 -2px 10px rgba(0,0,0,0.06);position:fixed;bottom:0;left:0;right:0;z-index:200;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;touch-action:pan-x;}
 .nav::-webkit-scrollbar{display:none;}
-.nb{flex:0 0 auto;min-width:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:none;cursor:pointer;font-family:var(--fb);position:relative;color:var(--txt);padding:0 4px;;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;}
+.nb{flex:0 0 auto;min-width:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:none;cursor:pointer;font-family:var(--fb);position:relative;color:var(--txt);padding:0 4px;}
 .nb.on{background:linear-gradient(180deg,rgba(26,95,168,0.07),transparent);}
 .nbi{font-size:19px;transition:transform .2s;}.nb.on .nbi{transform:scale(1.18);}
 .nbl{font-size:9px;font-weight:800;color:var(--mut);letter-spacing:.4px;text-transform:uppercase;}.nb.on .nbl{color:var(--blu);}
@@ -87,7 +86,7 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--bg)
 .hm{flex:1;text-align:center;border-right:1px solid rgba(255,255,255,0.06);}.hm:last-child{border-right:none;}
 .hmv{font-size:17px;font-weight:800;color:var(--amb);}.hml{font-size:10px;color:rgba(255,255,255,0.3);font-weight:600;margin-top:2px;}
 
-.btn{width:100%;padding:14px;border-radius:12px;border:none;font-size:15px;font-weight:800;cursor:pointer;font-family:var(--fb);transition:all .15s;margin-top:8px;color:var(--txt);;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.btn{width:100%;padding:14px;border-radius:12px;border:none;font-size:15px;font-weight:800;cursor:pointer;font-family:var(--fb);transition:all .15s;margin-top:8px;color:var(--txt);}
 .btn:active{transform:scale(.97);}.bb{background:linear-gradient(135deg,var(--blu),var(--blu2));color:#fff;}
 .bg2{background:linear-gradient(135deg,#16a34a,#145e30);color:#fff;}.bo{background:var(--surf);border:1.5px solid var(--bdr);}
 .bsm{padding:7px 13px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fb);border:none;transition:all .14s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;}
@@ -315,16 +314,16 @@ body{background:var(--bg);}
 <div class="ptag">D-Glopa Pharm LTD.</div>
 <div class="pdiv"></div>
 <div style="width:100%;max-width:300px;margin:0 auto;">
-<div style="font-size:10px;font-weight:800;color:#f59e0b;text-align:center;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:6px;margin-bottom:12px;">RC1a TESTING BUILD — Auth bypassed</div>
+<div style="font-size:10px;font-weight:800;color:#f59e0b;text-align:center;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);border-radius:8px;padding:8px 10px;margin-bottom:14px;">&#9888; RC1a TESTING BUILD &#8212; Auth bypassed</div>
 <button onclick="doLogin()" style="width:100%;padding:16px;border-radius:14px;background:linear-gradient(135deg,var(--amb),#d97706);border:none;color:#000;font-size:16px;font-weight:800;cursor:pointer;font-family:var(--fb);touch-action:manipulation;">&#128274; Sign In</button>
 <div id="perr" style="font-size:13px;color:#f87171;text-align:center;margin-top:12px;font-weight:600;min-height:20px;"></div>
-<div style="font-size:10px;color:rgba(255,255,255,0.2);text-align:center;margin-top:16px;">D-Glopa Pharm LTD. · v7.6.7-RC1</div>
+<div style="font-size:10px;color:rgba(255,255,255,0.2);text-align:center;margin-top:16px;">D-Glopa Pharm LTD. · v7.6.7-RC1b</div>
 </div>
 </div>
 
 <div id="app">
 <div class="hdr">
-<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v7.6.7-RC1</div>
+<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v7.6.7-RC1b</div>
 <div style="display:flex;align-items:center;gap:10px;">
 <div class="hrole" id="hrole">ADMIN</div>
 <button class="hso" onclick="signOut()">Sign out</button>
@@ -730,7 +729,7 @@ body{background:var(--bg);}
 
 <div class="pg" id="pg7">
 <div class="pgt">PBS Guide</div><div class="pgs">Workflows, tips &amp; daily checklist</div>
-<div class="gtabs" style="overflow-x:auto;scrollbar-width:none;">
+<div class="gtabs">
 <button class="gtab on" onclick="gTab2(0,this)">✅ Daily</button>
 <button class="gtab" onclick="gTab2(1,this)">📊 Dashboard</button>
 <button class="gtab" onclick="gTab2(2,this)">📦 Stock</button>
@@ -738,8 +737,6 @@ body{background:var(--bg);}
 <button class="gtab" onclick="gTab2(4,this)">🛒 POS</button>
 <button class="gtab" onclick="gTab2(5,this)">💰 Cash</button>
 <button class="gtab" onclick="gTab2(6,this)">⚙️ Settings</button>
-<button class="gtab" onclick="gTab2(7,this)" style="color:var(--amb);font-weight:900;">🏠 Phoenix</button>
-<button class="gtab" onclick="gTab2(8,this)" style="color:var(--red);">🔧 Admin</button>
 </div>
 
 <div class="gp on" id="gp0">
@@ -909,91 +906,6 @@ body{background:var(--bg);}
 </div>
 </div>
 </div>
-
-
-<!-- Phoenix RC1 Guide (gp7) -->
-<div class="gp" id="gp7">
-<div style="font-size:18px;font-weight:900;color:var(--amb);margin-bottom:4px;">&#127968; PBSRx Phoenix RC1</div>
-<div style="font-size:12px;color:var(--mut);margin-bottom:16px;">What's new — written for pharmacists and staff</div>
-
-<div class="card" style="margin-bottom:10px;">
-<div style="font-size:13px;font-weight:900;color:var(--txt);margin-bottom:8px;">&#128205; Shelf Location</div>
-<div style="font-size:12px;color:var(--mut);line-height:1.7;">Every product now has a <b>Shelf Location</b> (e.g., S02, S09). When you search for a product in the POS, the shelf appears below the unit price — so you or your staff can go straight to the right location. You can set or update the shelf in the product edit screen. Shelf is visible in Stock Pulse and Product Search.</div>
-</div>
-
-<div class="card" style="margin-bottom:10px;">
-<div style="font-size:13px;font-weight:900;color:var(--txt);margin-bottom:8px;">&#9889; Review Workspace</div>
-<div style="font-size:12px;color:var(--mut);line-height:1.7;">The <b>Review tab</b> in the navigation bar shows a list of enrichment tasks — things like setting a selling price, linking a supplier, or recording a barcode. <b>Priority 1 tasks must be completed before making your first sale.</b> Tapping any task takes you directly to that product. When you fill in the missing information and save, the task disappears automatically. Nothing is stored — the list is always computed fresh from your product data.</div>
-<div style="font-size:11px;color:var(--amb);font-weight:700;margin-top:8px;">&#9888; Set selling prices first — before your first sale.</div>
-</div>
-
-<div class="card" style="margin-bottom:10px;">
-<div style="font-size:13px;font-weight:900;color:var(--txt);margin-bottom:8px;">&#128202; Product Completeness Score</div>
-<div style="font-size:12px;color:var(--mut);line-height:1.7;">Every product has a <b>Completeness Score</b> (0–100%) shown in the Review Workspace. A product with just a name scores around 18%. Adding shelf, category, sell unit, and supplier brings it to around 50%. Adding selling price and cost brings it above 70%. The score is computed automatically — it rises as you enrich your data.</div>
-</div>
-
-<div class="card" style="margin-bottom:10px;">
-<div style="font-size:13px;font-weight:900;color:var(--txt);margin-bottom:8px;">&#127968; First Inventory Migration (PID MIGRATE)</div>
-<div style="font-size:12px;color:var(--mut);line-height:1.7;"><b>Step 1:</b> Go to Intake → PID MIGRATE tab.<br><b>Step 2:</b> Tap Snapshot &amp; Backup — always do this first.<br><b>Step 3:</b> Tap Preview (Dry Run) — this validates your file without importing anything.<br><b>Step 4:</b> If the preview shows no errors, tap Run Migration.<br><br>Migration takes 5-15 seconds. When it finishes, you will see a Migration Certificate with the session ID. The Review Workspace will then show all enrichment tasks.</div>
-</div>
-
-<div class="card" style="margin-bottom:10px;">
-<div style="font-size:13px;font-weight:900;color:var(--txt);margin-bottom:8px;">&#128196; PID v1.0 CSV Format</div>
-<div style="font-size:12px;color:var(--mut);line-height:1.7;">The migration file must have these columns:<br><br><code style="font-size:11px;background:var(--surf);padding:4px 8px;border-radius:6px;display:block;">Product Name, Owner, Qty, Unit Type, Expiry Date, Unit Cost, Selling Price, Category, Shelf, Notes, Status</code><br><br><b>Owner</b> must be O (Owner), C (Consignment), or Review.<br><b>Status</b> must be Active, Near Expiry, Expired, or No Expiry Recorded.</div>
-</div>
-
-<div class="card" style="margin-bottom:10px;">
-<div style="font-size:13px;font-weight:900;color:var(--txt);margin-bottom:8px;">&#128680; Soft Go-Live Workflow (First 14 Days)</div>
-<div style="font-size:12px;color:var(--mut);line-height:1.7;"><b>Before Day 1:</b> Complete pricing sprint — set selling prices for all daily products. Physically remove expired items from active shelves.<br><br><b>Days 1-7:</b> Record all sales in POS. Receive all stock via Bulk Receive. Check Dashboard every morning. Log any issue in your Phoenix Issue Log.<br><br><b>Days 8-14:</b> Enrich data using Review Workspace. Set isFastMover for products you sell daily. First cycle count of S11 (controlled medicines).</div>
-</div>
-
-<div class="card" style="margin-bottom:10px;">
-<div style="font-size:13px;font-weight:900;color:var(--txt);margin-bottom:8px;">&#127939; Review Workspace Workflow</div>
-<div style="font-size:12px;color:var(--mut);line-height:1.7;"><b>1.</b> Tap the ⚡ Review button in the navigation bar.<br><b>2.</b> Filter by Priority 1 first — these are the most important.<br><b>3.</b> Tap "Set Price →" on any product.<br><b>4.</b> Enter the selling price and cost price in the product form.<br><b>5.</b> Save and return — the task is gone.<br><b>6.</b> Work through 10-20 tasks per session during quiet periods.</div>
-</div>
-</div><!-- end gp7 Phoenix Guide -->
-
-<!-- Admin Guide (gp8) -->
-<div class="gp" id="gp8">
-<div style="font-size:18px;font-weight:900;color:var(--red);margin-bottom:4px;">&#128295; Administrator Guide</div>
-<div style="font-size:12px;color:var(--mut);margin-bottom:16px;">Owner operations — backup, restore, migration, recovery</div>
-
-<div class="card" style="margin-bottom:10px;">
-<div style="font-size:13px;font-weight:900;color:var(--txt);margin-bottom:8px;">&#128190; Backup Procedure</div>
-<div style="font-size:12px;color:var(--mut);line-height:1.7;"><b>Option A — Export CSV:</b> Go to Stock → View &amp; Edit All → Export. This saves your product catalogue as a CSV file.<br><br><b>Option B — Migration Snapshot:</b> Go to Intake → PID MIGRATE → Snapshot &amp; Backup. This saves a complete database snapshot (products + stock + GRN records) to your browser's local storage.<br><br><b>Recommended frequency:</b> Daily before major operations, and always before any import.</div>
-</div>
-
-<div class="card" style="margin-bottom:10px;">
-<div style="font-size:13px;font-weight:900;color:var(--txt);margin-bottom:8px;">&#8617; Restore &amp; Rollback</div>
-<div style="font-size:12px;color:var(--mut);line-height:1.7;">If a migration produces unexpected results:<br><br><b>1.</b> Go to Intake → PID MIGRATE.<br><b>2.</b> Scroll to the Emergency Rollback section.<br><b>3.</b> Tap "Restore Pre-Migration Snapshot."<br><b>4.</b> Confirm when prompted.<br><br>The rollback restores PBSRx to the exact state it was in when the snapshot was taken. Only the snapshot from the current session is available — not older sessions.</div>
-</div>
-
-<div class="card" style="margin-bottom:10px;">
-<div style="font-size:13px;font-weight:900;color:var(--txt);margin-bottom:8px;">&#128229; CSV Import — Product Catalogue</div>
-<div style="font-size:12px;color:var(--mut);line-height:1.7;">To import a product catalogue from a spreadsheet:<br><br><b>1.</b> Go to Intake → IMPORT CSV tab.<br><b>2.</b> Tap "Tap to select CSV or Excel file."<br><b>3.</b> Select your file.<br><b>4.</b> PBSRx reads the columns automatically.<br><br><b>Required column:</b> Generic Name (or Product Name, Name, Item Name).<br><b>Optional columns:</b> Brand, Strength, Form, Category, Cost Price, Sell Price, Qty on Hand, Shelf, Ownership, Notes.<br><br>Existing products (matched by name) have their prices updated. New names create new products.</div>
-</div>
-
-<div class="card" style="margin-bottom:10px;">
-<div style="font-size:13px;font-weight:900;color:var(--txt);margin-bottom:8px;">&#128203; Migration History</div>
-<div style="font-size:12px;color:var(--mut);line-height:1.7;">Go to Intake → PID MIGRATE → Migration History section. Tap it to load all recorded migration sessions. Each session shows the Session ID, date, products created, stock batches posted, and status. Migration certificates are stored permanently in PBSRx and survive app restarts.</div>
-</div>
-
-<div class="card" style="margin-bottom:10px;">
-<div style="font-size:13px;font-weight:900;color:var(--txt);margin-bottom:8px;">&#9888; Recovery Procedures</div>
-<div style="font-size:12px;color:var(--mut);line-height:1.7;"><b>App shows blank screen:</b> Force-close the browser, clear the browser cache for the app URL only (not all data), reload.<br><br><b>Products missing after reload:</b> Check browser storage — go to browser Settings → Site Data → PBSRx. If storage was cleared externally, re-import from your last CSV backup.<br><br><b>POS not finding a product:</b> Check that the product exists in Stock Pulse. If not, add it via Intake → New Product. If it exists but has zero stock, receive stock via Bulk Receive.<br><br><b>Supplier balance wrong:</b> Go to Intake → Suppliers → view the supplier → check payment history against expected payments. Log a correcting payment if needed.</div>
-</div>
-
-<div class="card" style="margin-bottom:10px;">
-<div style="font-size:13px;font-weight:900;color:var(--txt);margin-bottom:8px;">&#128269; Troubleshooting</div>
-<div style="font-size:12px;color:var(--mut);line-height:1.7;"><b>Q: The Review Workspace shows thousands of tasks.</b><br>A: This is expected after migration. Focus on Priority 1 only first (selling prices). Work through the rest during quiet periods over 2-4 weeks.<br><br><b>Q: Stock Pulse shows no products.</b><br>A: No products are flagged as Fast Movers yet. Go to Stock → View &amp; Edit All, select your daily-dispensing products, and tick "Monitor in Stock Pulse" (Fast Mover).<br><br><b>Q: Supplier balance is wrong.</b><br>A: Migration GRN records have invoiceAmt=0 — they create no liability. Only real Bulk Receive sessions create supplier debt. Check that your opening balance was set correctly in Intake → Suppliers → Edit.<br><br><b>Q: A product sold at ₦0.</b><br>A: Selling price was not set before the sale. Open Review Workspace → Priority 1 → find the product → set the selling price. The historical sale record shows ₦0 and cannot be edited, but future sales will be correct.</div>
-</div>
-
-<div class="card">
-<div style="font-size:13px;font-weight:900;color:var(--txt);margin-bottom:8px;">&#128222; Phoenix Issue Log (First 14 Days)</div>
-<div style="font-size:12px;color:var(--mut);line-height:1.7;">During the Soft Go-Live period, log every issue in this format:<br><br>• <b>Date:</b> [date]<br>• <b>Severity:</b> Critical / High / Medium / Low<br>• <b>Screen:</b> POS / Dashboard / Stock Pulse / etc.<br>• <b>What happened:</b> [description]<br>• <b>Screenshot:</b> Volume Down + Power button simultaneously<br><br>Batch all Medium and Low issues for the next scheduled Phoenix work package. Critical issues (data loss, POS failure, financial error) should be reported immediately.</div>
-</div>
-</div><!-- end gp8 Admin Guide -->
-
 <div class="pg" id="pg8">
 <div class="pgt">🛒 Sales Floor</div><div class="pgs">Customers · Returns · Prescriptions · Loyalty</div>
 
@@ -1391,7 +1303,6 @@ body{background:var(--bg);}
   <button id="icTab7" onclick="setIcTab(7)" style="flex:1;padding:10px 2px;border:none;background:none;color:var(--mut);font-size:10px;font-weight:800;cursor:pointer;">&#128203; BULK<br><span style="font-size:8px;">RECEIVE</span></button>
   <button id="icTab9" onclick="setIcTab(9)" style="flex:1;padding:10px 2px;border:none;background:none;color:var(--mut);font-size:10px;font-weight:800;cursor:pointer;">&#10133; NEW<br><span style="font-size:8px;">PRODUCT</span></button>
   <button id="icTab10" onclick="setIcTab(10)" style="flex:1;padding:10px 2px;border:none;background:none;color:var(--mut);font-size:10px;font-weight:800;cursor:pointer;">&#128229; IMPORT<br><span style="font-size:8px;">CSV</span></button>
-  <button id="icTab11" onclick="setIcTab(11)" style="flex:1;padding:10px 2px;border:none;background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(99,102,241,0.15));border-left:2px solid var(--amb);color:var(--amb);font-size:10px;font-weight:900;cursor:pointer;">&#127968; PID<br><span style="font-size:8px;">MIGRATE</span></button>
 </div>
 <!-- Tabs - Row 2: Management -->
 <div style="display:flex;background:var(--card);border:1px solid var(--bdr);border-radius:0 0 14px 14px;overflow:hidden;margin-bottom:12px;">
@@ -1544,7 +1455,6 @@ body{background:var(--bg);}
 <div class="fg"><label class="fl">Base Unit</label><input class="fi" autocomplete="off" id="icnp_su" list="suL" placeholder="e.g. Tablet"></div>
 <div class="fg"><label class="fl">Min Stock</label><input class="fi" autocomplete="off" id="icnp_mn" type="number" inputmode="numeric" placeholder="10"></div>
 </div>
-<div class="fg"><label class="fl">Shelf Location</label><input class="fi" autocomplete="off" id="icnp_shelf" placeholder="e.g. S02 (optional)"></div>
 <div class="fr">
 <div class="fg"><label class="fl">Cost Price (&#8358;)</label><input class="fi" autocomplete="off" id="icnp_co" type="number" inputmode="numeric" placeholder="0"></div>
 <div class="fg"><label class="fl">Sell Price (&#8358;)</label><input class="fi" autocomplete="off" id="icnp_sp" type="number" inputmode="numeric" placeholder="0"></div>
@@ -1581,97 +1491,6 @@ body{background:var(--bg);}
 </div>
 </div>
 </div>
-
-<!-- ── PHOENIX MIGRATION Panel (tab 11) ──────────────────────── -->
-<div id="icPanelMigration" style="display:none;">
-
-<!-- Pre-migration backup notice -->
-<div class="card" style="background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(99,102,241,0.08));border:1px solid var(--amb);margin-bottom:10px;">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-<span style="font-size:24px;">&#127968;</span>
-<div>
-<div style="font-size:14px;font-weight:900;color:var(--amb);">Phoenix Inventory Import</div>
-<div style="font-size:11px;color:var(--mut);">PID v1.0 — Official migration engine</div>
-</div>
-</div>
-<div style="font-size:12px;color:var(--txt);font-weight:600;margin-bottom:8px;">Import the Phoenix Inventory Dataset CSV.<br>Products are created first. Opening stock is posted second. No supplier liabilities. No cash movement.</div>
-<div id="pidBackupStatus" style="font-size:11px;color:var(--mut);background:var(--surf);border-radius:8px;padding:8px;margin-bottom:8px;">&#128274; Take a backup before importing.</div>
-<button onclick="pidTakeSnapshot()" class="btn" style="background:var(--surf);border:1px solid var(--bdr);color:var(--txt);font-size:12px;padding:8px 14px;margin-bottom:6px;width:100%;">&#128190; Snapshot &amp; Backup Before Import</button>
-</div>
-
-<!-- Phase 1: Product Catalogue -->
-<div class="card" style="margin-bottom:10px;">
-<div style="font-size:13px;font-weight:800;color:var(--txt);margin-bottom:4px;">&#128202; Phase 1 — Product Catalogue</div>
-<div style="font-size:11px;color:var(--mut);margin-bottom:10px;">Creates all 469 product records. No stock posted yet.</div>
-<div style="border:2px dashed var(--bdr);border-radius:12px;padding:20px;text-align:center;cursor:pointer;" onclick="document.getElementById('pidCsvF').click()">
-<div style="font-size:28px;margin-bottom:6px;">&#128230;</div>
-<div style="font-size:13px;font-weight:700;color:var(--txt);">Select PID v1.0 CSV</div>
-<div style="font-size:11px;color:var(--mut);margin-top:3px;">Export from Phoenix Inventory Dataset workbook</div>
-</div>
-<input type="file" id="pidCsvF" accept=".csv,.xlsx,.xls" style="display:none" onchange="pidLoadFile(this)">
-<div id="pidFilePreview" style="display:none;margin-top:10px;padding:10px;background:var(--surf);border-radius:8px;font-size:12px;"></div>
-</div>
-
-<!-- Phase 2: Opening Stock -->
-<div class="card" id="pidPhase2Card" style="display:none;margin-bottom:10px;">
-<div style="font-size:13px;font-weight:800;color:var(--txt);margin-bottom:4px;">&#128230; Phase 2 — Opening Stock</div>
-<div style="font-size:11px;color:var(--mut);margin-bottom:10px;">Posts quantities with ownership-tagged batches. No supplier liabilities created.</div>
-<div id="pidPhase2Summary" style="font-size:12px;color:var(--txt);margin-bottom:10px;"></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-<div style="background:var(--surf);border-radius:8px;padding:10px;text-align:center;">
-<div style="font-size:11px;color:var(--mut);font-weight:700;">Owner Stock</div>
-<div style="font-family:var(--fh);font-size:18px;color:var(--grn);" id="pidOwnerCount">0</div>
-<div style="font-size:10px;color:var(--mut);">Batch: OPENING-OWNER</div>
-</div>
-<div style="background:var(--surf);border-radius:8px;padding:10px;text-align:center;">
-<div style="font-size:11px;color:var(--mut);font-weight:700;">Consignment</div>
-<div style="font-family:var(--fh);font-size:18px;color:var(--blu);" id="pidConsignCount">0</div>
-<div style="font-size:10px;color:var(--mut);">Batch: OPENING-CONSIGNMENT</div>
-</div>
-</div>
-<div style="background:rgba(239,68,68,0.08);border:1px solid var(--red);border-radius:8px;padding:10px;text-align:center;margin-bottom:10px;">
-<div style="font-size:11px;color:var(--mut);font-weight:700;">Expired Stock</div>
-<div style="font-family:var(--fh);font-size:18px;color:var(--red);" id="pidExpiredCount">0</div>
-<div style="font-size:10px;color:var(--mut);">Batch: EXPIRED-OPENING · Accountability only</div>
-</div>
-</div>
-
-<!-- Migration control -->
-<div id="pidMigrationControl" style="display:none;margin-top:8px;">
-<div id="pidValidationResult" style="margin-bottom:10px;font-size:12px;"></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-<button onclick="pidDryRun()" id="pidDryRunBtn" style="width:100%;padding:12px;background:var(--surf);border:2px solid var(--amb);color:var(--amb);border-radius:14px;font-size:13px;font-weight:900;cursor:pointer;">&#128269; Preview (Dry Run)</button>
-<button onclick="pidRunMigration()" id="pidRunBtn" style="width:100%;padding:12px;background:linear-gradient(135deg,var(--amb),#d97706);border:none;color:#000;border-radius:14px;font-size:13px;font-weight:900;cursor:pointer;">&#127968; Run Migration</button>
-</div>
-<div style="font-size:11px;color:var(--mut);text-align:center;margin-top:6px;">This is irreversible without the pre-migration snapshot.</div>
-</div>
-
-<!-- Progress & Report -->
-<div id="pidProgress" style="display:none;padding:16px;text-align:center;">
-<div style="font-size:28px;animation:spin 1s linear infinite;display:inline-block;">&#9889;</div>
-<div style="font-size:13px;font-weight:700;color:var(--txt);margin-top:8px;" id="pidProgressMsg">Importing...</div>
-<div style="background:var(--bdr);border-radius:4px;height:8px;margin-top:8px;overflow:hidden;">
-<div id="pidProgressBar" style="height:100%;background:var(--amb);border-radius:4px;width:0%;transition:width .3s;"></div>
-</div>
-</div>
-
-<div id="pidReport" style="display:none;"></div>
-
-<!-- Rollback -->
-<div id="pidRollbackZone" style="margin-top:12px;display:none;">
-<div style="font-size:11px;font-weight:900;color:var(--red);margin-bottom:6px;">&#9888; Emergency Rollback</div>
-<button onclick="pidRollback()" style="width:100%;padding:10px;background:var(--red2);border:1px solid var(--red);border-radius:10px;color:var(--red);font-size:12px;font-weight:800;cursor:pointer;">&#8617; Restore Pre-Migration Snapshot</button>
-</div>
-
-<!-- Migration History -->
-<div style="margin-top:16px;">
-<div style="font-size:11px;font-weight:900;color:var(--mut);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">&#128203; Migration History</div>
-<div id="pidHistoryList" onclick="renderMigrationHistory()"></div>
-<div id="pidHistoryContent"></div>
-</div>
-
-</div>
-<!-- ── END PHOENIX MIGRATION PANEL ─────────────────────────── -->
 
 <!-- ── BULK RECEIVE Panel (tab 7) ─────────────────────────── -->
 <div id="icPanelBulk" style="display:none;">
@@ -1877,21 +1696,6 @@ body{background:var(--bg);}
 
 </div><!-- end pg10 -->
 
-<!-- ══════════════════════════════════════════ pg11: REVIEW WORKSPACE ══════════ -->
-<div class="pg" id="pg11">
-<div class="pgt">&#9889; Review Workspace</div>
-<div class="pgs">Product enrichment tasks — auto-generated, auto-resolved</div>
-<div id="rwSummary" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;"></div>
-<div id="rwFilters" style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
-<button class="bsm bsb" id="rwf_all" onclick="setRwFilter('all',this)">All</button>
-<button class="bsm" id="rwf_p1" onclick="setRwFilter('1',this)" style="background:var(--red2);color:var(--red);border:1px solid var(--red);">&#128308; Priority 1</button>
-<button class="bsm" id="rwf_p2" onclick="setRwFilter('2',this)" style="background:none;border:1px solid var(--bdr);color:var(--mut);">&#128992; Priority 2</button>
-<button class="bsm" id="rwf_p3" onclick="setRwFilter('3',this)" style="background:none;border:1px solid var(--bdr);color:var(--mut);">&#128309; Priority 3</button>
-<button class="bsm" id="rwf_p4" onclick="setRwFilter('4',this)" style="background:none;border:1px solid var(--bdr);color:var(--mut);">&#9898; Priority 4</button>
-</div>
-<div id="rwTaskList" style="min-height:120px;"></div>
-</div><!-- end pg11 -->
-
 
 <nav class="nav" id="mainNav">
 <button type="button" class="nb on" onclick="goTo(0,this)" id="nb0"><span class="nbi">&#128202;</span><span class="nbl">Dashboard</span></button>
@@ -1905,7 +1709,6 @@ body{background:var(--bg);}
 <button type="button" class="nb" onclick="goTo(7,this)" id="nb7"><span class="nbi">&#128214;</span><span class="nbl">Guide</span></button>
 <button type="button" class="nb" onclick="goTo(9,this)" id="nb9"><span class="nbi">&#128230;</span><span class="nbl">Intake</span><span class="nbg" id="intakebg" style="display:none;"></span></button>
 <button type="button" class="nb" onclick="goTo(10,this)" id="nb10"><span class="nbi">&#128201;</span><span class="nbl">Intel</span></button>
-<button type="button" class="nb" onclick="goTo(11,this)" id="nb11"><span class="nbi">&#9889;</span><span class="nbl">Review</span><span class="nbg" id="rwbg" style="display:none;"></span></button>
 </nav>
 </div>
 
@@ -1940,7 +1743,7 @@ body{background:var(--bg);}
 <div id="toast"></div>
 <script>
 // ── STATE ────────────────────────────────────────────────────────────────────
-var S={products:[],stock:[],cashDays:[],suppliers:[],supplierPayments:[],expCats:[],customPins:null,chkState:{},demandLog:[],loans:[],stockBalance:null,stockBalanceHistory:[],beSettings:null,sales:[],customers:[],reorderOrdered:{},purchaseOrders:[],goodsReceived:[],stockReturns:[],priceHistory:[],migrationHistory:[],migrationCerts:[],salesReturns:[],prescriptions:[]};
+var S={products:[],stock:[],cashDays:[],suppliers:[],supplierPayments:[],expCats:[],customPins:null,chkState:{},demandLog:[],loans:[],stockBalance:null,stockBalanceHistory:[],beSettings:null,sales:[],customers:[],reorderOrdered:{},purchaseOrders:[],goodsReceived:[],stockReturns:[],priceHistory:[],salesReturns:[],prescriptions:[]};
 var PINS={admin:'1234',staff:'5678'};
 var role='admin',curPg=0,pinEnt='',pinRole='admin',acM=[],snapM='bc',cv='all',curExp=[],drFrom='',drTo='';
 var KEY='pbsrx_v2';
@@ -1972,7 +1775,7 @@ if(!S.expCats)S.expCats=[];if(!S.supplierPayments)S.supplierPayments=[];
 if(!S.chkState)S.chkState={};
 if(!S.demandLog)S.demandLog=[];if(!S.loans)S.loans=[];
 if(!S.stockBalance)S.stockBalance=null;if(!S.stockBalanceHistory)S.stockBalanceHistory=[];
-if(!S.sales)S.sales=[];if(!S.customers)S.customers=[];if(!S.migrationHistory)S.migrationHistory=[];if(!S.migrationCerts)S.migrationCerts=[];
+if(!S.sales)S.sales=[];if(!S.customers)S.customers=[];
 if(S.customPins){PINS.admin=S.customPins.admin;PINS.staff=S.customPins.staff||'5678';}
 // ── SPRINT 1: Supplier balance migration ─────────────────────────────────────
 // Converts raw s.balance into s.openingBalance (immutable starting point).
@@ -2001,861 +1804,6 @@ try{
 }catch(ae){console.warn('Stock archive error',ae);}
 }catch(e){console.error('PBSRx load() error:',e);}
 }
-
-
-// ════════════════════════════════════════════════════════════════════════════
-// PX-MIG-002D — PHOENIX INVENTORY IMPORT & OPENING STOCK ENGINE
-// Chief Migration Engineer — Project Phoenix
-//
-// CRITICAL RULES:
-//   1. No supplier liabilities created (invoiceAmt always 0 on migration GRNs)
-//   2. No cash movement (no cashDays entries)
-//   3. No supplier payments (no S.supplierPayments entries)
-//   4. Expired stock posted with EXPIRED-OPENING batch tag
-//   5. Pre-migration snapshot taken before any write
-//   6. Idempotency guard: migration batch tag prevents double-import
-//   7. Products created first; stock posted second; always in this order
-// ════════════════════════════════════════════════════════════════════════════
-
-var PID_MIGRATION_BATCH = 'PID-v1.0';
-var PID_SNAPSHOT_KEY = 'pbsrx_pid_snapshot';
-var pidParsedData = null;  // Holds parsed file data between phases
-
-// ── PRODUCT COMPLETENESS SCORE ───────────────────────────────────────────────
-// Computed — never stored. Called on demand.
-function computeCompleteness(p){
-  var score = 0;
-  var max = 11;
-  // Identity layer (2 pts)
-  if(p.genericName && p.genericName.length > 0) score += 2;
-  // Commercial layer (2.5 pts)
-  if(p.sellPrice && p.sellPrice > 0) score += 2;
-  if(p.costPrice && p.costPrice > 0) score += 0.5;
-  // Operational layer (3 pts)
-  if(p.shelfLocation && p.shelfLocation.length > 0) score += 1;
-  if(p.category && p.category !== 'General' && p.category !== 'Other' && p.category.length > 0) score += 0.5;
-  if(p.sellUnit && p.sellUnit !== 'unit' && p.sellUnit !== 'Unit') score += 0.5;
-  if(p.isFastMover) score += 0.5;
-  if(p.supplier && p.supplier.length > 0) score += 0.5;
-  // Enrichment layer (3 pts)
-  if(p.barcode && p.barcode.length > 0) score += 0.5;
-  if(p.nafdac && p.nafdac.length > 0) score += 0.5;
-  if(p.reorderQty && p.reorderQty > 0) score += 0.5;
-  if(p.minStock && p.minStock !== 10) score += 0.5;
-  return Math.round((score / max) * 100);
-}
-
-// ── PRE-MIGRATION SNAPSHOT ───────────────────────────────────────────────────
-function pidTakeSnapshot(){
-  try{
-    var snapshot = {
-      timestamp: new Date().toISOString(),
-      products: JSON.parse(JSON.stringify(S.products)),
-      stock: JSON.parse(JSON.stringify(S.stock)),
-      goodsReceived: JSON.parse(JSON.stringify(S.goodsReceived||[])),
-      priceHistory: JSON.parse(JSON.stringify(S.priceHistory||[]))
-    };
-    localStorage.setItem(PID_SNAPSHOT_KEY, JSON.stringify(snapshot));
-    var statusEl = document.getElementById('pidBackupStatus');
-    if(statusEl){
-      statusEl.innerHTML = '&#9989; Snapshot taken: ' + snapshot.products.length + ' products, ' +
-        snapshot.stock.length + ' stock batches — ' + new Date(snapshot.timestamp).toLocaleTimeString();
-      statusEl.style.color = 'var(--grn)';
-    }
-    var rollbackZone = document.getElementById('pidRollbackZone');
-    if(rollbackZone) rollbackZone.style.display = 'block';
-    toast('Snapshot saved — safe to proceed with import',3000);
-    return true;
-  }catch(e){
-    toast('Snapshot failed: ' + e.message, 5000);
-    return false;
-  }
-}
-
-// ── ROLLBACK TO PRE-MIGRATION STATE ─────────────────────────────────────────
-function pidRollback(){
-  if(!confirm('ROLLBACK: This restores PBSRx to the pre-migration state. All migration data will be removed. Continue?')) return;
-  try{
-    var raw = localStorage.getItem(PID_SNAPSHOT_KEY);
-    if(!raw){ toast('No snapshot found — cannot rollback'); return; }
-    var snapshot = JSON.parse(raw);
-    S.products = snapshot.products || [];
-    S.stock = snapshot.stock || [];
-    S.goodsReceived = snapshot.goodsReceived || [];
-    S.priceHistory = snapshot.priceHistory || [];
-    save();
-    renderAll();
-    try{updReviewBadge();}catch(e){}
-    toast('Rollback complete — restored to ' + new Date(snapshot.timestamp).toLocaleTimeString(), 5000);
-    document.getElementById('pidReport').style.display = 'none';
-    document.getElementById('pidProgress').style.display = 'none';
-    document.getElementById('pidMigrationControl').style.display = 'none';
-  }catch(e){
-    toast('Rollback error: ' + e.message, 6000);
-  }
-}
-
-// ── FILE LOAD & PARSE ────────────────────────────────────────────────────────
-function pidLoadFile(input){
-  var file = input.files[0];
-  if(!file){ toast('No file selected'); return; }
-  var reader = new FileReader();
-  reader.onload = function(e){
-    try{
-      var rows = parseCSV(e.target.result);
-      if(!rows || !rows.length){ toast('No data found in file','error'); return; }
-      pidParsedData = rows;
-      pidPreviewFile(rows);
-    }catch(err){
-      toast('Could not read file: ' + err.message, 5000);
-    }
-  };
-  if(file.name.match(/\.xlsx?$/i)){
-    // Use impBk approach — SheetJS if available
-    var fr2 = new FileReader();
-    fr2.onload = function(e){
-      try{
-        var data = new Uint8Array(e.target.result);
-        var wb = XLSX.read(data,{type:'array'});
-        var ws = wb.Sheets[wb.SheetNames[0]];
-        var csv = XLSX.utils.sheet_to_csv(ws);
-        var rows = parseCSV(csv);
-        if(!rows||!rows.length){toast('No data in spreadsheet','error');return;}
-        pidParsedData = rows;
-        pidPreviewFile(rows);
-      }catch(err){toast('Excel read error: '+err.message,5000);}
-    };
-    fr2.readAsArrayBuffer(file);
-  } else {
-    reader.readAsText(file, 'UTF-8');
-  }
-}
-
-function pidPreviewFile(rows){
-  // Classify and count records
-  var counts = {total:0, owner:0, consign:0, expired:0, nearExpiry:0, active:0, noExpiry:0, review:0, errors:[]};
-  var today = new Date(); today.setHours(0,0,0,0);
-  var d90 = new Date(today); d90.setDate(d90.getDate()+90);
-
-  rows.forEach(function(row,i){
-    var name = findCol(row,['product name','generic name','name','drug name','item name']);
-    if(!name){counts.errors.push('Row '+(i+2)+': Missing product name'); return;}
-    var owner = (findCol(row,['owner','ownership','stock type'])||'').toUpperCase().trim();
-    var expiryRaw = findCol(row,['expiry date','expiry','expiry_date']);
-    var expDt = expiryRaw ? new Date(expiryRaw) : null;
-    var statusRaw = (findCol(row,['status','stock classification','stock_classification'])||'').toLowerCase();
-
-    counts.total++;
-    if(owner === 'C') counts.consign++;
-    else if(owner === 'REVIEW') counts.review++;
-    else counts.owner++;
-
-    var isExpired = (expDt && expDt < today) || statusRaw.includes('expired');
-    var isNear = expDt && !isExpired && expDt < d90;
-
-    if(isExpired) counts.expired++;
-    else if(isNear) counts.nearExpiry++;
-    else if(!expiryRaw) counts.noExpiry++;
-    else counts.active++;
-  });
-
-  // Show preview
-  var previewEl = document.getElementById('pidFilePreview');
-  if(previewEl){
-    previewEl.style.display = 'block';
-    previewEl.innerHTML =
-      '<div style="font-weight:800;color:var(--txt);margin-bottom:8px;">&#128202; File Preview: ' + counts.total + ' records</div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">' +
-      '<div style="background:var(--surf);border-radius:6px;padding:8px;"><div style="font-size:10px;color:var(--mut);">Owner</div><div style="font-size:16px;font-weight:900;color:var(--grn);">' + counts.owner + '</div></div>' +
-      '<div style="background:var(--surf);border-radius:6px;padding:8px;"><div style="font-size:10px;color:var(--mut);">Consignment</div><div style="font-size:16px;font-weight:900;color:var(--blu);">' + counts.consign + '</div></div>' +
-      '<div style="background:var(--surf);border-radius:6px;padding:8px;"><div style="font-size:10px;color:var(--mut);">Active</div><div style="font-size:16px;font-weight:900;color:var(--grn);">' + counts.active + '</div></div>' +
-      '<div style="background:var(--surf);border-radius:6px;padding:8px;"><div style="font-size:10px;color:var(--mut);">Near Expiry</div><div style="font-size:16px;font-weight:900;color:var(--ora);">' + counts.nearExpiry + '</div></div>' +
-      '<div style="background:rgba(239,68,68,0.08);border-radius:6px;padding:8px;"><div style="font-size:10px;color:var(--mut);">Expired</div><div style="font-size:16px;font-weight:900;color:var(--red);">' + counts.expired + '</div></div>' +
-      '<div style="background:var(--surf);border-radius:6px;padding:8px;"><div style="font-size:10px;color:var(--mut);">No Expiry</div><div style="font-size:16px;font-weight:900;color:var(--mut);">' + counts.noExpiry + '</div></div>' +
-      '</div>' +
-      (counts.errors.length ? '<div style="margin-top:8px;padding:8px;background:var(--red2);border-radius:6px;font-size:11px;color:var(--red);">&#9888; ' + counts.errors.slice(0,3).join('<br>') + (counts.errors.length>3 ? '<br>+ ' + (counts.errors.length-3) + ' more':'') + '</div>' : '') +
-      (counts.review ? '<div style="margin-top:6px;padding:8px;background:rgba(249,115,22,0.1);border-radius:6px;font-size:11px;color:var(--ora);">&#10067; ' + counts.review + ' records have unknown ownership — will be flagged for review</div>' : '');
-  }
-
-  // Update phase 2 counts
-  var ownerEl = document.getElementById('pidOwnerCount');
-  var consignEl = document.getElementById('pidConsignCount');
-  var expiredEl = document.getElementById('pidExpiredCount');
-  if(ownerEl) ownerEl.textContent = counts.owner;
-  if(consignEl) consignEl.textContent = counts.consign;
-  if(expiredEl) expiredEl.textContent = counts.expired;
-
-  // Show phase 2 and migration control
-  var phase2 = document.getElementById('pidPhase2Card');
-  if(phase2) phase2.style.display = 'block';
-  var ctrl = document.getElementById('pidMigrationControl');
-  if(ctrl) ctrl.style.display = 'block';
-
-  // Validate snapshot taken
-  var hasSnapshot = !!localStorage.getItem(PID_SNAPSHOT_KEY);
-  var valEl = document.getElementById('pidValidationResult');
-  if(valEl){
-    if(!hasSnapshot){
-      valEl.innerHTML = '<div style="padding:8px;background:var(--red2);border-radius:8px;color:var(--red);font-weight:700;font-size:12px;">&#9888; Take a snapshot backup BEFORE running migration.</div>';
-    } else {
-      valEl.innerHTML = '<div style="padding:8px;background:rgba(34,197,94,0.1);border-radius:8px;color:var(--grn);font-weight:700;font-size:12px;">&#9989; Snapshot ready. ' + counts.total + ' records validated. Ready to migrate.</div>';
-    }
-  }
-}
-
-// ── IDEMPOTENCY CHECK ────────────────────────────────────────────────────────
-function pidIsMigrationAlreadyRun(){
-  // Check if ANY stock batch carries the PID migration tag
-  return (S.stock||[]).some(function(b){ return b.migrationBatch === PID_MIGRATION_BATCH; });
-}
-
-// ── MAIN MIGRATION RUNNER ────────────────────────────────────────────────────
-
-
-// ── MIGRATION HISTORY VIEWER ────────────────────────────────────────────────
-function renderMigrationHistory(){
-  var el = document.getElementById('pidHistoryContent');
-  if(!el) return;
-  var hist = (S.migrationHistory||[]).slice().reverse();
-  if(!hist.length){
-    el.innerHTML='<div style="font-size:12px;color:var(--mut);text-align:center;padding:12px;">No migration sessions recorded yet.</div>';
-    return;
-  }
-  el.innerHTML = hist.map(function(h){
-    var statusColor = h.status==='SUCCESS'?'var(--grn)':'var(--ora)';
-    return '<div style="background:var(--surf);border:1px solid var(--bdr);border-radius:10px;padding:12px;margin-bottom:6px;">' +
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">' +
-      '<div style="font-size:12px;font-weight:800;color:var(--txt);">'+escH(h.sessionId||'—')+'</div>' +
-      '<span style="font-size:10px;font-weight:800;color:'+statusColor+';background:rgba(0,0,0,0.1);padding:2px 6px;border-radius:4px;">'+h.status+'</span>' +
-      '</div>' +
-      '<div style="font-size:11px;color:var(--mut);">' +
-      new Date(h.timestamp).toLocaleString('en-NG') + ' · ' + (h.durationSec||'—')+'s' +
-      '</div>' +
-      '<div style="display:flex;gap:12px;margin-top:6px;font-size:11px;color:var(--txt);">' +
-      '<span>&#128230; '+h.productsCreated+' new</span>' +
-      '<span>&#128994; '+h.ownerStock+' owner</span>' +
-      '<span>&#128309; '+h.consignStock+' consign</span>' +
-      '<span>&#128308; '+h.expiredStock+' expired</span>' +
-      '</div>' +
-      (h.warnings?'<div style="font-size:10px;color:var(--ora);margin-top:4px;">&#9888; '+h.warnings+' warning(s)</div>':'')+
-      '</div>';
-  }).join('');
-}
-// ─────────────────────────────────────────────────────────────────────────────
-// ── DRY RUN MODE ─────────────────────────────────────────────────────────────
-// Validates the dataset and estimates results without writing any data.
-function pidDryRun(){
-  if(!pidParsedData||!pidParsedData.length){toast('No data loaded. Select a PID CSV first.');return;}
-  var today=new Date();today.setHours(0,0,0,0);
-  var d90=new Date(today);d90.setDate(d90.getDate()+90);
-  var stats={total:pidParsedData.length,errors:[],warnings:[],
-    productsToCreate:0,productsToUpdate:0,ownerStock:0,consignStock:0,
-    expiredStock:0,nearExpiry:0,active:0,noExpiry:0,zeroQty:0};
-  pidParsedData.forEach(function(row,i){
-    var name=(findCol(row,['product name','generic name','name','drug name'])||'').trim();
-    if(!name){stats.errors.push('Row '+(i+2)+': No product name');return;}
-    var existing=S.products.find(function(p){return p.genericName&&p.genericName.toLowerCase()===name.toLowerCase();});
-    if(existing)stats.productsToUpdate++;else stats.productsToCreate++;
-    var owner=(findCol(row,['owner','ownership'])||'O').toUpperCase().trim();
-    var qty=parseFloat(String(findCol(row,['qty','quantity'])||'0').replace(/[^\d.]/g,''))||0;
-    var expiryRaw=findCol(row,['expiry date','expiry'])||'';
-    var statusRaw=(findCol(row,['status','stock classification'])||'').toLowerCase();
-    var expDt=expiryRaw?new Date(expiryRaw):null;
-    var isExpired=(expDt&&expDt<today)||statusRaw.includes('expired');
-    var isNear=expDt&&!isExpired&&expDt<d90;
-    if(qty>0){
-      if(isExpired)stats.expiredStock++;
-      else if(owner==='C')stats.consignStock++;
-      else stats.ownerStock++;
-    }else stats.zeroQty++;
-    if(isExpired)stats.expired=(stats.expired||0)+1;
-    else if(isNear)stats.nearExpiry++;
-    else if(!expiryRaw)stats.noExpiry++;
-    else stats.active++;
-    if(!findCol(row,['shelf','shelf location']))stats.warnings.push(name+': No shelf location');
-  });
-  var reportEl=document.getElementById('pidReport');
-  if(reportEl){
-    reportEl.style.display='block';
-    reportEl.innerHTML='<div class="card" style="border:2px dashed var(--amb);">'+
-      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">'+
-      '<span style="font-size:24px;">&#128269;</span>'+
-      '<div><div style="font-size:14px;font-weight:900;color:var(--amb);">DRY RUN PREVIEW</div>'+
-      '<div style="font-size:11px;color:var(--mut);">No data written to PBSRx</div></div></div>'+
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">'+
-      pidStatCard('Total Records',stats.total,'var(--txt)')+
-      pidStatCard('New Products',stats.productsToCreate,'var(--grn)')+
-      pidStatCard('Products to Update',stats.productsToUpdate,'var(--blu)')+
-      pidStatCard('Owner Stock Batches',stats.ownerStock,'var(--grn)')+
-      pidStatCard('Consignment Batches',stats.consignStock,'var(--blu)')+
-      pidStatCard('Expired (to archive)',stats.expiredStock,'var(--red)')+
-      pidStatCard('Zero-Qty (catalogue only)',stats.zeroQty,'var(--mut)')+
-      pidStatCard('Warnings',stats.warnings.length,stats.warnings.length>0?'var(--ora)':'var(--grn)')+
-      '</div>'+
-      (stats.errors.length?'<div style="padding:8px;background:var(--red2);border-radius:8px;color:var(--red);font-size:11px;margin-bottom:8px;"><b>Errors ('+stats.errors.length+'):</b><br>'+stats.errors.slice(0,3).join('<br>')+'</div>':'<div style="padding:8px;background:rgba(34,197,94,0.1);border-radius:8px;color:var(--grn);font-size:12px;font-weight:700;">&#9989; No blocking errors — migration can proceed</div>')+
-      '</div>';
-  }
-  toast('Dry run complete — '+(stats.errors.length?stats.errors.length+' errors found':'no errors — safe to migrate'),4000);
-}
-// ─────────────────────────────────────────────────────────────────────────────
-function pidRunMigration(){
-  if(!pidParsedData || !pidParsedData.length){
-    toast('No data loaded. Select a PID CSV file first.'); return;
-  }
-  if(!localStorage.getItem(PID_SNAPSHOT_KEY)){
-    toast('Take a snapshot backup before running migration.', 4000); return;
-  }
-  if(pidIsMigrationAlreadyRun()){
-    if(!confirm('WARNING: Migration data from PID v1.0 already detected in PBSRx.\n\nRunning again will skip existing products but may create duplicate stock batches.\n\nProceed only if you rolled back first. Continue?')) return;
-  }
-  if(!confirm('Run Phoenix Migration now?\n\n' + pidParsedData.length + ' records will be imported.\n\nProducts created first. Opening stock posted second.\nNo supplier liabilities. No cash movement.\n\nContinue?')) return;
-
-  // Show progress
-  var runBtn = document.getElementById('pidRunBtn');
-  if(runBtn) runBtn.disabled = true;
-  var progress = document.getElementById('pidProgress');
-  if(progress) progress.style.display = 'block';
-  var ctrl = document.getElementById('pidMigrationControl');
-  if(ctrl) ctrl.style.display = 'none';
-
-  // Run async to allow UI update
-  setTimeout(function(){
-    try{
-      pidExecuteMigration(pidParsedData);
-    }catch(e){
-      toast('Migration error: ' + e.message, 8000);
-      var progress = document.getElementById('pidProgress');
-      if(progress) progress.style.display = 'none';
-      var ctrl = document.getElementById('pidMigrationControl');
-      if(ctrl) ctrl.style.display = 'block';
-      var runBtn = document.getElementById('pidRunBtn');
-      if(runBtn) runBtn.disabled = false;
-    }
-  }, 100);
-}
-
-function pidExecuteMigration(rows){
-  var stats = {
-    total: rows.length,
-    productsCreated: 0, productsUpdated: 0,
-    stockPosted: 0, expiredPosted: 0,
-    ownerStock: 0, consignStock: 0,
-    skipped: 0, warnings: [], errors: [],
-    startTime: Date.now()
-  };
-
-  var today = new Date(); today.setHours(0,0,0,0);
-  var d90 = new Date(today); d90.setDate(d90.getDate()+90);
-  var migrationGRNOwner = null;
-  var migrationGRNConsign = null;
-
-  // ── PHASE 1: PRODUCT CATALOGUE ───────────────────────────────────────────
-  pidSetProgress(5, 'Phase 1: Creating product catalogue...');
-
-  rows.forEach(function(row, i){
-    var name = findCol(row,['product name','generic name','name','drug name','item name']);
-    if(!name || name.trim() === ''){
-      stats.skipped++;
-      stats.warnings.push('Row '+(i+2)+': No product name — skipped');
-      return;
-    }
-    name = name.trim();
-
-    var ownerRaw = (findCol(row,['owner','ownership','stock type'])||'O').trim().toUpperCase();
-    var category = findCol(row,['category','therapeutic class','therapeutic_class']) || 'General';
-    var shelfRaw = findCol(row,['shelf','shelf location','shelf_location','shelf no']) || '';
-    var unitType = findCol(row,['unit type','unit_type','sell unit','selling unit']) || 'unit';
-    var costRaw = Number(findCol(row,['unit cost','cost price','cost','unit_cost'])) || 0;
-    var sellRaw = Number(findCol(row,['selling price','sell price','price','sell_price'])) || 0;
-    var supplierRaw = findCol(row,['supplier','vendor']) || '';
-    var notesRaw = findCol(row,['notes','remarks','note']) || '';
-
-    // Build migration notes tags
-    var migNotes = notesRaw;
-    if(ownerRaw === 'C') migNotes = ('[PID:C] ' + migNotes).trim();
-    else if(ownerRaw === 'REVIEW') migNotes = ('[PID:REVIEW] Ownership unconfirmed — verify before sale. ' + migNotes).trim();
-    else migNotes = ('[PID:O] ' + migNotes).trim();
-
-    // Check for existing product (name match, case-insensitive)
-    var existing = (S.products||[]).find(function(p){
-      return p.genericName && p.genericName.toLowerCase() === name.toLowerCase();
-    });
-
-    if(existing){
-      // Update enrichment fields only — never overwrite name (immutable identity)
-      if(costRaw > 0 && !existing.costPrice) existing.costPrice = costRaw;
-      if(sellRaw > 0 && !existing.sellPrice) existing.sellPrice = sellRaw;
-      if(shelfRaw && !existing.shelfLocation) existing.shelfLocation = shelfRaw;
-      if(category && category !== 'General' && (!existing.category || existing.category === 'General')) existing.category = category;
-      if(supplierRaw && !existing.supplier) existing.supplier = supplierRaw;
-      // Always stamp the migration tag on notes if not already present
-      if((existing.notes||'').indexOf('[PID:') < 0) existing.notes = (migNotes + ' ' + (existing.notes||'')).trim();
-      stats.productsUpdated++;
-    } else {
-      // Create new product
-      if(!S.products) S.products = [];
-      S.products.push({
-        id: 'pid' + Date.now() + Math.random().toString(36).slice(2,5),
-        genericName: name,
-        brandName: findCol(row,['brand name','brand_name','brand'])||'',
-        strength: findCol(row,['strength','strength/size','size'])||'',
-        form: findCol(row,['form','dosage form'])||'',
-        category: category,
-        barcode: findCol(row,['barcode'])||'',
-        nafdac: findCol(row,['nafdac','nafdac number'])||'',
-        sellUnit: unitType,
-        costPrice: costRaw,
-        sellPrice: sellRaw,
-        minStock: Number(findCol(row,['min stock','reorder level','minimum']))||10,
-        reorderQty: 0,
-        isFastMover: false,
-        shelfLocation: shelfRaw,
-        supplier: supplierRaw,
-        notes: migNotes,
-        addedDate: td(),
-        migrationBatch: PID_MIGRATION_BATCH,
-        migrationDate: td()
-      });
-      stats.productsCreated++;
-    }
-    pidSetProgress(5 + Math.round((i/rows.length)*40), 'Phase 1: ' + (i+1) + '/' + rows.length + ' products...');
-  });
-
-  // ── PHASE 2: OPENING STOCK ───────────────────────────────────────────────
-  pidSetProgress(50, 'Phase 2: Posting opening stock batches...');
-
-  // Create migration GRN records (invoiceAmt=0 = no supplier liability)
-  var grnIdOwner = 'PID-OWNER-' + td();
-  var grnIdConsign = 'PID-CONSIGN-' + td();
-  migrationGRNOwner = {
-    id: grnIdOwner,
-    date: td(),
-    supplier: 'Opening Balance',
-    invoice: 'OPENING-OWNER-2026',
-    invoiceAmt: 0, // ZERO — no liability created
-    totalValue: 0,
-    totalQty: 0,
-    lines: [],
-    source: 'pid-migration',
-    migrationBatch: PID_MIGRATION_BATCH,
-    note: 'Phoenix Migration PID v1.0 — Owner Opening Stock'
-  };
-  migrationGRNConsign = {
-    id: grnIdConsign,
-    date: td(),
-    supplier: 'Consignment',
-    invoice: 'OPENING-CONSIGNMENT-2026',
-    invoiceAmt: 0, // ZERO — no liability created
-    totalValue: 0,
-    totalQty: 0,
-    lines: [],
-    source: 'pid-migration',
-    migrationBatch: PID_MIGRATION_BATCH,
-    note: 'Phoenix Migration PID v1.0 — Consignment Opening Stock'
-  };
-
-  rows.forEach(function(row, i){
-    var name = findCol(row,['product name','generic name','name','drug name','item name']);
-    if(!name || !name.trim()) return;
-    name = name.trim();
-
-    var qtyRaw = findCol(row,['qty','quantity','qty on hand','qty_on_hand']) || '0';
-    var numQty = parseFloat(String(qtyRaw).replace(/[^\d.]/g,'')) || 0;
-    if(numQty <= 0) return; // No stock to post — product exists, zero stock is valid
-
-    var ownerRaw = (findCol(row,['owner','ownership','stock type'])||'O').trim().toUpperCase();
-    var expiryRaw = findCol(row,['expiry date','expiry','expiry_date']) || '';
-    var costRaw = Number(findCol(row,['unit cost','cost price','cost'])) || 0;
-    var unitType = findCol(row,['unit type','unit_type','sell unit']) || 'unit';
-    var statusRaw = (findCol(row,['status','stock classification'])||'').toLowerCase();
-
-    // Find the product we just created
-    var prod = (S.products||[]).find(function(p){
-      return p.genericName && p.genericName.toLowerCase() === name.toLowerCase();
-    });
-    if(!prod){ stats.warnings.push(name + ': Product not found for stock posting — skipped'); return; }
-
-    // Classify expiry status
-    var expDt = expiryRaw ? new Date(expiryRaw) : null;
-    var isExpired = (expDt && expDt < today) || statusRaw.includes('expired');
-
-    // Determine batch tag and source
-    var batchTag, sourceTag, grnRef;
-    if(isExpired){
-      batchTag = 'EXPIRED-OPENING';
-      sourceTag = 'migration-expired';
-      grnRef = 'EXPIRED-OPENING-2026';
-    } else if(ownerRaw === 'C'){
-      batchTag = 'OPENING-CONSIGNMENT';
-      sourceTag = 'migration-active';
-      grnRef = grnIdConsign;
-    } else {
-      batchTag = 'OPENING-OWNER';
-      sourceTag = 'migration-active';
-      grnRef = grnIdOwner;
-    }
-
-    // Format expiry as YYYY-MM
-    var expiryFormatted = '';
-    if(expiryRaw){
-      try{
-        var d = new Date(expiryRaw);
-        if(!isNaN(d.getTime())){
-          expiryFormatted = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
-        }
-      }catch(e){}
-    }
-
-    // Post stock batch
-    if(!S.stock) S.stock = [];
-    S.stock.push({
-      id: 'ms' + Date.now() + Math.random().toString(36).slice(2,5),
-      productId: prod.id,
-      qty: numQty,
-      unit: unitType || prod.sellUnit || 'unit',
-      batch: batchTag,
-      expiry: expiryFormatted,
-      cost: costRaw,
-      supplier: ownerRaw === 'C' ? 'Consignment' : 'Opening Balance',
-      date: td(),
-      depleted: false,
-      source: sourceTag,
-      migrationBatch: PID_MIGRATION_BATCH,
-      grn: grnRef
-    });
-
-    // Add to appropriate GRN line
-    var lineData = {pid: prod.id, name: name, qty: numQty, cost: costRaw, batch: batchTag};
-    if(isExpired || ownerRaw !== 'C'){
-      migrationGRNOwner.lines.push(lineData);
-      migrationGRNOwner.totalQty += numQty;
-      migrationGRNOwner.totalValue += numQty * costRaw;
-    } else {
-      migrationGRNConsign.lines.push(lineData);
-      migrationGRNConsign.totalQty += numQty;
-      migrationGRNConsign.totalValue += numQty * costRaw;
-    }
-
-    if(isExpired) stats.expiredPosted++;
-    else if(ownerRaw === 'C'){ stats.consignStock++; }
-    else stats.ownerStock++;
-    stats.stockPosted++;
-
-    pidSetProgress(50 + Math.round((i/rows.length)*40), 'Phase 2: ' + stats.stockPosted + ' batches posted...');
-  });
-
-  // Persist GRN audit records (invoiceAmt=0 means NO liability in getSupplierBalance)
-  if(!S.goodsReceived) S.goodsReceived=[];
-  if(migrationGRNOwner.lines.length > 0) S.goodsReceived.push(migrationGRNOwner);
-  if(migrationGRNConsign.lines.length > 0) S.goodsReceived.push(migrationGRNConsign);
-
-  // ── SAVE & REFRESH ───────────────────────────────────────────────────────
-  pidSetProgress(95, 'Saving...');
-  save();
-  renderAll();
-  try{updReviewBadge();}catch(e){}
-  try{if(typeof renderPulse==='function')renderPulse();}catch(e){}
-
-  stats.endTime = Date.now();
-  pidSetProgress(100, 'Complete!');
-
-  // ── STORE MIGRATION HISTORY & CERTIFICATE ──────────────────────────────
-  var sessionId = 'PHX-MIG-' + td().replace(/-/g,'') + '-' + Math.floor(Math.random()*900+100);
-  var cert = {
-    sessionId: sessionId,
-    timestamp: new Date().toISOString(),
-    operator: (role==='admin'?'Owner':'Staff'),
-    datasetVersion: 'PID v1.0',
-    productsCreated: stats.productsCreated,
-    productsUpdated: stats.productsUpdated,
-    ownerStock: stats.ownerStock,
-    consignStock: stats.consignStock,
-    expiredStock: stats.expiredPosted,
-    totalBatches: stats.stockPosted,
-    warnings: stats.warnings.length,
-    errors: stats.errors.length,
-    skipped: stats.skipped,
-    snapshotKey: PID_SNAPSHOT_KEY,
-    rollbackAvailable: !!localStorage.getItem(PID_SNAPSHOT_KEY),
-    status: stats.errors.length===0?'SUCCESS':'PARTIAL',
-    durationSec: ((stats.endTime-stats.startTime)/1000).toFixed(1)
-  };
-  if(!S.migrationHistory)S.migrationHistory=[];
-  if(!S.migrationCerts)S.migrationCerts=[];
-  S.migrationHistory.push(cert);
-  S.migrationCerts.push(cert);
-  save();
-  stats.sessionId = sessionId;
-  // ── SHOW REPORT ──────────────────────────────────────────────────────────
-  setTimeout(function(){
-    var progress = document.getElementById('pidProgress');
-    if(progress) progress.style.display = 'none';
-    pidShowReport(stats);
-  }, 600);
-}
-
-function pidSetProgress(pct, msg){
-  var bar = document.getElementById('pidProgressBar');
-  var msgEl = document.getElementById('pidProgressMsg');
-  if(bar) bar.style.width = pct + '%';
-  if(msgEl) msgEl.textContent = msg;
-}
-
-// ── MIGRATION REPORT ─────────────────────────────────────────────────────────
-function pidShowReport(stats){
-  var dur = ((stats.endTime - stats.startTime)/1000).toFixed(1);
-  var totalReview = 0;
-  try{totalReview = generateReviewTasks().length;}catch(e){}
-  var avgComplete = 0;
-  if(S.products.length > 0){
-    var total = S.products.reduce(function(s,p){return s+computeCompleteness(p);},0);
-    avgComplete = Math.round(total / S.products.length);
-  }
-  var shelfCoverage = S.products.length > 0 ?
-    Math.round(S.products.filter(function(p){return p.shelfLocation;}).length / S.products.length * 100) : 0;
-
-  var reportEl = document.getElementById('pidReport');
-  if(!reportEl) return;
-  reportEl.style.display = 'block';
-  reportEl.innerHTML =
-    '<div class="card" style="border:2px solid var(--grn);margin-top:10px;">' +
-    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">' +
-    '<span style="font-size:28px;">&#9989;</span>' +
-    '<div><div style="font-size:15px;font-weight:900;color:var(--grn);">Phoenix Migration Complete</div>' +
-    '<div style="font-size:11px;color:var(--mut);">PID v1.0 · ' + dur + 's · ' + new Date().toLocaleTimeString() + '</div>' +
-    '<div style="font-size:10px;color:var(--mut);margin-top:2px;">Session: ' + (stats.sessionId||'—') + '</div></div></div>' +
-    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">' +
-    pidStatCard('Products Created', stats.productsCreated, 'var(--grn)') +
-    pidStatCard('Products Updated', stats.productsUpdated, 'var(--blu)') +
-    pidStatCard('Owner Stock', stats.ownerStock, 'var(--grn)') +
-    pidStatCard('Consignment', stats.consignStock, 'var(--blu)') +
-    pidStatCard('Expired (Archived)', stats.expiredPosted, 'var(--red)') +
-    pidStatCard('Stock Batches', stats.stockPosted, 'var(--txt)') +
-    pidStatCard('Review Tasks', totalReview, totalReview > 0 ? 'var(--ora)' : 'var(--grn)') +
-    pidStatCard('Avg Completeness', avgComplete+'%', avgComplete>70?'var(--grn)':'var(--ora)') +
-    pidStatCard('Shelf Coverage', shelfCoverage+'%', shelfCoverage>90?'var(--grn)':'var(--ora)') +
-    pidStatCard('Skipped', stats.skipped, stats.skipped>0?'var(--ora)':'var(--mut)') +
-    '</div>' +
-    (stats.warnings.length ? '<div style="padding:8px;background:rgba(249,115,22,0.1);border-radius:8px;font-size:11px;color:var(--ora);margin-bottom:8px;"><b>Warnings (' + stats.warnings.length + '):</b><br>' + stats.warnings.slice(0,5).join('<br>') + (stats.warnings.length>5?'<br>+' + (stats.warnings.length-5) + ' more':'') + '</div>' : '') +
-    '<div style="font-size:12px;color:var(--mut);font-weight:600;border-top:1px solid var(--bdr);padding-top:8px;margin-top:4px;">' +
-    '&#10003; No supplier liabilities created &nbsp;&#10003; No cash movement &nbsp;&#10003; Expired stock archived</div>' +
-    '</div>';
-
-  // Rollback zone
-  var rollbackZone = document.getElementById('pidRollbackZone');
-  if(rollbackZone) rollbackZone.style.display = 'block';
-}
-
-function pidStatCard(label, value, color){
-  return '<div style="background:var(--surf);border-radius:8px;padding:10px;text-align:center;">' +
-    '<div style="font-size:18px;font-weight:900;color:' + color + ';">' + value + '</div>' +
-    '<div style="font-size:10px;color:var(--mut);">' + label + '</div></div>';
-}
-
-// ════════════════════════════════════════════════════════════════════════════
-// END PX-MIG-002D ENGINE
-// ════════════════════════════════════════════════════════════════════════════
-
-// ════════════════════════════════════════════════════════════════════════════
-// PX-MIG-002C — REVIEW WORKSPACE ENGINE
-// Computed workspace — no storage, no sync, no duplicates.
-// Tasks are generated on demand by scanning S.products[].
-// Tasks resolve automatically when the underlying data gap is filled.
-// ════════════════════════════════════════════════════════════════════════════
-
-var rwCurrentFilter='all';
-
-function setRwFilter(f,el){
-  rwCurrentFilter=f;
-  document.querySelectorAll('#rwFilters .bsm').forEach(function(b){
-    b.style.background='none';b.style.borderColor='var(--bdr)';b.style.color='var(--mut)';
-  });
-  if(el){
-    var colors={'1':'var(--red)','2':'var(--ora)','3':'var(--grn)','all':'var(--amb)'};
-    var bg={'1':'var(--red2)','2':'rgba(249,115,22,0.15)','3':'rgba(34,197,94,0.15)','all':'rgba(245,158,11,0.15)'};
-    el.style.background=bg[f]||'var(--surf)';
-    el.style.borderColor=colors[f]||'var(--amb)';
-    el.style.color=colors[f]||'#000';
-  }
-  renderReviewWorkspace();
-}
-
-// Generate all tasks by scanning product master — O(n), no storage
-function generateReviewTasks(){
-  var tasks=[];
-  var salesMap={};
-  (S.sales||[]).forEach(function(s){
-    (s.items||[]).forEach(function(it){
-      salesMap[it.pid]=(salesMap[it.pid]||0)+1;
-    });
-  });
-
-  S.products.forEach(function(p){
-    var id=p.id;
-    var name=escH(p.genericName||'Unknown');
-    var hasSales=!!salesMap[id];
-    var cat=p.category||'';
-    var isControlled=cat.toLowerCase().includes('controlled')||cat.toLowerCase().includes('antibiotic')||cat.toLowerCase().includes('antimalarial');
-
-    // ── PRIORITY 1: Financial & operational gates ────────────────────────────
-    if(!p.sellPrice||p.sellPrice===0){
-      tasks.push({pid:id,pri:1,type:'sell_price',icon:'&#8358;',
-        title:name,desc:'No selling price set — this product will sell at \u20a60',
-        action:'editProd('+id+')',actionLabel:'Set Price'});
-    }
-    if((!p.costPrice||p.costPrice===0)&&hasSales){
-      tasks.push({pid:id,pri:1,type:'cost_price',icon:'&#128179;',
-        title:name,desc:'No cost price — margin tracking unavailable (has sales)',
-        action:'editProd('+id+')',actionLabel:'Set Cost'});
-    }
-    if(!p.isFastMover&&hasSales){
-      tasks.push({pid:id,pri:1,type:'fast_mover',icon:'&#128138;',
-        title:name,desc:'Not monitored in Stock Pulse — but this product has been sold',
-        action:'editProd('+id+')',actionLabel:'Enable Monitoring'});
-    }
-    if((p.notes||'').indexOf('[PID:REVIEW]')>=0){
-      tasks.push({pid:id,pri:1,type:'ownership',icon:'&#10067;',
-        title:name,desc:'Ownership unconfirmed (Owner or Consignment) — verify before sale',
-        action:'editProd('+id+')',actionLabel:'Confirm Ownership'});
-    }
-
-    // ── PRIORITY 2: Operational intelligence ────────────────────────────────
-    if(!p.sellUnit||p.sellUnit==='unit'||p.sellUnit==='Unit'){
-      tasks.push({pid:id,pri:2,type:'sell_unit',icon:'&#128230;',
-        title:name,desc:'Sell unit is generic "unit" — set to Tablet, Bottle, Pack, Card, etc.',
-        action:'editProd('+id+')',actionLabel:'Set Unit'});
-    }
-    if(p.isFastMover&&(!p.minStock||p.minStock===10)){
-      tasks.push({pid:id,pri:2,type:'reorder_level',icon:'&#128308;',
-        title:name,desc:'Using default minimum stock of 10 — set the real reorder point',
-        action:'editProd('+id+')',actionLabel:'Set Min Stock'});
-    }
-    // Expiry missing for controlled / antibiotic / antimalarial
-    if(isControlled){
-      var batches=(S.stock||[]).filter(function(b){return b.productId===id&&!b.depleted;});
-      var hasExpiry=batches.some(function(b){return b.expiry&&b.expiry.length>4;});
-      if(!hasExpiry&&batches.length>0){
-        tasks.push({pid:id,pri:2,type:'expiry',icon:'&#128337;',
-          title:name,desc:'No expiry date recorded — required for '+cat+' products',
-          action:'editProd('+id+')',actionLabel:'Log via Intake'});
-      }
-    }
-
-    // ── PRIORITY 3: Enrichment ───────────────────────────────────────────────
-    if(!p.category||p.category==='General'||p.category==='Other'){
-      tasks.push({pid:id,pri:3,type:'category',icon:'&#127991;',
-        title:name,desc:'Category is "'+( p.category||'none')+'" — assign a specific category',
-        action:'editProd('+id+')',actionLabel:'Set Category'});
-    }
-    if(!p.costPrice||p.costPrice===0){
-      // Lower priority for products with no sales yet
-      tasks.push({pid:id,pri:3,type:'cost_price_ns',icon:'&#128181;',
-        title:name,desc:'No cost price — set when product is next received',
-        action:'editProd('+id+')',actionLabel:'Set Cost'});
-    }
-    if(p.isFastMover&&(!p.reorderQty||p.reorderQty===0)){
-      tasks.push({pid:id,pri:3,type:'reorder_qty',icon:'&#128338;',
-        title:name,desc:'No reorder quantity — Reorder Brain cannot generate order amounts',
-        action:'editProd('+id+')',actionLabel:'Set Reorder Qty'});
-    }
-
-    // ── PRIORITY 4: Progressive enrichment ──────────────────────────────────
-    if(!p.barcode){
-      tasks.push({pid:id,pri:4,type:'barcode',icon:'&#128211;',
-        title:name,desc:'No barcode — capture via AI Snap during next intake',
-        action:'editProd('+id+')',actionLabel:'Add Barcode'});
-    }
-    if(!p.nafdac){
-      tasks.push({pid:id,pri:4,type:'nafdac',icon:'&#128196;',
-        title:name,desc:'No NAFDAC number — capture via AI Snap during next intake',
-        action:'editProd('+id+')',actionLabel:'Add NAFDAC'});
-    }
-    if(!p.supplier){
-      tasks.push({pid:id,pri:4,type:'supplier',icon:'&#127981;',
-        title:name,desc:'No supplier linked — will be set on next Bulk Receive',
-        action:'editProd('+id+')',actionLabel:'Link Supplier'});
-    }
-    if(!p.shelfLocation){
-      tasks.push({pid:id,pri:4,type:'shelf',icon:'&#128205;',
-        title:name,desc:'No shelf location recorded — enter physical shelf zone',
-        action:'editProd('+id+')',actionLabel:'Set Shelf'});
-    }
-  });
-
-  return tasks;
-}
-
-function renderReviewWorkspace(){
-  var tasks=generateReviewTasks();
-  var filtered=rwCurrentFilter==='all'?tasks:tasks.filter(function(t){return String(t.pri)===rwCurrentFilter;});
-
-  // Summary strip
-  var counts={1:0,2:0,3:0,4:0};
-  tasks.forEach(function(t){counts[t.pri]=(counts[t.pri]||0)+1;});
-  var sumEl=document.getElementById('rwSummary');
-  if(sumEl){
-    var priColors={1:'var(--red)',2:'var(--ora)',3:'var(--grn)',4:'var(--mut)'};
-    var priLabels={1:'Priority 1',2:'Priority 2',3:'Priority 3',4:'Priority 4'};
-    sumEl.innerHTML=[1,2,3,4].map(function(p){
-      return '<div style="background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:10px 14px;text-align:center;min-width:70px;">'+
-        '<div style="font-family:var(--fh);font-size:22px;color:'+priColors[p]+';font-weight:900;">'+counts[p]+'</div>'+
-        '<div style="font-size:10px;color:var(--mut);font-weight:700;">'+priLabels[p]+'</div></div>';
-    }).join('');
-  }
-
-  // Update badge
-  var p1count=counts[1]||0;
-  var rwBadge=document.getElementById('rwbg');
-  if(rwBadge){rwBadge.style.display=p1count>0?'inline-block':'none';rwBadge.textContent=p1count;}
-
-  // Task list
-  var el=document.getElementById('rwTaskList');if(!el)return;
-  if(!S.products.length){
-    el.innerHTML='<div style="text-align:center;color:var(--mut);padding:40px 16px;"><div style="font-size:32px;margin-bottom:8px;">&#9989;</div><div style="font-size:14px;font-weight:700;">No products yet.</div><div style="font-size:12px;margin-top:4px;">Import products to generate Review tasks.</div></div>';
-    return;
-  }
-  if(!filtered.length){
-    el.innerHTML='<div style="text-align:center;color:var(--grn);padding:40px 16px;"><div style="font-size:32px;margin-bottom:8px;">&#9989;</div><div style="font-size:14px;font-weight:800;">All '+rwCurrentFilter==='all'?'tasks':'Priority '+rwCurrentFilter+' tasks'+'cleared!</div><div style="font-size:12px;color:var(--mut);margin-top:4px;">These fields are all populated.</div></div>';
-    return;
-  }
-
-  var priColors={1:'var(--red)',2:'var(--ora)',3:'var(--grn)',4:'var(--mut)'};
-  var priBg={1:'var(--red2)',2:'rgba(249,115,22,0.12)',3:'rgba(34,197,94,0.08)',4:'var(--surf)'};
-  var priLabel={1:'P1',2:'P2',3:'P3',4:'P4'};
-
-  el.innerHTML='<div style="font-size:11px;color:var(--mut);font-weight:700;padding:4px 0 8px;">'+filtered.length+' task'+(filtered.length!==1?'s':'')+' · Tap to resolve</div>'+
-  filtered.map(function(t){
-    // Show completeness score if we have it
-    var prod=S.products.find(function(p){return p.id===t.pid;});
-    var score=prod?computeCompleteness(prod):0;
-    var scoreColor=score>=80?'var(--grn)':score>=50?'var(--ora)':'var(--red)';
-    return '<div style="background:'+priBg[t.pri]+';border:1px solid var(--bdr);border-radius:12px;padding:12px 14px;margin-bottom:6px;display:flex;align-items:center;gap:10px;">'+
-      '<div style="font-size:20px;flex-shrink:0;">'+t.icon+'</div>'+
-      '<div style="flex:1;min-width:0;">'+
-        '<div style="font-size:13px;font-weight:800;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+t.title+'</div>'+
-        '<div style="font-size:11px;color:var(--mut);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+t.desc+'</div>'+
-        '<div style="font-size:10px;margin-top:3px;"><span style="color:'+scoreColor+';font-weight:800;">'+score+'%</span><span style="color:var(--mut);"> complete</span></div>'+
-      '</div>'+
-      '<div style="flex-shrink:0;display:flex;align-items:center;gap:6px;">'+
-        '<span style="font-size:9px;font-weight:900;color:'+priColors[t.pri]+';background:'+priBg[t.pri]+';border:1px solid '+priColors[t.pri]+';border-radius:6px;padding:2px 5px;">'+priLabel[t.pri]+'</span>'+
-        '<button onclick="'+t.action+'" style="font-size:11px;font-weight:800;background:var(--blu);color:#fff;border:none;border-radius:8px;padding:6px 10px;cursor:pointer;white-space:nowrap;">'+t.actionLabel+'</button>'+
-      '</div>'+
-    '</div>';
-  }).join('');
-}
-
-// Update Review badge whenever products change
-function updReviewBadge(){
-  try{
-    var tasks=generateReviewTasks();
-    var p1=tasks.filter(function(t){return t.pri===1;}).length;
-    var rwBadge=document.getElementById('rwbg');
-    if(rwBadge){rwBadge.style.display=p1>0?'inline-block':'none';rwBadge.textContent=p1;}
-  }catch(e){}
-}
-// ════════════════════════════════════════════════════════════════════════════
-// END REVIEW WORKSPACE ENGINE
-// ════════════════════════════════════════════════════════════════════════════
 // ── SPRINT 1: Storage health utility (call from console anytime) ─────────────
 function getStorageHealth(){
   try{
@@ -2954,63 +1902,47 @@ function pd2(){pinEnt=pinEnt.slice(0,-1);updDots();}
 function updDots(){for(var i=0;i<4;i++)document.getElementById('pd'+i).classList.toggle('f',i<pinEnt.length);}
 function chkPin(){/* legacy - not used */}
 function doLogin(){
-  // ===== TEMPORARY RC1a AUTH BYPASS =====
-  // TESTING BUILD ONLY — Remove before production
-  // Set this flag to false to re-enable authentication
-  var RC1A_BYPASS_AUTH = true;
-
+  // ===== TEMPORARY RC1a AUTH BYPASS - REMOVE BEFORE PRODUCTION =====
+  var RC1A_BYPASS_AUTH=true;
   if(RC1A_BYPASS_AUTH){
-    // Set all session state exactly as a successful owner login would
-    role = 'owner';
-    document.getElementById('pin').style.display = 'none';
+    role='owner';
+    document.getElementById('pin').style.display='none';
     document.getElementById('app').classList.add('on');
-    document.getElementById('hrole').textContent = 'OWNER';
-    iD('cd_d'); iD('pm_d');
+    document.getElementById('hrole').textContent='OWNER';
+    iD('cd_d');iD('pm_d');
     try{updExpDL();}catch(e){}
-    try{renderAll();}catch(e){console.error('RC1a renderAll:',e);}
+    try{renderAll();}catch(e){console.error('renderAll:',e);}
     try{updBadges();}catch(e){}
     try{updReviewBadge();}catch(e){}
-    return; // Skip credential check entirely
-  }
-  // ===== END TEMPORARY RC1a AUTH BYPASS =====
-
-  // Real authentication (password-only, first-time sets password)
-  var errEl = document.getElementById('perr');
-  if(errEl) errEl.textContent = '';
-  var pass = (document.getElementById('loginPass')||{value:''}).value;
-  if(!pass){
-    if(errEl) errEl.textContent = 'Enter your password to continue.';
     return;
   }
-  var saved = localStorage.getItem('pbsrx_owner_pass');
-  var ok = false;
-  if(!saved){
-    localStorage.setItem('pbsrx_owner_pass', pass);
-    ok = true;
-  } else {
-    ok = (pass === saved);
-  }
+  // ===== END BYPASS - Real auth below =====
+  var errEl=document.getElementById('perr');
+  if(errEl)errEl.textContent='';
+  var pass=(document.getElementById('loginPass')||{value:''}).value;
+  if(!pass){if(errEl)errEl.textContent='Enter your password.';return;}
+  var saved=localStorage.getItem('pbsrx_owner_pass');
+  var ok=false;
+  if(!saved){localStorage.setItem('pbsrx_owner_pass',pass);ok=true;}
+  else{ok=(pass===saved);}
   if(ok){
-    role = 'owner';
-    document.getElementById('pin').style.display = 'none';
+    role='owner';
+    document.getElementById('pin').style.display='none';
     document.getElementById('app').classList.add('on');
-    document.getElementById('hrole').textContent = 'OWNER';
-    iD('cd_d'); iD('pm_d');
+    document.getElementById('hrole').textContent='OWNER';
+    iD('cd_d');iD('pm_d');
     try{updExpDL();}catch(e){}
     try{renderAll();}catch(e){console.error('renderAll:',e);}
     try{updBadges();}catch(e){}
     try{updReviewBadge();}catch(e){}
     if(!localStorage.getItem('pbsrx_v2_seen')){
-      toast('Welcome to PBSRx - D-Glopa Pharm LTD.!', 4500);
+      toast('Welcome to PBSRx - D-Glopa Pharm LTD.!',4500);
       localStorage.setItem('pbsrx_v2_seen','1');
     }
-  } else {
-    if(errEl) errEl.textContent = 'Incorrect password.';
-    var inp = document.getElementById('loginPass');
-    if(inp){
-      inp.style.borderColor = '#f87171';
-      setTimeout(function(){ inp.style.borderColor = 'rgba(255,255,255,0.15)'; }, 1500);
-    }
+  }else{
+    if(errEl)errEl.textContent='Incorrect password.';
+    var inp=document.getElementById('loginPass');
+    if(inp){inp.style.borderColor='#f87171';setTimeout(function(){inp.style.borderColor='rgba(255,255,255,0.15)';},1500);}
   }
 }
 function signOut(){
@@ -3337,7 +2269,6 @@ return '<div class="pulse-row" id="pr_'+p.id+'" onclick="togglePulseRow('+p.id+'
 '<div style="width:10px;height:10px;border-radius:50%;background:'+col+';flex-shrink:0;box-shadow:0 0 6px '+col+'88;"></div>'+
 '<div style="flex:1;min-width:0;">'+
 '<div style="font-size:13px;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+p.genericName+(p.strength?' <span style="font-size:11px;color:var(--mut);">'+p.strength+'</span>':'')+expWarn+'</div>'+
-(p.shelfLocation?'<div style="font-size:10px;color:var(--mut);">&#128205; '+escH(p.shelfLocation)+'</div>':'')+
 '</div>'+
 '<div style="text-align:right;flex-shrink:0;">'+
 '<div style="font-size:13px;font-weight:900;color:'+col+';">'+cur+'</div>'+
@@ -3349,7 +2280,7 @@ return '<div class="pulse-row" id="pr_'+p.id+'" onclick="togglePulseRow('+p.id+'
 '<div id="prx_'+p.id+'" style="display:none;background:var(--card);border:1px solid '+col+'44;border-radius:10px;margin-top:-2px;margin-bottom:4px;padding:12px;animation:fadeIn .2s;">'+
 '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">'+
 '<div><div style="font-size:15px;font-weight:900;color:var(--txt);">'+p.genericName+(p.strength?' '+p.strength:'')+'</div>'+
-'<div style="font-size:12px;color:var(--mut);">'+(p.brandName||'')+(p.category?' · '+p.category:'')+(p.shelfLocation?' · &#128205; '+escH(p.shelfLocation):'')+'</div></div>'+
+'<div style="font-size:12px;color:var(--mut);">'+(p.brandName||'')+(p.category?' · '+p.category:'')+'</div></div>'+
 '<span style="background:'+col+'22;color:'+col+';font-size:11px;font-weight:800;padding:3px 8px;border-radius:20px;">'+(lbl==='Crit'?'Critical':lbl)+'</span>'+
 '</div>'+
 // Progress bar
@@ -3439,7 +2370,7 @@ function editProd(id){
 id=Number(id);var p=S.products.find(function(x){return x.id===id;});if(!p)return;
 goTo(9,document.getElementById('nb9'));setIcTab(9);
 setTimeout(function(){
-var map={np_g:'genericName',np_br:'brandName',np_st:'strength',np_bc2:'barcode',np_nf:'nafdac',np_us:'unitsPerPack',np_mn:'minStock',np_rq:'reorderQty',np_co:'costPrice',np_sp_base:'sellPrice',np_u2:'unit2',np_u2q:'unit2qty',np_u2p:'unit2price',np_u3:'unit3',np_u3q:'unit3qty',np_u3p:'unit3price',np_shelf:'shelfLocation'};
+var map={np_g:'genericName',np_br:'brandName',np_st:'strength',np_bc2:'barcode',np_nf:'nafdac',np_us:'unitsPerPack',np_mn:'minStock',np_rq:'reorderQty',np_co:'costPrice',np_sp_base:'sellPrice',np_u2:'unit2',np_u2q:'unit2qty',np_u2p:'unit2price',np_u3:'unit3',np_u3q:'unit3qty',np_u3p:'unit3price'};
 Object.keys(map).forEach(function(fid){var el=document.getElementById(fid);if(el)el.value=p[map[fid]]||'';});
 var fo=document.getElementById('np_fo');if(fo)fo.value=p.form||'';
 var ca=document.getElementById('np_ca');if(ca)ca.value=p.category||'Analgesic';
@@ -3594,7 +2525,6 @@ form:document.getElementById('np_fo').value,category:document.getElementById('np
 barcode:document.getElementById('np_bc2').value.trim(),nafdac:document.getElementById('np_nf').value.trim(),
 packType:document.getElementById('np_pt').value,unitsPerPack:Number(document.getElementById('np_us').value)||1,
 sellUnit:document.getElementById('np_su').value,
-shelfLocation:(document.getElementById('np_shelf')?document.getElementById('np_shelf').value.trim():(ex?ex.shelfLocation||'':'')),
 sellPrice:Number(document.getElementById('np_sp_base').value)||Number(document.getElementById('np_sp').value)||0,
 unit2:u2,unit2qty:u2q,unit2price:u2p,
 unit3:u3,unit3qty:u3q,unit3price:u3p,
@@ -3606,7 +2536,7 @@ if(ex)S.products=S.products.map(function(p){return p.id===id?prod:p;});else S.pr
 var iq=Number(document.getElementById('np_iq').value)||0;
 if(iq>0){S.stock.push({id:Date.now()+1,productId:id,qty:iq,unit:prod.sellUnit,batch:document.getElementById('np_ib').value||'OPENING',expiry:document.getElementById('np_ie').value||'',cost:prod.costPrice,date:td(),depleted:false});}
 save();
-['np_g','np_br','np_st','np_bc2','np_nf','np_us','np_mn','np_rq','np_co','np_sp_base','np_sp','np_u2','np_u2q','np_u2p','np_u3','np_u3q','np_u3p','np_iq','np_ib','np_ie','np_shelf'].forEach(function(fid){var el=document.getElementById(fid);if(el)el.value='';});
+['np_g','np_br','np_st','np_bc2','np_nf','np_us','np_mn','np_rq','np_co','np_sp_base','np_sp','np_u2','np_u2q','np_u2p','np_u3','np_u3q','np_u3p','np_iq','np_ib','np_ie'].forEach(function(fid){var el=document.getElementById(fid);if(el)el.value='';});
 document.getElementById('np_fm').checked=true;
 renderPulse();updBadges();toast((ex?'Updated: ':'Added: ')+gen+(iq?' with '+iq+' opening stock':''));
 // Add to session tray
@@ -4032,9 +2962,8 @@ var cs=S.products.filter(function(p){return p.isFastMover&&(getStatus(p)==='crit
 var sb=document.getElementById('sbg');if(sb){sb.style.display=cs?'flex':'none';sb.textContent=cs;}
 var hs=S.suppliers.filter(function(s){return s.priority==='high'&&getSupplierBalance(s.id)>0;}).length;
 var spb=document.getElementById('supbg');if(spb){spb.style.display=hs?'flex':'none';spb.textContent=hs;}
-  try{updReviewBadge();}catch(e){}
 }
-function renderAll(){try{updProdCount();}catch(e){}renderPulse();renderExpiry();renderCashHist();renderSup();renderDash();try{updReviewBadge();}catch(e){}}
+function renderAll(){try{updProdCount();}catch(e){}renderPulse();renderExpiry();renderCashHist();renderSup();renderDash();}
 
 // ── BACKUP / PINS ────────────────────────────────────────────────────────────
 function saveToDrive(){
@@ -4082,12 +3011,9 @@ toast('PINs updated successfully.');
 
 // ── PWA MANIFEST (inline) ────────────────────────────────────────────────────
 function installPWA(){
-// RC1 FIX: relative start_url for GitHub Pages subpath compatibility
-// Icons are canvas-generated - no external files needed
 var manifest={
   name:'PBSRx - Pharmacy Business System',
   short_name:'PBSRx',
-  description:'Phoenix Edition - Pharmacy Operating System',
   start_url:'./',
   scope:'./',
   display:'standalone',
@@ -4102,8 +3028,7 @@ var manifest={
   ]
 };
 var blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
-var blobUrl=URL.createObjectURL(blob);
-document.getElementById('manifestPlaceholder').href=blobUrl;
+document.getElementById('manifestPlaceholder').href=URL.createObjectURL(blob);
 }
 function getPhaIcon(size){
 var c=document.createElement('canvas');c.width=size;c.height=size;var ctx=c.getContext('2d');
@@ -4124,19 +3049,18 @@ ctx.fillStyle='rgba(255,255,255,0.85)';ctx.font='bold '+Math.round(size*0.13)+'p
 return c.toDataURL('image/png');
 }
 
-// ── SWIPE & NAV — RC1 STABILIZED ────────────────────────────────────────────
-// FIX: Removed double declaration of _swTouchX/_swTouchY (variable shadowing bug)
-// FIX: Android left-edge swipe (system back) excluded by origin check
-// FIX: Overlays (.ov) fully excluded from swipe detection
-// FIX: Minimum swipe distance 80px + velocity guard prevents accidental triggers
-// FIX: Gesture cancelled if vertical movement exceeds horizontal (it was a scroll)
-var _swTouchX=0,_swTouchY=0,_swActive=false,_swCancelled=false;
+// ── SWIPE GUARD ──────────────────────────────────────────────────────────────
+// Blocks browser back/forward and pull-to-refresh on page content.
+// The nav bar (#mainNav) and any horizontally scrollable element is exempt.
+// Vertical scroll is always preserved.
+var _swTouchX=0,_swTouchY=0;
 // ── NAV HISTORY for swipe-back ────────────────────────────────────────────────
 var _navHistory=[];
+var _origGoTo=null;
 function navPush(idx){if(_navHistory[_navHistory.length-1]!==idx)_navHistory.push(idx);}
 function navBack(){
   if(_navHistory.length>1){
-    _navHistory.pop();
+    _navHistory.pop(); // remove current
     var prev=_navHistory[_navHistory.length-1];
     goToNoHistory(prev);
   }
@@ -4159,73 +3083,55 @@ function goToNoHistory(idx,el){
   if(idx===6){try{renderRuleBasedCoach();}catch(e){}}
   if(idx===8){renderCustomers();try{setSfTab(0);}catch(e){}}
   if(idx===9){try{renderIntakeSummary();setIcTab(2);setTimeout(function(){icSetQuickCapture('aisnap');},100);}catch(e){}}
-  if(idx===11){try{renderReviewWorkspace();}catch(e){}}
   if(idx===10){try{renderIntel();}catch(e){}}
 }
 function initSwipe(){
-// RC1: Lock history to prevent Android back gesture from exiting the app
+// Lock history so back button cannot exit the app
 history.pushState(null,null,location.href);
 window.addEventListener('popstate',function(){
-  history.pushState(null,null,location.href);
-  // Android back button = swipe back in nav history
-  navBack();
+history.pushState(null,null,location.href);
 });
-// RC1: Unified touch handlers using the outer _sw* variables (fixed shadowing)
+var _swTouchX=0,_swTouchY=0,_swActive=false;
 document.addEventListener('touchstart',function(e){
-  _swTouchX=e.touches[0].clientX;
-  _swTouchY=e.touches[0].clientY;
-  _swActive=true;
-  _swCancelled=false;
-  // FIX: Exclude Android left-edge system gesture (originates within 20px of left)
-  if(_swTouchX < 20){ _swCancelled=true; }
+_swTouchX=e.touches[0].clientX;
+_swTouchY=e.touches[0].clientY;
+_swActive=true;
 },{passive:true});
-
 document.addEventListener('touchmove',function(e){
-  if(_swCancelled)return;
-  var dx=Math.abs(e.touches[0].clientX-_swTouchX);
-  var dy=Math.abs(e.touches[0].clientY-_swTouchY);
-  // FIX: If vertical movement exceeds horizontal early, mark as scroll and cancel swipe tracking
-  if(dy>dx&&dy>15){ _swCancelled=true; return; }
-  var t=e.target;
-  var inScrollable=false;
-  while(t&&t!==document.body){
-    // FIX: Exclude nav, any overlay (.ov), modals, and horizontally scrollable elements
-    if(t.id==='mainNav'||t.classList.contains('ov')||
-       t.classList.contains('modal')||t.id==='receiptModal'||t.id==='prodMgrModal'){
-      inScrollable=true; break;
-    }
-    if(t.scrollWidth>t.clientWidth+4&&getComputedStyle(t).overflowX!=='hidden'){
-      inScrollable=true; break;
-    }
-    t=t.parentElement;
-  }
-  if(inScrollable){ _swCancelled=true; return; }
-  // Block horizontal swipes on page content (prevents browser back/forward)
-  if(dx>dy&&dx>12){ e.preventDefault(); return; }
-  // Pull-to-refresh guard
-  if(dy>dx&&_swTouchY<80&&e.touches[0].clientY>_swTouchY+20){ e.preventDefault(); }
+var dx=Math.abs(e.touches[0].clientX-_swTouchX);
+var dy=Math.abs(e.touches[0].clientY-_swTouchY);
+// Allow touch on the nav bar and any element with horizontal scroll
+var t=e.target;
+var inScrollable=false;
+while(t&&t!==document.body){
+if(t.id==='mainNav'){inScrollable=true;break;}
+if(t.scrollWidth>t.clientWidth+2&&getComputedStyle(t).overflowX!=='hidden'){inScrollable=true;break;}
+t=t.parentElement;
+}
+if(inScrollable)return;
+// Block horizontal swipes on page content (prevents browser back/fwd)
+if(dx>dy&&dx>10){e.preventDefault();return;}
+// Pull-to-refresh guard
+if(dy>dx&&_swTouchY<60&&e.touches[0].clientY>_swTouchY){e.preventDefault();return;}
 },{passive:false});
-
 document.addEventListener('touchend',function(e){
-  if(!_swActive||_swCancelled){ _swActive=false; return; }
-  var ex=e.changedTouches[0].clientX;
-  var ey=e.changedTouches[0].clientY;
-  var dx=ex-_swTouchX;
-  var dy=Math.abs(ey-_swTouchY);
-  _swActive=false;
-  // FIX: Exclude overlays and modals at touchend too
-  var t=e.target;
-  while(t&&t!==document.body){
-    if(t.classList.contains('ov')||t.id==='mainNav'||
-       t.classList.contains('modal')||t.id==='receiptModal'){return;}
-    t=t.parentElement;
-  }
-  // FIX: Minimum 80px swipe + must be 2x more horizontal than vertical + must start from right of screen
-  // This prevents accidental back-navigation from normal taps or short swipes
-  if(dx>80&&Math.abs(dx)>dy*2&&_swTouchX>60){
-    navBack();
-  }
-  // Swipe LEFT: reserved — no action
+if(!_swActive)return;
+var ex=e.changedTouches[0].clientX;
+var ey=e.changedTouches[0].clientY;
+var dx=ex-_swTouchX;
+var dy=Math.abs(ey-_swTouchY);
+_swActive=false;
+// Ignore if inside nav bar or modal
+var t=e.target;
+while(t&&t!==document.body){
+if(t.id==='mainNav'||t.classList.contains('modal')||t.classList.contains('receipt-modal')||t.id==='receiptModal'||t.id==='prodMgrModal'){return;}
+t=t.parentElement;
+}
+// Swipe RIGHT (dx > 60, predominantly horizontal) → go back
+if(dx>60&&Math.abs(dx)>dy*1.5){
+navBack();
+}
+// Swipe LEFT: currently reserved, no action to prevent accidental nav
 },{passive:true});
 }
 // ── INIT ─────────────────────────────────────────────────────────────────────
@@ -5710,7 +4616,7 @@ var unitStr=units.map(function(u){return u.name+' '+N(u.price);}).join(' · ');
 return '<div class="pos-dd-row" onclick="posSelectFromDropdown('+p.id+')" style="padding:11px 14px;border-bottom:1px solid var(--bdr);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;active:background:var(--surf);">'+
 '<div style="flex:1;min-width:0;">'+
 '<div style="font-size:14px;font-weight:800;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+escH(p.genericName)+(p.strength?' <span style="color:var(--mut);font-weight:600;font-size:12px;">'+escH(p.strength)+'</span>':'')+(p.brandName?' <span style="color:var(--mut);font-size:11px;">('+escH(p.brandName)+')</span>':'')+'</div>'+
-'<div style="font-size:11px;color:var(--mut);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+escH(unitStr)+(p.shelfLocation?' &nbsp;&#128205; '+escH(p.shelfLocation):'')+'</div>'+
+'<div style="font-size:11px;color:var(--mut);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+escH(unitStr)+'</div>'+
 '</div>'+
 '<div style="text-align:right;flex-shrink:0;">'+
 '<div style="font-size:11px;font-weight:800;color:'+stockColor+';">'+stock+' left</div>'+
@@ -6233,13 +5139,13 @@ return '';
 }
 function downloadTemplate(type){
 var headers={
-products:'Generic Name,Brand Name,Strength/Size,Form,Category,Barcode/NAFDAC,Cost Price,Sell Price,Qty on Hand,Reorder Level,Supplier,Expiry Date (YYYY-MM),Shelf,Ownership,Notes',
+products:'Generic Name,Brand Name,Strength/Size,Form,Category,Barcode/NAFDAC,Cost Price,Sell Price,Qty on Hand,Reorder Level,Supplier,Expiry Date (YYYY-MM)',
 suppliers:'Supplier Name,Contact Person,Phone,Email,Address,Notes',
 customers:'Full Name,Phone,Notes',
 sales:'Date (YYYY-MM-DD),Product Name,Qty Sold,Unit Price,Total,Customer Name,Payment Method'
 };
 var example={
-products:'Amoxicillin,Amoxil,500mg,Capsule,Antibiotics,A4-1234,850,1200,50,10,Emzor,2027-06,S03,O,',
+products:'Amoxicillin,Amoxil,500mg,Capsule,Antibiotics,A4-1234,850,1200,50,10,Emzor,2027-06',
 suppliers:'Emzor Pharmaceuticals,Sales Rep,08012345678,emzor@email.com,Lagos,Pay within 30 days',
 customers:'Mrs Adaeze Obi,08098765432,Hypertensive - regular customer',
 sales:'2024-01-15,Amoxicillin 500mg,2,1200,2400,Mrs Adaeze Obi,Cash'
@@ -6267,14 +5173,6 @@ if(existing){
 existing.costPrice=Number(findCol(r,['cost price','cost_price','purchase price','unit cost']))||existing.costPrice;
 existing.sellPrice=Number(findCol(r,['sell price','sell_price','sales price','selling price']))||existing.sellPrice;
 }else{
-// PX-MIG-002C: Extended import with shelfLocation and migration metadata
-var ownership=findCol(r,['ownership','owner','stock type']);
-var shelfRaw=findCol(r,['shelf','shelf location','shelf_location','shelf no','shelf number']);
-var notesRaw=findCol(r,['notes','remarks']);
-// Encode ownership and shelf as structured notes tags for PID migration
-var migNotes=notesRaw||'';
-if(ownership==='O'||ownership==='C'){migNotes=(migNotes?migNotes+' ':'')+'[PID:'+ownership+']';}
-if(ownership==='Review'){migNotes=(migNotes?migNotes+' ':'')+'[PID:REVIEW] Ownership unconfirmed — verify before sale';}
 S.products.push({
 id:'p'+Date.now()+Math.random().toString(36).slice(2,5),
 genericName:name,
@@ -6288,10 +5186,6 @@ costPrice:Number(findCol(r,['cost price','cost_price','purchase price','unit cos
 sellPrice:Number(findCol(r,['sell price','sell_price','sales price','selling price']))||0,
 reorderLevel:Number(findCol(r,['reorder level','reorder_level','reorder point']))||5,
 supplier:findCol(r,['supplier','vendor']),
-shelfLocation:shelfRaw||'',
-notes:migNotes,
-imported:true,
-migrationSource:'csv-import'
 });
 var qty=Number(findCol(r,['qty on hand','qty','quantity','stock']));
 if(qty>0){var pid=S.products[S.products.length-1].id;S.stock.push({id:'sk'+Date.now(),productId:pid,qty:qty,expiry:findCol(r,['expiry date','expiry','expiry_date'])||'',date:td()});}
@@ -7363,8 +6257,7 @@ w.document.write(
 '<div class="ft">Thank you for your patronage!<br>PBSRx Pharmacy System</div>'+
 '</div>'+
 '<div class="noprint" style="text-align:center;margin-top:10px;"><button onclick="window.print()" style="padding:10px 24px;font-size:14px;cursor:pointer;">Print</button></div>'+
-'
-</body></html>'
+'</body></html>'
 );
 w.document.close();w.focus();
 setTimeout(function(){w.print();},400);
@@ -8521,13 +7414,12 @@ function setIcTab(idx){
   icTab=idx;
   // Hide quick capture panels when switching to any tool tab
   icHideQuickCapture();
-  [0,1,2,3,4,7,8,9,10,11].forEach(function(i){
+  [0,1,2,3,4,7,8,9,10].forEach(function(i){
     var btn=document.getElementById('icTab'+i);
-    if(btn){btn.style.background=i===idx?'var(--amb)':'none';btn.style.color=i===idx?'#000':'var(--mut)';
-    if(i===idx){setTimeout(function(){btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});},80);}}
+    if(btn){btn.style.background=i===idx?'var(--amb)':'none';btn.style.color=i===idx?'#000':'var(--mut)';}
   });
-  // panels: 0=PO,1=Receive,2=Search,3=Returns,4=GRNHistory,7=Bulk,8=Suppliers,9=NewProd,10=Import,11=Migration
-  var panelMap={0:'icPanelPO',1:'icPanelReceive',2:'icPanelSearch',3:'icPanelReturns',4:'icPanelHistory',7:'icPanelBulk',8:'icPanelSuppliers',9:'icPanelNewProd',10:'icPanelImport',11:'icPanelMigration'};
+  // panels: 0=PO, 1=Receive, 2=Search, 3=Returns, 4=GRNHistory, 7=Bulk, 8=Suppliers, 9=NewProd, 10=Import
+  var panelMap={0:'icPanelPO',1:'icPanelReceive',2:'icPanelSearch',3:'icPanelReturns',4:'icPanelHistory',7:'icPanelBulk',8:'icPanelSuppliers',9:'icPanelNewProd',10:'icPanelImport'};
   Object.keys(panelMap).forEach(function(i){var el=document.getElementById(panelMap[i]);if(el)el.style.display=Number(i)===idx?'block':'none';});
   if(idx===0)renderPOList();
   if(idx===1)initReceivePanel();
@@ -10648,7 +9540,6 @@ function saveIntakeNewProd(){
     nafdac:     (document.getElementById('icnp_nf')||{value:''}).value.trim(),
     barcode:    (document.getElementById('icnp_bc')||{value:''}).value.trim(),
     sellUnit:   (document.getElementById('icnp_su')||{value:'unit'}).value.trim()||'unit',
-    shelfLocation: (document.getElementById('icnp_shelf')||{value:''}).value.trim(),
     minStock:   Number((document.getElementById('icnp_mn')||{value:10}).value)||10,
     reorderQty: 0,
     costPrice:  cost,
@@ -11391,9 +10282,9 @@ Thank you for your patronage! 🙏<br>Powered by PBSRx
 <script>
 if('serviceWorker' in navigator){
   window.addEventListener('load',function(){
-    navigator.serviceWorker.register('./sw.js').then(function(reg){
-      console.log('PBSRx SW registered:',reg.scope);
-    }).catch(function(e){console.log('SW reg failed:',e);});
+    navigator.serviceWorker.register('./sw.js').then(function(r){
+      console.log('PBSRx SW:',r.scope);
+    }).catch(function(e){console.warn('SW failed:',e);});
   });
 }
 </script>

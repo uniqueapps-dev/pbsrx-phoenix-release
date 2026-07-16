@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>PBSRx — Intake</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1115;
+  --card: #1a1d23;
+  --card2: #21252d;
+  --border: #2a2e38;
+  --amber: #f59e0b;
+  --amber-dim: #b45309;
+  --amber-glow: rgba(245,158,11,0.12);
+  --text: #e8eaf0;
+  --muted: #6b7280;
+  --red: #ef4444;
+  --green: #22c55e;
+  --green-glow: rgba(34,197,94,0.1);
+  --blue: #3b82f6;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+/* ── HEADER ────────────────────────────────────────────── */
+.header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 16px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 2px;
+  color: var(--amber);
+  line-height: 1;
+}
+
+.brand span {
+  color: var(--muted);
+  font-size: 11px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  letter-spacing: 1px;
+  display: block;
+  margin-top: 1px;
+}
+
+/* ── CAPTURE BAR ───────────────────────────────────────── */
+.capture-bar {
+  display: flex;
+  gap: 8px;
+}
+
+.capture-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 6px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+
+.capture-btn:active, .capture-btn.active {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: var(--amber-glow);
+}
+
+.capture-btn-icon { font-size: 20px; }
+
+/* ── DATE BAR ──────────────────────────────────────────── */
+.date-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 0;
+}
+
+.date-bar-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.date-picker-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+}
+
+.date-picker-btn.backdated { border-color: var(--amber-dim); color: var(--amber); }
+
+#intakeDateInput {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.backdate-warning {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  background: rgba(245,158,11,0.1);
+  border: 1px solid var(--amber-dim);
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--amber);
+  margin: 6px 16px 0;
+}
+
+.backdate-warning.visible { display: flex; }
+
+/* ── MAIN ──────────────────────────────────────────────── */
+.main { padding: 16px; }
+
+/* ── CAMERA ────────────────────────────────────────────── */
+.camera-section {
+  display: none;
+  margin-bottom: 16px;
+}
+
+.camera-section.visible { display: block; }
+
+.camera-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+  border: 2px solid var(--border);
+}
+
+#cameraVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.camera-frame {
+  width: 60%;
+  aspect-ratio: 3/2;
+  border: 2px solid var(--amber);
+  border-radius: 8px;
+  box-shadow: 0 0 0 2000px rgba(0,0,0,0.35);
+}
+
+.camera-shot-count {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.7);
+  border: 1px solid var(--amber);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--amber);
+}
+
+.camera-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0 4px;
+  gap: 10px;
+}
+
+.camera-shutter {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--amber);
+  border: 3px solid #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: transform 0.1s;
+}
+
+.camera-shutter:active { transform: scale(0.93); }
+
+.camera-shutter.disabled {
+  background: var(--muted);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.camera-thumbs {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  overflow-x: auto;
+}
+
+.camera-thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+}
+
+.camera-thumb.pending {
+  background: var(--card2);
+  border: 2px dashed var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--muted);
+}
+
+.analyze-btn {
+  background: var(--amber);
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 17px;
+  letter-spacing: 1.5px;
+  color: #000;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+
+.analyze-btn:disabled { opacity: 0.35; pointer-events: none; }
+
+.camera-stop-btn {
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── SEARCH BAR ────────────────────────────────────────── */
+.search-section {
+  display: none;
+  margin-bottom: 16px;
+}
+
+.search-section.visible { display: block; }
+
+.search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 0 14px;
+  transition: border-color 0.2s;
+}
+
+.search-wrap:focus-within { border-color: var(--amber); }
+.search-wrap input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  padding: 13px 0;
+}
+.search-wrap input::placeholder { color: var(--muted); }
+
+.search-results-list {
+  background: var(--card);
+  border: 1.5px solid var(--amber-dim);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 8px;
+  display: none;
+}
+
+.search-results-list.visible { display: block; }
+
+.search-result-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.search-result-row:last-child { border-bottom: none; }
+.search-result-row:active { background: var(--card2); }
+
+.srr-name { font-weight: 600; font-size: 14px; }
+.srr-units { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.srr-arrow { color: var(--amber); font-size: 18px; }
+
+/* ── MATCH BANNER ──────────────────────────────────────── */
+.match-banner {
+  display: none;
+  background: var(--card);
+  border: 1.5px solid var(--amber-dim);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  animation: slideIn 0.2s ease;
+}
+
+.match-banner.visible { display: block; }
+
+.match-banner-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.match-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.match-item:last-child { border-bottom: none; }
+
+.match-name { font-weight: 600; font-size: 14px; }
+.match-units { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+.match-actions { display: flex; gap: 8px; }
+
+.btn-use {
+  background: var(--amber);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #000;
+  cursor: pointer;
+}
+
+.btn-new {
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+/* ── INTAKE FORM ───────────────────────────────────────── */
+.intake-form {
+  display: none;
+}
+
+.intake-form.visible { display: block; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Section header */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+}
+
+.section-title.amber { color: var(--amber); }
+
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Form card */
+.form-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.field-block { margin-bottom: 14px; }
+.field-block:last-child { margin-bottom: 0; }
+
+.field-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+
+.field-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.field-input:focus { border-color: var(--amber); }
+.field-input::placeholder { color: var(--muted); }
+
+select.field-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+/* ── UNITS TABLE ───────────────────────────────────────── */
+.units-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.unit-row-form {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.unit-row-form.base-unit {
+  border-color: var(--amber-dim);
+  background: var(--amber-glow);
+}
+
+.unit-field {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  -moz-appearance: textfield;
+}
+
+.unit-field::-webkit-inner-spin-button,
+.unit-field::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+.unit-field::placeholder { color: var(--muted); }
+.unit-field.name-f { flex: 2; min-width: 0; }
+.unit-field.price-f { flex: 2; min-width: 0; text-align: right; }
+.unit-field.conv-f { flex: 1.5; min-width: 0; text-align: right; }
+
+.unit-divider {
+  color: var(--muted);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.unit-base-badge {
+  background: var(--amber);
+  color: #000;
+  font-size: 9px;
+  font-weight: 800;
+  border-radius: 4px;
+  padding: 2px 5px;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.unit-del-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+
+.unit-del-btn:active { color: var(--red); }
+
+.add-unit-btn {
+  width: 100%;
+  background: none;
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  padding: 11px;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  text-align: center;
+}
+
+.add-unit-btn:active { border-color: var(--amber); color: var(--amber); }
+
+/* ── STOCK ENTRY ───────────────────────────────────────── */
+.stock-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.stock-row .field-block { flex: 1; margin-bottom: 0; }
+
+/* ── PROFIT ANALYSIS ───────────────────────────────────── */
+.profit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.profit-row:last-child { border-bottom: none; }
+.profit-row-label { color: var(--muted); }
+.profit-row-value { font-weight: 700; color: var(--text); }
+.profit-row-value.green { color: var(--green); }
+.profit-row-value.amber { color: var(--amber); }
+.profit-row-value.red { color: var(--red); }
+
+.profit-footer {
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 10px;
+}
+
+.profit-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.profit-footer-row:last-child { margin-bottom: 0; }
+
+.pfl { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+
+.pfv {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 1px;
+  color: var(--text);
+}
+
+.pfv.green { color: var(--green); }
+.pfv.amber { color: var(--amber); }
+
+/* ── FINANCIALS ────────────────────────────────────────── */
+.fin-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+/* ── VALIDATION ERROR ──────────────────────────────────── */
+.field-error {
+  font-size: 11px;
+  color: var(--red);
+  margin-top: 5px;
+  display: none;
+}
+
+.field-error.visible { display: block; }
+
+/* ── ACTION BUTTONS ────────────────────────────────────── */
+.action-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.btn-primary {
+  flex: 2;
+  background: var(--amber);
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: #000;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.btn-primary:active { transform: scale(0.98); opacity: 0.9; }
+
+.btn-secondary {
+  flex: 1;
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+/* ── AI STATUS ─────────────────────────────────────────── */
+.ai-status {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.ai-status.visible { display: flex; }
+.ai-spinner { animation: spin 1s linear infinite; font-size: 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── SUPPLIER QUICK CREATE ─────────────────────────────── */
+.supplier-add-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.supplier-add-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  display: none;
+}
+
+.supplier-add-input.visible { display: block; }
+.supplier-add-input:focus { border-color: var(--amber); }
+
+.btn-add-supplier {
+  background: var(--amber-glow);
+  border: 1.5px solid var(--amber-dim);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: var(--amber);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ── TOAST ─────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.error { border-color: var(--red); color: var(--red); }
+.toast.success { border-color: var(--green); color: var(--green); }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ──────────────────────────────────────────── -->
+<div class="header">
+  <div class="header-top">
+    <div class="brand">PBSRx <span>STOCK INTAKE</span></div>
+    <button style="background:none;border:none;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="resetAll()">✕ Clear</button>
+  </div>
+  <div class="capture-bar">
+    <button class="capture-btn" id="btnCamera" onclick="toggleCamera()">
+      <span class="capture-btn-icon">📷</span>
+      <span>CAPTURE</span>
+    </button>
+    <button class="capture-btn" id="btnSearch" onclick="toggleSearch()">
+      <span class="capture-btn-icon">🔍</span>
+      <span>SEARCH</span>
+    </button>
+    <button class="capture-btn" onclick="document.getElementById('uploadInput').click()">
+      <span class="capture-btn-icon">⬆</span>
+      <span>UPLOAD</span>
+    </button>
+    <input type="file" id="uploadInput" accept="image/*" multiple style="display:none" onchange="handleUpload(this.files)">
+  </div>
+</div>
+
+<!-- ── DATE BAR ────────────────────────────────────────── -->
+<div class="date-bar">
+  <span class="date-bar-label">Intake Date:</span>
+  <div class="date-picker-btn" id="intakeDateBtn">
+    <span id="intakeDateDisplay">Today</span>
+    <span>📅</span>
+    <input type="date" id="intakeDateInput" onchange="onIntakeDateChange(this.value)">
+  </div>
+</div>
+<div class="backdate-warning" id="backdateWarn">⚠ Recording intake for past date</div>
+
+<!-- ── MAIN ────────────────────────────────────────────── -->
+<div class="main">
+
+  <!-- CAMERA -->
+  <div class="camera-section" id="cameraSection">
+    <div class="camera-viewport">
+      <video id="cameraVideo" autoplay playsinline muted></video>
+      <div class="camera-overlay">
+        <div class="camera-frame"></div>
+      </div>
+      <div class="camera-shot-count" id="shotCount">0 / 3</div>
+    </div>
+    <div class="camera-controls">
+      <button class="camera-stop-btn" onclick="stopCamera()">Stop</button>
+      <button class="camera-shutter" id="shutterBtn" onclick="captureShot()">📸</button>
+      <button class="analyze-btn" id="analyzeBtn" disabled onclick="runAIAnalysis()">ANALYZE</button>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:6px;" id="thumbsRow"></div>
+  </div>
+
+  <!-- AI STATUS -->
+  <div class="ai-status" id="aiStatus">
+    <span class="ai-spinner">⚙</span>
+    <span id="aiStatusText">Analyzing images…</span>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-section" id="searchSection">
+    <div class="search-wrap">
+      <span style="color:var(--muted);font-size:16px;">🔍</span>
+      <input type="text" id="intakeSearch" placeholder="Search product by name…" autocomplete="off" oninput="handleIntakeSearch(this.value)">
+      <button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;" onclick="clearIntakeSearch()">✕</button>
+    </div>
+    <div class="search-results-list" id="intakeResults"></div>
+  </div>
+
+  <!-- MATCH BANNER -->
+  <div class="match-banner" id="matchBanner">
+    <div class="match-banner-title">🔎 Possible Matches</div>
+    <div id="matchList"></div>
+  </div>
+
+  <!-- INTAKE FORM -->
+  <div class="intake-form" id="intakeForm">
+
+    <!-- ── PRODUCT IDENTITY ── -->
+    <div class="section-header">
+      <div class="section-title amber">Product</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="form-card">
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div class="field-block" style="flex:3;margin-bottom:0;">
+          <div class="field-label">Product Name *</div>
+          <input class="field-input" id="fProductName" type="text" placeholder="e.g. Amoxicillin 500mg Capsule" autocomplete="off">
+        </div>
+        <div class="field-block" style="flex:2;margin-bottom:0;">
+          <div class="field-label">Barcode (opt)</div>
+          <input class="field-input" id="fBarcode" type="text" placeholder="Scan or type">
+        </div>
+      </div>
+    </div>
+
+    <!-- ── AI EXTRACTED DATA ── -->
+    <div class="form-card" id="aiDataCard" style="display:none;">
+      <div class="section-header" style="margin-bottom:10px;">
+        <div class="section-title" style="font-size:13px;">AI Extracted Data</div>
+        <div class="section-line"></div>
+      </div>
+      <div id="aiDataRows" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+    </div>
+
+    <!-- ── SUPPLIER ── -->
+    <div class="section-header">
+      <div class="section-title amber">Supplier</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="form-card">
+      <div class="field-block">
+        <div class="field-label">Supplier</div>
+        <select class="field-input" id="fSupplier" onchange="onSupplierChange(this.value)">
+          <option value="">— Select supplier —</option>
+        </select>
+        <div class="supplier-add-row">
+          <input class="supplier-add-input" id="newSupplierName" type="text" placeholder="Supplier name" id="newSupplierInput">
+          <button class="btn-add-supplier" onclick="addSupplier()">＋ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── UNITS ── -->
+    <div class="section-header">
+      <div class="section-title amber">Units</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="form-card">
+      <div style="display:grid;grid-template-columns:2fr 2fr 1.5fr auto;gap:6px;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:8px;">
+        <span style="font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;">Unit</span>
+        <span style="font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;text-align:right;">Sell Price</span>
+        <span style="font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;text-align:right;">× Base</span>
+        <span></span>
+      </div>
+      <div class="units-table" id="unitsTable"></div>
+      <button class="add-unit-btn" onclick="addUnitRow()">＋ Add Selling Unit</button>
+    </div>
+
+    <!-- ── STOCK RECEIPT ── -->
+    <div class="section-header">
+      <div class="section-title amber">Stock Receipt</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="form-card">
+      <div class="stock-row">
+        <div class="field-block">
+          <div class="field-label">Qty Received *</div>
+          <input class="field-input" id="fQtyReceived" type="number" placeholder="0" min="0" step="any" oninput="recalcProfit()">
+        </div>
+        <div class="field-block">
+          <div class="field-label">Received In *</div>
+          <select class="field-input" id="fReceivedUnit" onchange="recalcProfit()"></select>
+        </div>
+      </div>
+      <div class="field-block">
+        <div class="field-label">Cost Price (per received unit) *</div>
+        <input class="field-input" id="fCostPrice" type="number" placeholder="₦0.00" min="0" step="any" oninput="recalcProfit()">
+        <div class="field-error" id="costPriceError">Selling price missing for this unit</div>
+      </div>
+    </div>
+
+    <!-- ── PROFIT ANALYSIS ── -->
+    <div class="section-header">
+      <div class="section-title amber">Invoice Valuation</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="form-card">
+      <div id="profitItemRows">
+        <div style="color:var(--muted);font-size:13px;text-align:center;padding:10px 0;">Fill in units and stock receipt to see analysis</div>
+      </div>
+      <div class="profit-footer" id="profitFooter" style="display:none;">
+        <div class="profit-footer-row">
+          <span class="pfl">Total Cost</span>
+          <span class="pfv amber" id="pfTotalCost">₦0</span>
+        </div>
+        <div class="profit-footer-row">
+          <span class="pfl">Selling Value</span>
+          <span class="pfv" id="pfSellingValue">₦0</span>
+        </div>
+        <div class="profit-footer-row">
+          <span class="pfl">Potential Profit</span>
+          <span class="pfv green" id="pfProfit">₦0</span>
+        </div>
+        <div class="profit-footer-row">
+          <span class="pfl">Margin</span>
+          <span class="pfv" id="pfMargin" style="font-size:18px;">0%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FINANCIALS ── -->
+    <div class="section-header">
+      <div class="section-title amber">Payment</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="form-card">
+      <div class="fin-row">
+        <div class="field-block" style="margin-bottom:0;">
+          <div class="field-label">Total Cost (auto)</div>
+          <input class="field-input" id="fTotalCost" type="text" readonly style="color:var(--amber);font-weight:700;">
+        </div>
+        <div class="field-block" style="margin-bottom:0;">
+          <div class="field-label">Amount Paid</div>
+          <input class="field-input" id="fAmountPaid" type="number" placeholder="₦0" min="0" step="any" oninput="calcBalance()">
+        </div>
+      </div>
+      <div class="field-block" style="margin-top:10px;margin-bottom:0;">
+        <div class="field-label">Balance / Credit</div>
+        <input class="field-input" id="fBalance" type="text" readonly style="color:var(--red);font-weight:700;">
+      </div>
+    </div>
+
+    <!-- ── SUBMIT ── -->
+    <div class="action-row">
+      <button class="btn-primary" onclick="submitIntake()">SAVE INTAKE</button>
+      <button class="btn-secondary" onclick="resetAll()">Clear</button>
+    </div>
+
+  </div><!-- /intake-form -->
+</div><!-- /main -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// DATA LAYER — shared localStorage keys with POS
+// ══════════════════════════════════════════════════════════
+function loadLS(key, fallback = []) {
+  try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
+  catch { return fallback; }
+}
+
+function saveLS(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); }
+  catch (e) { console.error('saveLS failed', key, e); }
+}
+
+// Generate product ID matching PBSRx convention
+function genId() {
+  return Date.now().toString().slice(-6) + Math.floor(Math.random() * 10);
+}
+
+// ── SUPPLIERS ────────────────────────────────────────────
+let suppliers = loadLS('pbsrx_suppliers', [
+  { id: '1', name: 'General Supplier' }
+]);
+
+function saveSuppliers() { saveLS('pbsrx_suppliers', suppliers); }
+
+function renderSupplierSelect() {
+  const sel = document.getElementById('fSupplier');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— Select supplier —</option>' +
+    suppliers.map(s => `<option value="${s.id}" ${s.id === cur ? 'selected' : ''}>${s.name}</option>`).join('') +
+    '<option value="__new">＋ Add new…</option>';
+  if (cur) sel.value = cur;
+}
+
+function onSupplierChange(val) {
+  const inp = document.getElementById('newSupplierName');
+  inp.classList.toggle('visible', val === '__new');
+  if (val === '__new') inp.focus();
+}
+
+function addSupplier() {
+  const name = document.getElementById('newSupplierName').value.trim();
+  if (!name) return;
+  if (suppliers.some(s => s.name.toLowerCase() === name.toLowerCase())) {
+    showToast('Supplier already exists', 'error'); return;
+  }
+  const s = { id: genId(), name };
+  suppliers.push(s);
+  saveSuppliers();
+  renderSupplierSelect();
+  document.getElementById('fSupplier').value = s.id;
+  document.getElementById('newSupplierName').value = '';
+  document.getElementById('newSupplierName').classList.remove('visible');
+}
+
+// ── DATE ─────────────────────────────────────────────────
+function todayISO() { return new Date().toISOString().slice(0, 10); }
+let intakeDate = todayISO();
+
+function fmtDateDisplay(d) {
+  if (d === todayISO()) return 'Today';
+  return new Date(d + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function initDate() {
+  const inp = document.getElementById('intakeDateInput');
+  inp.max = todayISO();
+  inp.value = todayISO();
+}
+
+function onIntakeDateChange(val) {
+  if (!val || val > todayISO()) { document.getElementById('intakeDateInput').value = intakeDate; return; }
+  intakeDate = val;
+  const bd = intakeDate !== todayISO();
+  document.getElementById('intakeDateDisplay').textContent = fmtDateDisplay(intakeDate);
+  document.getElementById('intakeDateBtn').classList.toggle('backdated', bd);
+  document.getElementById('backdateWarn').classList.toggle('visible', bd);
+}
+
+function resetDate() {
+  intakeDate = todayISO();
+  document.getElementById('intakeDateInput').value = intakeDate;
+  document.getElementById('intakeDateDisplay').textContent = 'Today';
+  document.getElementById('intakeDateBtn').classList.remove('backdated');
+  document.getElementById('backdateWarn').classList.remove('visible');
+}
+
+// ── FORMAT ───────────────────────────────────────────────
+function fmt(n) { return '₦' + Number(n || 0).toLocaleString('en-NG', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
+function fmtPct(n) { return (isNaN(n) || !isFinite(n)) ? '—' : n.toFixed(1) + '%'; }
+
+// ══════════════════════════════════════════════════════════
+// CAMERA
+// ══════════════════════════════════════════════════════════
+let stream = null;
+let shots = [];
+const MAX_SHOTS = 5;
+const MIN_SHOTS = 3;
+
+function toggleCamera() {
+  const sec = document.getElementById('cameraSection');
+  const btn = document.getElementById('btnCamera');
+  if (sec.classList.contains('visible')) {
+    stopCamera(); return;
+  }
+  closeSearch();
+  sec.classList.add('visible');
+  btn.classList.add('active');
+  startCamera();
+}
+
+async function startCamera() {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: 'environment' }, focusMode: 'continuous' },
+      audio: false
+    });
+    document.getElementById('cameraVideo').srcObject = stream;
+    shots = [];
+    updateShotUI();
+  } catch(e) {
+    showToast('Camera unavailable: ' + e.message, 'error');
+    stopCamera();
+  }
+}
+
+function stopCamera() {
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+  document.getElementById('cameraSection').classList.remove('visible');
+  document.getElementById('btnCamera').classList.remove('active');
+}
+
+function captureShot() {
+  if (!stream || shots.length >= MAX_SHOTS) return;
+  const video = document.getElementById('cameraVideo');
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth || 640;
+  canvas.height = video.videoHeight || 480;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+  shots.push(dataUrl);
+  updateShotUI();
+}
+
+function updateShotUI() {
+  document.getElementById('shotCount').textContent = shots.length + ' / ' + MIN_SHOTS;
+  document.getElementById('analyzeBtn').disabled = shots.length < MIN_SHOTS;
+
+  const row = document.getElementById('thumbsRow');
+  row.innerHTML = shots.map(src =>
+    `<img class="camera-thumb" src="${src}">`
+  ).join('') +
+  Array.from({ length: Math.max(0, MIN_SHOTS - shots.length) }, () =>
+    `<div class="camera-thumb pending">📷</div>`
+  ).join('');
+}
+
+function handleUpload(files) {
+  shots = [];
+  const readers = Array.from(files).slice(0, MAX_SHOTS).map(f => new Promise(res => {
+    const r = new FileReader();
+    r.onload = e => { shots.push(e.target.result); res(); };
+    r.readAsDataURL(f);
+  }));
+  Promise.all(readers).then(() => {
+    updateShotUI();
+    if (shots.length >= MIN_SHOTS) runAIAnalysis();
+  });
+}
+
+// ── AI ANALYSIS ──────────────────────────────────────────
+async function runAIAnalysis() {
+  if (shots.length < MIN_SHOTS) return;
+  stopCamera();
+  showAiStatus('Analyzing images with AI…');
+
+  const imageContents = shots.map(src => ({
+    type: 'image',
+    source: { type: 'base64', media_type: 'image/jpeg', data: src.split(',')[1] }
+  }));
+
+  const prompt = `You are a Nigerian pharmacy AI assistant. Analyze these pharmaceutical product images and extract the following information. Return ONLY a valid JSON object with these exact keys (use null if not found):
+
+{
+  "brandName": "string",
+  "genericName": "string",
+  "strength": "string",
+  "dosageForm": "string",
+  "batchNumber": "string",
+  "nafdacNumber": "string",
+  "manufacturer": "string",
+  "expiryDate": "string"
+}
+
+Do not include any text outside the JSON.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 500,
+        messages: [{ role: 'user', content: [...imageContents, { type: 'text', text: prompt }] }]
+      })
+    });
+    const data = await res.json();
+    const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+    applyAIData(parsed);
+  } catch(e) {
+    showToast('AI analysis failed — fill manually', 'error');
+    console.error('[AI]', e);
+  } finally {
+    hideAiStatus();
+  }
+}
+
+function applyAIData(data) {
+  // Auto-fill name
+  const name = [data.brandName, data.genericName, data.strength, data.dosageForm].filter(Boolean).join(' ');
+  if (name && !document.getElementById('fProductName').value) {
+    document.getElementById('fProductName').value = name;
+  }
+
+  // Show extracted fields
+  const card = document.getElementById('aiDataCard');
+  const rows = document.getElementById('aiDataRows');
+  const fields = [
+    ['Brand', data.brandName], ['Generic', data.genericName],
+    ['Strength', data.strength], ['Form', data.dosageForm],
+    ['Batch', data.batchNumber], ['NAFDAC', data.nafdacNumber],
+    ['Manufacturer', data.manufacturer], ['Expiry', data.expiryDate]
+  ].filter(([, v]) => v);
+
+  if (fields.length) {
+    rows.innerHTML = fields.map(([l, v]) =>
+      `<div style="background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-size:12px;">
+        <span style="color:var(--muted);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">${l}</span>
+        <div style="color:var(--text);font-weight:600;margin-top:2px;">${v}</div>
+      </div>`
+    ).join('');
+    card.style.display = 'block';
+  }
+
+  // Check matches
+  checkMatches(document.getElementById('fProductName').value);
+  showIntakeForm();
+}
+
+function showAiStatus(msg) {
+  const el = document.getElementById('aiStatus');
+  document.getElementById('aiStatusText').textContent = msg;
+  el.classList.add('visible');
+}
+
+function hideAiStatus() { document.getElementById('aiStatus').classList.remove('visible'); }
+
+// ══════════════════════════════════════════════════════════
+// SEARCH
+// ══════════════════════════════════════════════════════════
+function toggleSearch() {
+  const sec = document.getElementById('searchSection');
+  const btn = document.getElementById('btnSearch');
+  const isOpen = sec.classList.contains('visible');
+  closeSearch();
+  if (!isOpen) {
+    sec.classList.add('visible');
+    btn.classList.add('active');
+    document.getElementById('intakeSearch').focus();
+  }
+}
+
+function closeSearch() {
+  document.getElementById('searchSection').classList.remove('visible');
+  document.getElementById('btnSearch').classList.remove('active');
+  document.getElementById('intakeResults').classList.remove('visible');
+}
+
+function clearIntakeSearch() {
+  document.getElementById('intakeSearch').value = '';
+  document.getElementById('intakeResults').classList.remove('visible');
+}
+
+function handleIntakeSearch(val) {
+  const res = document.getElementById('intakeResults');
+  const products = loadLS('pbsrx_products', []);
+  if (!val.trim()) { res.classList.remove('visible'); return; }
+
+  const matches = products.filter(p => p.name.toLowerCase().includes(val.toLowerCase()));
+  if (!matches.length) {
+    res.innerHTML = `<div style="padding:16px;text-align:center;color:var(--muted);font-size:13px;">No match — you can add new below</div>`;
+    res.classList.add('visible');
+    return;
+  }
+
+  res.innerHTML = matches.map(p => `
+    <div class="search-result-row" onclick="loadProduct(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+      <div>
+        <div class="srr-name">${p.name}</div>
+        <div class="srr-units">${(p.units || []).map(u => u.name).join(' · ')}</div>
+      </div>
+      <span class="srr-arrow">›</span>
+    </div>`).join('');
+  res.classList.add('visible');
+}
+
+// ══════════════════════════════════════════════════════════
+// MATCHING
+// ══════════════════════════════════════════════════════════
+function checkMatches(name) {
+  const products = loadLS('pbsrx_products', []);
+  if (!name || !products.length) return;
+
+  const term = name.toLowerCase();
+  const matches = products.filter(p =>
+    p.name.toLowerCase().includes(term) ||
+    term.includes(p.name.toLowerCase().split(' ')[0])
+  ).slice(0, 3);
+
+  if (!matches.length) return;
+
+  const banner = document.getElementById('matchBanner');
+  const list = document.getElementById('matchList');
+  list.innerHTML = matches.map(p => `
+    <div class="match-item">
+      <div>
+        <div class="match-name">${p.name}</div>
+        <div class="match-units">${(p.units||[]).map(u => u.name + ' ₦' + u.price).join(' · ')}</div>
+      </div>
+      <div class="match-actions">
+        <button class="btn-use" onclick='loadProduct(${JSON.stringify(p)})'>Use</button>
+        <button class="btn-new" onclick="hideBanner()">New</button>
+      </div>
+    </div>`).join('');
+  banner.classList.add('visible');
+}
+
+function hideBanner() { document.getElementById('matchBanner').classList.remove('visible'); }
+
+// ══════════════════════════════════════════════════════════
+// UNIT ROWS
+// ══════════════════════════════════════════════════════════
+let unitRows = [];
+
+function addUnitRow(data = {}) {
+  const id = Date.now() + Math.random();
+  const isBase = unitRows.length === 0;
+  unitRows.push({ id, name: data.name || '', price: data.price || '', conv: data.conv || (isBase ? 1 : ''), isBase });
+  renderUnitRows();
+}
+
+function removeUnitRow(id) {
+  if (unitRows.length <= 1) { showToast('Need at least one unit', 'error'); return; }
+  unitRows = unitRows.filter(r => r.id !== id);
+  if (!unitRows.some(r => r.isBase)) unitRows[0].isBase = true;
+  renderUnitRows();
+  recalcProfit();
+}
+
+function renderUnitRows() {
+  const table = document.getElementById('unitsTable');
+  table.innerHTML = unitRows.map(row => `
+    <div class="unit-row-form ${row.isBase ? 'base-unit' : ''}" id="ur_${row.id}">
+      <input class="unit-field name-f" type="text" placeholder="e.g. strip" value="${row.name}"
+        oninput="updateUnit(${row.id},'name',this.value)" autocomplete="off">
+      <span class="unit-divider">₦</span>
+      <input class="unit-field price-f" type="number" placeholder="0" value="${row.price}" min="0" step="any"
+        oninput="updateUnit(${row.id},'price',this.value)">
+      <span class="unit-divider">×</span>
+      <input class="unit-field conv-f" type="number" placeholder="1" value="${row.conv}" min="0.01" step="any"
+        oninput="updateUnit(${row.id},'conv',this.value)" ${row.isBase ? 'readonly style="color:var(--muted)"' : ''}>
+      ${row.isBase ? '<span class="unit-base-badge">BASE</span>' : `<button class="unit-del-btn" onclick="removeUnitRow(${row.id})">✕</button>`}
+    </div>`).join('');
+  updateReceivedUnitDropdown();
+}
+
+function updateUnit(id, field, val) {
+  const row = unitRows.find(r => r.id === id);
+  if (!row) return;
+  row[field] = field === 'name' ? val : parseFloat(val) || '';
+  updateReceivedUnitDropdown();
+  recalcProfit();
+}
+
+function updateReceivedUnitDropdown() {
+  const sel = document.getElementById('fReceivedUnit');
+  const cur = sel.value;
+  sel.innerHTML = unitRows.filter(r => r.name).map(r =>
+    `<option value="${r.id}" ${r.id == cur ? 'selected' : ''}>${r.name} (×${r.conv || 1} base)</option>`
+  ).join('');
+  if (!sel.value && unitRows[0]) sel.value = unitRows[0].id;
+}
+
+// ══════════════════════════════════════════════════════════
+// PROFIT ANALYSIS
+// ══════════════════════════════════════════════════════════
+function recalcProfit() {
+  const qty = parseFloat(document.getElementById('fQtyReceived').value) || 0;
+  const cost = parseFloat(document.getElementById('fCostPrice').value) || 0;
+  const selUnitId = document.getElementById('fReceivedUnit').value;
+  const recvUnit = unitRows.find(r => String(r.id) === String(selUnitId));
+
+  // Auto total cost
+  const totalCost = parseFloat((qty * cost).toFixed(2));
+  document.getElementById('fTotalCost').value = fmt(totalCost);
+  calcBalance();
+
+  // Validate: if cost entered, selling price must exist for received unit
+  const errEl = document.getElementById('costPriceError');
+  if (cost > 0 && recvUnit && !recvUnit.price) {
+    errEl.classList.add('visible');
+  } else {
+    errEl.classList.remove('visible');
+  }
+
+  // Profit per unit: use received unit selling price (independent pricing)
+  const sellingPricePerUnit = recvUnit ? (parseFloat(recvUnit.price) || 0) : 0;
+  const totalSelling = parseFloat((qty * sellingPricePerUnit).toFixed(2));
+  const totalProfit = parseFloat((totalSelling - totalCost).toFixed(2));
+  const margin = totalCost > 0 ? (totalProfit / totalCost) * 100 : 0;
+
+  const rowsEl = document.getElementById('profitItemRows');
+  const footer = document.getElementById('profitFooter');
+
+  if (qty > 0 && cost > 0 && unitRows.some(r => r.name && r.price)) {
+    // Per-unit breakdown rows for each selling unit
+    const rows = unitRows.filter(r => r.name && r.price).map(r => {
+      const sp = parseFloat(r.price) || 0;
+      const cp = recvUnit ? (cost / (parseFloat(recvUnit.conv) || 1)) * (parseFloat(r.conv) || 1) : cost;
+      const pp = parseFloat((sp - cp).toFixed(2));
+      const mp = cp > 0 ? (pp / cp) * 100 : 0;
+      return `<div class="profit-row">
+        <span class="profit-row-label">${r.name}${r.isBase ? ' (base)' : ''}</span>
+        <div style="display:flex;gap:14px;align-items:center;">
+          <span style="font-size:12px;color:var(--muted);">Cost ${fmt(cp)}</span>
+          <span style="font-size:12px;color:var(--muted);">Sell ${fmt(sp)}</span>
+          <span class="profit-row-value ${pp >= 0 ? 'green' : 'red'}">${fmt(pp)}</span>
+          <span style="font-size:11px;color:${mp >= 0 ? 'var(--green)' : 'var(--red)'};">${fmtPct(mp)}</span>
+        </div>
+      </div>`;
+    }).join('');
+
+    rowsEl.innerHTML = rows;
+    footer.style.display = 'block';
+    document.getElementById('pfTotalCost').textContent = fmt(totalCost);
+    document.getElementById('pfSellingValue').textContent = fmt(totalSelling);
+    document.getElementById('pfProfit').textContent = fmt(totalProfit);
+    document.getElementById('pfProfit').className = 'pfv ' + (totalProfit >= 0 ? 'green' : 'red');
+    document.getElementById('pfMargin').textContent = fmtPct(margin);
+    document.getElementById('pfMargin').className = 'pfv ' + (margin >= 0 ? 'green' : 'red');
+  } else {
+    rowsEl.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:10px 0;">Fill in units and stock receipt to see analysis</div>';
+    footer.style.display = 'none';
+  }
+}
+
+function calcBalance() {
+  const totalCost = parseFloat(document.getElementById('fQtyReceived').value || 0) * parseFloat(document.getElementById('fCostPrice').value || 0);
+  const paid = parseFloat(document.getElementById('fAmountPaid').value) || 0;
+  const balance = parseFloat((totalCost - paid).toFixed(2));
+  const balEl = document.getElementById('fBalance');
+  balEl.value = balance > 0 ? fmt(balance) + ' owed' : balance < 0 ? fmt(Math.abs(balance)) + ' overpaid' : '₦0 — Settled';
+  balEl.style.color = balance > 0 ? 'var(--red)' : balance < 0 ? 'var(--amber)' : 'var(--green)';
+}
+
+// ══════════════════════════════════════════════════════════
+// LOAD PRODUCT
+// ══════════════════════════════════════════════════════════
+function loadProduct(p) {
+  if (typeof p === 'string') p = JSON.parse(p);
+  document.getElementById('fProductName').value = p.name || '';
+  document.getElementById('fBarcode').value = p.barcode || '';
+
+  unitRows = [];
+  (p.units || []).forEach((u, i) => addUnitRow({ name: u.name, price: u.price, conv: u.conv || (i === 0 ? 1 : '') }));
+  if (!unitRows.length) addUnitRow();
+  renderUnitRows();
+
+  hideBanner();
+  closeSearch();
+  showIntakeForm();
+  document.getElementById('fQtyReceived').focus();
+  showToast('Product loaded', 'success');
+}
+
+// ══════════════════════════════════════════════════════════
+// SHOW FORM
+// ══════════════════════════════════════════════════════════
+function showIntakeForm() {
+  const f = document.getElementById('intakeForm');
+  if (!f.classList.contains('visible')) {
+    f.classList.add('visible');
+    if (!unitRows.length) addUnitRow();
+    renderUnitRows();
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// SUBMIT
+// ══════════════════════════════════════════════════════════
+function submitIntake() {
+  const name = document.getElementById('fProductName').value.trim();
+  const qty = parseFloat(document.getElementById('fQtyReceived').value);
+  const cost = parseFloat(document.getElementById('fCostPrice').value);
+
+  if (!name) { showToast('Product name required', 'error'); document.getElementById('fProductName').focus(); return; }
+  if (!qty || qty <= 0) { showToast('Quantity required', 'error'); document.getElementById('fQtyReceived').focus(); return; }
+  if (!cost || cost < 0) { showToast('Cost price required', 'error'); document.getElementById('fCostPrice').focus(); return; }
+  if (!unitRows.some(r => r.name && r.price)) { showToast('At least one unit with price required', 'error'); return; }
+
+  // Validate: cost entered → selling price must exist for received unit
+  const selUnitId = document.getElementById('fReceivedUnit').value;
+  const recvUnit = unitRows.find(r => String(r.id) === String(selUnitId));
+  if (cost > 0 && recvUnit && !recvUnit.price) {
+    showToast('Add selling price for received unit', 'error'); return;
+  }
+
+  // Upsert product
+  let products = loadLS('pbsrx_products', []);
+  const barcode = document.getElementById('fBarcode').value.trim();
+  let product = products.find(p => p.name.toLowerCase() === name.toLowerCase() || (barcode && p.barcode === barcode));
+
+  const unitDefs = unitRows.filter(r => r.name).map(r => ({
+    name: r.name,
+    price: parseFloat(r.price) || 0,
+    conv: parseFloat(r.conv) || 1,
+    isBase: r.isBase
+  }));
+
+  if (!product) {
+    product = { id: genId(), name, barcode, units: unitDefs };
+    products.push(product);
+  } else {
+    product.units = unitDefs;
+    if (barcode) product.barcode = barcode;
+  }
+  saveLS('pbsrx_products', products);
+
+  // Compute base units received
+  const convFactor = parseFloat(recvUnit?.conv) || 1;
+  const baseUnitsReceived = parseFloat((qty * convFactor).toFixed(4));
+
+  // Save intake record
+  const totalCost = parseFloat((qty * cost).toFixed(2));
+  const paid = parseFloat(document.getElementById('fAmountPaid').value) || 0;
+  const supplierId = document.getElementById('fSupplier').value;
+
+  // Profit summary
+  const sellingPricePerUnit = recvUnit ? (parseFloat(recvUnit.price) || 0) : 0;
+  const totalSelling = parseFloat((qty * sellingPricePerUnit).toFixed(2));
+  const potentialProfit = parseFloat((totalSelling - totalCost).toFixed(2));
+  const margin = totalCost > 0 ? parseFloat(((potentialProfit / totalCost) * 100).toFixed(2)) : 0;
+
+  const intake = {
+    id: 'I' + Date.now(),
+    date: intakeDate,
+    createdAt: Date.now(),
+    productId: product.id,
+    productName: name,
+    barcode,
+    supplierId,
+    units: unitDefs,
+    qtyReceived: qty,
+    receivedUnitName: recvUnit?.name || '',
+    convFactor,
+    baseUnitsReceived,
+    costPricePerUnit: cost,
+    totalCost,
+    amountPaid: paid,
+    balance: parseFloat((totalCost - paid).toFixed(2)),
+    totalSellingValue: totalSelling,
+    potentialProfit,
+    marginPct: margin,
+    aiData: collectAiData()
+  };
+
+  const intakes = loadLS('pbsrx_intakes', []);
+  intakes.push(intake);
+  saveLS('pbsrx_intakes', intakes);
+
+  // Update stock
+  const stock = loadLS('pbsrx_stock', []);
+  const existing = stock.find(s => s.productId === product.id);
+  if (existing) {
+    existing.baseUnits = parseFloat(((existing.baseUnits || 0) + baseUnitsReceived).toFixed(4));
+    existing.lastCost = cost;
+    existing.lastUpdated = Date.now();
+  } else {
+    stock.push({ productId: product.id, productName: name, baseUnits: baseUnitsReceived, lastCost: cost, lastUpdated: Date.now() });
+  }
+  saveLS('pbsrx_stock', stock);
+
+  console.log('[Intake saved]', intake);
+  showToast('Intake saved ✓', 'success');
+  resetAll();
+}
+
+function collectAiData() {
+  const rows = document.getElementById('aiDataRows');
+  if (!rows || !rows.innerHTML) return null;
+  return rows.innerText || null;
+}
+
+// ══════════════════════════════════════════════════════════
+// RESET
+// ══════════════════════════════════════════════════════════
+function resetAll() {
+  stopCamera();
+  closeSearch();
+  document.getElementById('intakeForm').classList.remove('visible');
+  document.getElementById('matchBanner').classList.remove('visible');
+  document.getElementById('aiDataCard').style.display = 'none';
+  document.getElementById('aiStatus').classList.remove('visible');
+  document.getElementById('fProductName').value = '';
+  document.getElementById('fBarcode').value = '';
+  document.getElementById('fQtyReceived').value = '';
+  document.getElementById('fCostPrice').value = '';
+  document.getElementById('fAmountPaid').value = '';
+  document.getElementById('fTotalCost').value = '';
+  document.getElementById('fBalance').value = '';
+  document.getElementById('intakeSearch').value = '';
+  document.getElementById('aiDataRows').innerHTML = '';
+  document.getElementById('profitItemRows').innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:10px 0;">Fill in units and stock receipt to see analysis</div>';
+  document.getElementById('profitFooter').style.display = 'none';
+  document.getElementById('costPriceError').classList.remove('visible');
+  shots = [];
+  unitRows = [];
+  resetDate();
+}
+
+// ══════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════
+let toastTimer = null;
+function showToast(msg, type = '') {
+  const el = document.getElementById('toast');
+  clearTimeout(toastTimer);
+  el.textContent = msg;
+  el.className = 'toast' + (type ? ' ' + type : '');
+  void el.offsetWidth;
+  el.classList.add('show');
+  toastTimer = setTimeout(() => { el.classList.remove('show'); }, 2200);
+}
+
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
+initDate();
+renderSupplierSelect();
+
+// Show form button — quick entry without camera/search
+document.querySelector('.capture-btn:nth-child(2)').insertAdjacentHTML('afterend',
+  ''); // reserve for potential 4th button
+</script>
+</body>
+</html>

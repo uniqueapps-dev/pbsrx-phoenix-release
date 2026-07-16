@@ -8,7 +8,6 @@
 <meta name="version" content="v7.6.7-RC1">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>PBSRx — Pharmacy Business System</title>
-<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="manifest" href="#" id="manifestPlaceholder">
@@ -4051,10 +4050,28 @@ toast('PINs updated successfully.');
 
 // ── PWA MANIFEST (inline) ────────────────────────────────────────────────────
 function installPWA(){
-var manifest={name:'PBSRx',short_name:'PBSRx',start_url:'.',display:'standalone',background_color:'#040d1a',theme_color:'#0a1e3d',
-icons:[{src:getPhaIcon(192),sizes:'192x192',type:'image/png'},{src:getPhaIcon(512),sizes:'512x512',type:'image/png'}]};
+// RC1 FIX: relative start_url for GitHub Pages subpath compatibility
+// Icons are canvas-generated - no external files needed
+var manifest={
+  name:'PBSRx - Pharmacy Business System',
+  short_name:'PBSRx',
+  description:'Phoenix Edition - Pharmacy Operating System',
+  start_url:'./',
+  scope:'./',
+  display:'standalone',
+  orientation:'portrait',
+  background_color:'#0a1e3d',
+  theme_color:'#0a1e3d',
+  icons:[
+    {src:getPhaIcon(192),sizes:'192x192',type:'image/png',purpose:'any'},
+    {src:getPhaIcon(192),sizes:'192x192',type:'image/png',purpose:'maskable'},
+    {src:getPhaIcon(512),sizes:'512x512',type:'image/png',purpose:'any'},
+    {src:getPhaIcon(512),sizes:'512x512',type:'image/png',purpose:'maskable'}
+  ]
+};
 var blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
-document.getElementById('manifestPlaceholder').href=URL.createObjectURL(blob);
+var blobUrl=URL.createObjectURL(blob);
+document.getElementById('manifestPlaceholder').href=blobUrl;
 }
 function getPhaIcon(size){
 var c=document.createElement('canvas');c.width=size;c.height=size;var ctx=c.getContext('2d');
@@ -7315,15 +7332,6 @@ w.document.write(
 '</div>'+
 '<div class="noprint" style="text-align:center;margin-top:10px;"><button onclick="window.print()" style="padding:10px 24px;font-size:14px;cursor:pointer;">Print</button></div>'+
 '
-<script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load',function(){
-    navigator.serviceWorker.register('/sw.js').then(function(reg){
-      console.log('PBSRx SW registered:',reg.scope);
-    }).catch(function(e){console.log('SW reg failed:',e);});
-  });
-}
-</script>
 </body></html>'
 );
 w.document.close();w.focus();
@@ -11347,4 +11355,14 @@ Thank you for your patronage! 🙏<br>Powered by PBSRx
 </div>
 </div>
 <datalist id="productSuggestions"></datalist>
+
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('./sw.js').then(function(reg){
+      console.log('PBSRx SW registered:',reg.scope);
+    }).catch(function(e){console.log('SW reg failed:',e);});
+  });
+}
+</script>
 </body></html>

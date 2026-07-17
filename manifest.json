@@ -1,18 +1,24 @@
 {
-  "name": "PBSRx - Pharmacy Business System",
+  "name": "PBSRx Phoenix - D-Glopa Pharm LTD",
   "short_name": "PBSRx",
-  "description": "Phoenix Edition - Pharmacy Operating System for D-Glopa Pharm LTD.",
-  "version": "7.6.7-RC1b",
+  "description": "PBSRx Phoenix v7.6.7 RC1 — Pharmacy Business System",
   "start_url": "./index.html",
-  "scope": "./",
   "display": "standalone",
-  "orientation": "portrait",
-  "theme_color": "#0a1e3d",
-  "background_color": "#0a1e3d",
+  "background_color": "#0f1117",
+  "theme_color": "#f59e0b",
+  "orientation": "portrait-primary",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ]
 }

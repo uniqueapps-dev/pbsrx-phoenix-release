@@ -1,45 +1,39 @@
-// PBSRx Phoenix v7.6.7-RC1b -- Service Worker
-const CACHE = 'pbsrx-phoenix-rc1b-v1';
-const BASE  = self.registration.scope;
+/* PBSRx Phoenix v7.6.7 RC1 — Service Worker */
+var CACHE_NAME = 'pbsrx-v7.6.7-RC1';
+var CORE_ASSETS = [
+  './',
+  './index.html',
+  './manifest.json'
+];
 
-self.addEventListener('install', e => {
+self.addEventListener('install', function(e) {
   e.waitUntil(
-    caches.open(CACHE).then(cache =>
-      Promise.allSettled([BASE, BASE+'index.html', BASE+'manifest.json']
-        .map(u => cache.add(u).catch(() => {})))
-    ).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(function(cache) {
+      return cache.addAll(CORE_ASSETS);
+    }).then(function() {
+      return self.skipWaiting();
+    })
   );
 });
 
-self.addEventListener('activate', e => {
+self.addEventListener('activate', function(e) {
   e.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
+    caches.keys().then(function(keys) {
+      return Promise.all(
+        keys.filter(function(k) { return k !== CACHE_NAME; })
+            .map(function(k) { return caches.delete(k); })
+      );
+    }).then(function() {
+      return self.clients.claim();
+    })
   );
 });
 
-self.addEventListener('fetch', e => {
+self.addEventListener('fetch', function(e) {
   if (e.request.method !== 'GET') return;
-  if (e.request.mode === 'navigate') {
-    e.respondWith(
-      caches.match(BASE + 'index.html')
-        .then(r => r || fetch(e.request).then(res => {
-          if (res.ok) caches.open(CACHE).then(c => c.put(BASE+'index.html', res.clone()));
-          return res;
-        })).catch(() => fetch(e.request))
-    );
-    return;
-  }
   e.respondWith(
-    caches.match(e.request).then(r => r || fetch(e.request).then(res => {
-      if (res.ok && res.type !== 'opaque')
-        caches.open(CACHE).then(c => c.put(e.request, res.clone()));
-      return res;
-    })).catch(() =>
-      e.request.destination === 'document'
-        ? caches.match(BASE + 'index.html')
-        : undefined
-    )
+    caches.match(e.request).then(function(cached) {
+      return cached || fetch(e.request).catch(function() { return cached; });
+    })
   );
 });

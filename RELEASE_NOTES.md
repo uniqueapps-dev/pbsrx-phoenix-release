@@ -92,6 +92,9 @@ RELEASE_NOTES.md  — This file
 | Relative paths only (manifest) | ✅ PASS |
 | Relative paths only (sw.js) | ✅ PASS |
 | No changes outside SW wrapper | ✅ PASS (diff confirms 3 line changes only) |
+
+---
+
 ## Engineering Log
 
 - 2026-07-17: Established Android-native Git workflow using Termux and Acode.

@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="v7.6.7-RC2">
+<meta name="version" content="v7.6.7-RC3.9">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>PBSRx — Pharmacy Business System</title>
 <link rel="manifest" href="./manifest.json">
@@ -59,8 +59,8 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--bg)
 .hrole{font-size:9px;color:rgba(255,255,255,0.35);font-weight:800;letter-spacing:2.5px;text-transform:uppercase;background:rgba(255,255,255,0.06);padding:4px 10px;border-radius:99px;}
 .hso{background:none;border:none;color:rgba(255,255,255,0.35);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--fb);}
 .pages{flex:1;overflow:hidden;position:relative;}
-.pg{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 84px;display:none;-webkit-tap-highlight-color:transparent;}.pg.on{display:block;animation:pgFadeIn .15s ease;}
-@keyframes pgFadeIn{from{opacity:0.75}to{opacity:1}}
+.pg{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 84px;display:none;-webkit-tap-highlight-color:transparent;background:var(--bg);}.pg.on{display:block;animation:pgFadeIn .15s ease;}
+@keyframes pgFadeIn{from{opacity:0}to{opacity:1}}
 #appWrap{min-height:100vh;}
 .nav{height:62px;background:var(--card);border-top:1px solid var(--bdr);display:flex;align-items:stretch;flex-shrink:0;box-shadow:0 -2px 10px rgba(0,0,0,0.06);position:fixed;bottom:0;left:0;right:0;z-index:200;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;touch-action:pan-x;}
 .nav::-webkit-scrollbar{display:none;}
@@ -267,7 +267,7 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .stock-display b{color:var(--txt);}
 .rs-unit-sel{padding:8px 10px;border-radius:8px;border:1.5px solid var(--bdr);background:var(--surf);font-size:13px;font-weight:600;color:var(--txt);font-family:var(--fb);outline:none;margin-top:3px;width:100%;}
 /* POS dropdown */
-.pos-dd-row:active,.pos-dd-row:hover{background:var(--surf);}
+.pos-dd-row{touch-action:manipulation;}.pos-dd-row:active,.pos-dd-row:hover{background:var(--surf);}
 #posDropdown::-webkit-scrollbar{width:4px;}
 #posDropdown::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:4px;}
 #toast{position:fixed;bottom:74px;left:50%;transform:translateX(-50%) translateY(14px);background:#1a2332;color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;font-weight:700;z-index:900;opacity:0;transition:all .27s;pointer-events:none;white-space:nowrap;max-width:88vw;text-align:center;}
@@ -321,13 +321,13 @@ body{background:var(--bg);}
 <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:16px;text-align:center;">First time? Enter any password to set it.</div>
 <button onclick="doLogin()" style="width:100%;padding:16px;border-radius:14px;background:linear-gradient(135deg,var(--amb),#d97706);border:none;color:#000;font-size:16px;font-weight:800;cursor:pointer;font-family:var(--fb);touch-action:manipulation;">&#128274; Sign In</button>
 <div id="perr" style="font-size:13px;color:#f87171;text-align:center;margin-top:12px;font-weight:600;min-height:20px;"></div>
-<div style="font-size:10px;color:rgba(255,255,255,0.2);text-align:center;margin-top:16px;">D-Glopa Pharm LTD. · v7.6.7-RC2</div>
+<div style="font-size:10px;color:rgba(255,255,255,0.2);text-align:center;margin-top:16px;">D-Glopa Pharm LTD. · v7.6.7-RC3.9</div>
 </div>
 </div>
 
 <div id="app">
 <div class="hdr">
-<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v7.6.7-RC2</div>
+<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v7.6.7-RC3.9</div>
 <div style="display:flex;align-items:center;gap:10px;">
 <div class="hrole" id="hrole">ADMIN</div>
 <button class="hso" onclick="signOut()">Sign out</button>
@@ -471,6 +471,7 @@ body{background:var(--bg);}
 </div>
 </div>
 </div>
+</div>
 
 <div class="pg" id="pg2" style="display:none!important;"></div>
 
@@ -490,7 +491,10 @@ body{background:var(--bg);}
 <!-- STEP 2 -->
 <div id="posStep2" style="display:none;background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(16,185,129,0.06));border:1.5px solid var(--grn);border-radius:16px;padding:14px;margin-bottom:10px;">
 <div style="font-size:10px;font-weight:900;color:var(--grn);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">&#9313; SELECT PACK &amp; QTY</div>
-<div style="font-size:15px;font-weight:800;color:var(--txt);margin-bottom:10px;" id="posSelProdName"></div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;">
+<div style="font-size:15px;font-weight:800;color:var(--txt);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="posSelProdName"></div>
+<button id="posClearBtn" onclick="posClearSelection()" style="flex-shrink:0;background:none;border:1px solid var(--bdr);border-radius:50%;width:28px;height:28px;font-size:16px;cursor:pointer;color:var(--mut);display:flex;align-items:center;justify-content:center;touch-action:manipulation;" aria-label="Clear selection">&#10005;</button>
+</div>
 <div id="posUnitButtons" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;"></div>
 <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:8px;">
 <div style="flex:1;"><label class="fl">Quantity</label><input class="fi" id="pos_qty" type="number" inputmode="decimal" pattern="[0-9]*" value="1" min="1" oninput="posCalcLine()" onfocus="this.select()" onclick="this.select()" autocomplete="off" style="font-size:20px;font-weight:900;text-align:center;"></div>
@@ -879,6 +883,41 @@ body{background:var(--bg);}
 <div style="font-size:12px;color:var(--mut);" id="beCalcMo"></div>
 </div>
 
+<!-- ── Developer Tools ──────────────────────────────────────────────────────── -->
+<div class="sh" style="margin-top:16px;">&#9881;&#65039; Developer Tools</div>
+<div class="card" style="border:1px solid var(--bdr);">
+  <div style="font-size:12px;color:var(--mut);margin-bottom:10px;line-height:1.5;">
+    Diagnostic panel for investigating interaction issues, tracking saves, 
+    monitoring renders, and reading the full application state in real time.
+    All data stays on-device. Nothing is transmitted.
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">
+    <div>
+      <div style="font-size:13px;font-weight:800;color:var(--txt);">&#128202; Diagnostics Panel</div>
+      <div id="devModeStatus" style="font-size:11px;color:var(--mut);margin-top:2px;">
+        Status: <span id="devModeLabel" style="font-weight:700;">OFF</span>
+      </div>
+    </div>
+    <button id="devModeToggle" type="button" onclick="pbsrxToggleDiag()"
+      style="padding:10px 20px;border:none;border-radius:12px;font-size:13px;
+             font-weight:800;cursor:pointer;touch-action:manipulation;
+             background:var(--surf);color:var(--mut);border:1px solid var(--bdr);"
+      aria-label="Toggle diagnostics panel">
+      Enable
+    </button>
+  </div>
+  <div id="devModeModules" style="display:none;border-top:1px solid var(--bdr);padding-top:10px;">
+    <div style="font-size:10px;color:var(--mut);font-weight:700;letter-spacing:1px;margin-bottom:6px;">MODULE FILTERS</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;" id="devModuleToggles"></div>
+    <button type="button" onclick="PBSRx.Diagnostics.report()"
+      style="width:100%;margin-top:10px;padding:10px;background:var(--blu3);
+             color:var(--blu);border:1px solid var(--blu);border-radius:10px;
+             font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;">
+      &#128203; Copy Diagnostic Report to Clipboard
+    </button>
+  </div>
+</div>
+
 </div>
 </div>
 
@@ -908,6 +947,7 @@ body{background:var(--bg);}
 <div class="al ab" style="margin-bottom:8px;"><div class="ai">🤖</div><div class="at"><b>Android (Chrome):</b><br>Tap the 3-dot menu (⋮) → <b>"Add to Home Screen"</b> or <b>"Install App"</b> → Install. Opens fullscreen, works offline.</div></div>
 <div class="al ab" style="margin-bottom:8px;"><div class="ai">🍎</div><div class="at"><b>iPhone (Safari):</b><br>Tap the Share button (□↑) → <b>"Add to Home Screen"</b> → Add. Appears as an app icon.</div></div>
 <div class="al ab"><div class="ai">💻</div><div class="at"><b>Desktop (Chrome/Edge):</b><br>Look for the install icon (⊕) in the address bar → Click Install. Opens in its own window like a native app.</div></div>
+</div>
 </div>
 </div>
 
@@ -945,7 +985,7 @@ body{background:var(--bg);}
 
 <div class="card" style="margin-bottom:10px;">
 <div style="font-size:13px;font-weight:900;color:var(--txt);margin-bottom:8px;">&#128680; Soft Go-Live Workflow (First 14 Days)</div>
-<div style="font-size:12px;color:var(--mut);line-height:1.7;"><b>Before Day 1:</b> Complete pricing sprint — set selling prices for all daily products. Physically remove expired items from active shelves.<br><br><b>Days 1-7:</b> Record all sales in POS. Receive all stock via Bulk Receive. Check Dashboard every morning. Log any issue in your Phoenix Issue Log.<br><br><b>Days 8-14:</b> Enrich data using Review Workspace. Set isFastMover for products you sell daily. First cycle count of S11 (controlled medicines).</div>
+<div style="font-size:12px;color:var(--mut);line-height:1.7;"><b>Before Day 1:</b> Complete pricing sprint — set selling prices for all daily products. Physically remove expired items from active shelves.<br><br><b>Days 1-7:</b> Record all sales in POS. Receive all stock via Bulk Receive. Check Dashboard every morning. Log any issue in your Phoenix Issue Log.<br><br><b>Days 8-14:</b> Enrich data using Review Workspace. Enable Stock Pulse monitoring for products you sell daily. First cycle count of S11 (controlled medicines).</div>
 </div>
 
 <div class="card" style="margin-bottom:10px;">
@@ -1585,6 +1625,12 @@ body{background:var(--bg);}
 <!-- ── PHOENIX MIGRATION Panel (tab 11) ──────────────────────── -->
 <div id="icPanelMigration" style="display:none;">
 
+<!-- PIR-014: One-tap operational enrollment repair for existing migrated products -->
+<div class="card" style="margin-bottom:10px;border:1px solid var(--bdr);">
+  <div style="font-size:11px;font-weight:700;color:var(--mut);letter-spacing:1px;margin-bottom:6px;">&#9881;&#65039; OPERATIONAL ENROLLMENT</div>
+  <div style="font-size:12px;color:var(--txt);margin-bottom:8px;">If migrated products are not showing in Stock Pulse, tap to enroll them. Only products with active stock are enrolled. Expired opening stock is excluded.</div>
+  <button type="button" onclick="var r=pidBackfillOperationalEnrollment();toast(r?(r.enrolled+' products enrolled, '+r.skipped+' skipped'):'No eligible products found',3000);" style="width:100%;padding:10px;background:var(--blu3);color:var(--blu);border:1px solid var(--blu);border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;touch-action:manipulation;">&#128138; Enroll in Stock Pulse</button>
+</div>
 <!-- Pre-migration backup notice -->
 <div class="card" style="background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(99,102,241,0.08));border:1px solid var(--amb);margin-bottom:10px;">
 <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
@@ -1877,22 +1923,53 @@ body{background:var(--bg);}
 
 </div><!-- end pg10 -->
 
-<!-- ══════════════════════════════════════════ pg11: REVIEW WORKSPACE ══════════ -->
+<!-- ════════════════════════════════════════════ pg11: REVIEW WORKSPACE RC3 ═══ -->
 <div class="pg" id="pg11">
 <div class="pgt">&#9889; Review Workspace</div>
-<div class="pgs">Product enrichment tasks — auto-generated, auto-resolved</div>
+<div class="pgs" id="rwPgs">Product Data Quality Centre</div>
+<!-- RC3: Sub-tab bar -->
+<div style="display:flex;gap:6px;margin-bottom:12px;">
+<button class="bsm bsb" id="rwtab_dash" onclick="setRwTab('dash')">&#128202; Dashboard</button>
+<button class="bsm" id="rwtab_queue" onclick="setRwTab('queue')" style="background:none;border:1px solid var(--bdr);color:var(--mut);">&#9999;&#65039; Queue</button>
+<button class="bsm" id="rwtab_act" onclick="setRwTab('act')" style="background:none;border:1px solid var(--bdr);color:var(--mut);">&#128203; Activity</button>
+</div>
+<!-- Dashboard panel -->
+<div id="rwDashPanel"><div id="rwDashContent"></div></div>
+<!-- Queue panel -->
+<div id="rwQueuePanel" style="display:none;">
 <div id="rwSummary" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;"></div>
-<div id="rwFilters" style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
+<div id="rwFilters" style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;">
 <button class="bsm bsb" id="rwf_all" onclick="setRwFilter('all',this)">All</button>
 <button class="bsm" id="rwf_p1" onclick="setRwFilter('1',this)" style="background:var(--red2);color:var(--red);border:1px solid var(--red);">&#128308; Priority 1</button>
 <button class="bsm" id="rwf_p2" onclick="setRwFilter('2',this)" style="background:none;border:1px solid var(--bdr);color:var(--mut);">&#128992; Priority 2</button>
 <button class="bsm" id="rwf_p3" onclick="setRwFilter('3',this)" style="background:none;border:1px solid var(--bdr);color:var(--mut);">&#128309; Priority 3</button>
 <button class="bsm" id="rwf_p4" onclick="setRwFilter('4',this)" style="background:none;border:1px solid var(--bdr);color:var(--mut);">&#9898; Priority 4</button>
 </div>
+<div id="rwFieldFilters" style="display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;">
+<button class="bsm" id="rwff_all" onclick="setRwFieldFilter('all',this)" style="font-size:10px;padding:5px 9px;background:var(--blu3);color:var(--blu);border:none;">&#128269; All</button>
+<button class="bsm" id="rwff_price" onclick="setRwFieldFilter('price',this)" style="font-size:10px;padding:5px 9px;background:var(--surf);border:1px solid var(--bdr);color:var(--mut);">&#8358; Price</button>
+<button class="bsm" id="rwff_shelf" onclick="setRwFieldFilter('shelf',this)" style="font-size:10px;padding:5px 9px;background:var(--surf);border:1px solid var(--bdr);color:var(--mut);">&#128205; Shelf</button>
+<button class="bsm" id="rwff_supplier" onclick="setRwFieldFilter('supplier',this)" style="font-size:10px;padding:5px 9px;background:var(--surf);border:1px solid var(--bdr);color:var(--mut);">&#127981; Supplier</button>
+<button class="bsm" id="rwff_cat" onclick="setRwFieldFilter('cat',this)" style="font-size:10px;padding:5px 9px;background:var(--surf);border:1px solid var(--bdr);color:var(--mut);">&#127991; Category</button>
+<button class="bsm" id="rwff_dup" onclick="setRwFieldFilter('dup',this)" style="font-size:10px;padding:5px 9px;background:var(--surf);border:1px solid var(--bdr);color:var(--mut);">&#128258; Dupes</button>
+<button class="bsm" id="rwff_owner" onclick="setRwFieldFilter('owner',this)" style="font-size:10px;padding:5px 9px;background:var(--surf);border:1px solid var(--bdr);color:var(--mut);">O Owner</button>
+<button class="bsm" id="rwff_cons" onclick="setRwFieldFilter('cons',this)" style="font-size:10px;padding:5px 9px;background:var(--surf);border:1px solid var(--bdr);color:var(--mut);">C Consign</button>
+</div>
+<div style="display:flex;align-items:center;gap:5px;margin-bottom:10px;">
+<span style="font-size:10px;color:var(--mut);font-weight:700;">SORT:</span>
+<button class="bsm" id="rwsort_pri" onclick="setRwSort('pri',this)" style="font-size:10px;padding:4px 8px;background:var(--blu3);color:var(--blu);border:none;">Priority</button>
+<button class="bsm" id="rwsort_score" onclick="setRwSort('score',this)" style="font-size:10px;padding:4px 8px;background:var(--surf);border:1px solid var(--bdr);color:var(--mut);">Score &#8593;</button>
+<button class="bsm" id="rwsort_name" onclick="setRwSort('name',this)" style="font-size:10px;padding:4px 8px;background:var(--surf);border:1px solid var(--bdr);color:var(--mut);">Name</button>
+<button class="bsm" id="rwsort_upd" onclick="setRwSort('upd',this)" style="font-size:10px;padding:4px 8px;background:var(--surf);border:1px solid var(--bdr);color:var(--mut);">Recent</button>
+</div>
+<div id="rwInlinePanel" style="display:none;background:var(--card);border:2px solid var(--amb);border-radius:16px;padding:16px;margin-bottom:10px;"></div>
 <div id="rwTaskList" style="min-height:120px;"></div>
-
-
+<div id="rwMilestone" style="display:none;"></div>
+</div>
+<!-- Activity panel -->
+<div id="rwActPanel" style="display:none;"><div id="rwActContent"></div></div>
 </div><!-- end pg11 -->
+
 
 <nav class="nav" id="mainNav">
 <button type="button" class="nb on" onclick="goTo(0,this)" id="nb0"><span class="nbi">&#128202;</span><span class="nbl">Dashboard</span></button>
@@ -1941,9 +2018,154 @@ body{background:var(--bg);}
 <div id="toast"></div>
 <script>
 // ── STATE ────────────────────────────────────────────────────────────────────
-var S={products:[],stock:[],cashDays:[],suppliers:[],supplierPayments:[],expCats:[],customPins:null,chkState:{},demandLog:[],loans:[],stockBalance:null,stockBalanceHistory:[],beSettings:null,sales:[],customers:[],reorderOrdered:{},purchaseOrders:[],goodsReceived:[],stockReturns:[],priceHistory:[],migrationHistory:[],migrationCerts:[],salesReturns:[],prescriptions:[]};
+var S={products:[],stock:[],cashDays:[],suppliers:[],supplierPayments:[],expCats:[],customPins:null,chkState:{},demandLog:[],loans:[],stockBalance:null,stockBalanceHistory:[],beSettings:null,sales:[],customers:[],reorderOrdered:{},purchaseOrders:[],goodsReceived:[],stockReturns:[],priceHistory:[],migrationHistory:[],migrationCerts:[],salesReturns:[],prescriptions:[],reviewLog:[]};
 var PINS={admin:'1234',staff:'5678'};
 var role='admin',curPg=0,pinEnt='',pinRole='admin',acM=[],snapM='bc',cv='all',curExp=[],drFrom='',drTo='';
+
+// ════════════════════════════════════════════════════════════════════════════
+// PBSRX PLATFORM STANDARDS — Discoverable Reference Index
+//
+// PST-001 Product Identity
+//   Implementation : getCurStock() — String(pid) normalization
+//   Audit point    : PBSRx.Diagnostics 'PED-ID-READ' event
+//   Search tag     : PST-001
+//
+// PST-002 Pricing Independence
+//   Implementation : saveProdEdit(), rwSaveInline() — price never auto-set from cost
+//   Exception      : rsSuggestSell() — documented intentional suggestion only
+//   Search tag     : PST-002
+//
+// PST-003 Semantic Product Vocabulary
+//   Implementation : peUpdateSemanticLabels(), peUpdatePreview()
+//   Search tag     : PST-003
+//
+// PST-004 Canonical Packaging Resolver
+//   Implementation : getProdUnits(p) — System B over System A fallback
+//   Search tag     : PST-004
+//
+// PST-005 Canonical Product Ingestion
+//   Implementation : pidExecuteMigration(), saveReceiveStock(), importQB(),
+//                    importFromQB(), importSalesCSV(), impCSV()
+//   Backfill       : pidBackfillOperationalEnrollment()
+//   Audit point    : PBSRx.Diagnostics 'STOCK-PULSE-ENROLLED' event
+//   Search tag     : PST-005
+//
+// PST-006 Operational Visibility vs Commercial Classification
+//   Implementation : isFastMover (operational) / countFrequency (commercial)
+//   Safety net     : initStocktakeFields() fallback — documented intentional
+//   Search tag     : PST-006
+//
+// PST-007 Event Scope Principle
+//   Implementation : rwRegisterQueueDelegates() — scoped to #rwQueuePanel
+//                    PED observer — scoped to #prodEditModal
+//   Audit point    : PBSRx.Diagnostics 'REVIEW-EVENT-SCOPE' event
+//   Search tag     : PST-007
+//
+// PST-008 Idempotent Registration
+//   Implementation : _rwDelegatesRegistered, _hooksInstalled, _pbsrxBriefingInterval
+//   Search tag     : PST-008
+//
+// ════════════════════════════════════════════════════════════════════════════
+// PRODUCT FLAG REGISTRY (D-018)
+//
+// Internal flags on product objects. Not user-editable. Not exported to CSV.
+//
+// Flag            Type      Set by                Purpose
+// ─────────────── ───────── ───────────────────── ─────────────────────────
+// _temp           boolean   snapSendToPOS()        Temporary POS product.
+//                                                  Never saved to S.products.
+//                                                  Safe to discard after sale.
+//
+// imported        boolean   impCSV()               Product originated from
+//                                                  a QuickBooks-style CSV
+//                                                  import (legacy QB export).
+//
+// migrationBatch  string    pidExecuteMigration()  ID of the PID migration
+//                                                  session that created this
+//                                                  product. Used by
+//                                                  pidBackfillOperationalEnrollment()
+//                                                  to identify migrated products.
+//                                                  Format: 'PHX-MIG-YYYYMMDD-NNN'
+//
+// migrationDate   string    pidExecuteMigration()  ISO date of migration.
+//
+// source          string    importFromQB()         Human-readable ingestion
+//                           importSalesCSV()       source for audit purposes.
+//                                                  Values: 'QuickBooks',
+//                                                  'SalesImport', etc.
+//
+// addedDate       string    All creation paths     ISO date product was added.
+//                                                  Always set.
+//
+// ════════════════════════════════════════════════════════════════════════════
+//
+// ════════════════════════════════════════════════════════════════════════════
+// PBSRX INTERACTION ARCHITECTURE — Standard Rules
+//
+// PBSRx uses delegated event listeners on `document` for dynamically rendered
+// UI (Review Workspace task cards, POS dropdown rows). These listeners walk the
+// DOM upward from e.target to find elements with interaction data-attributes.
+//
+// Three architectural rules govern every delegated handler:
+//
+// RULE 1 — Native controls are sovereign.
+//   Delegated listeners must never intercept events that originate on or inside
+//   a native interactive element (INPUT, SELECT, TEXTAREA, BUTTON, LABEL, A,
+//   or any element with contenteditable). These elements own their interaction
+//   completely. Interrupting them destroys focus, keyboard state, and typed text.
+//
+// RULE 2 — Editing sessions are protected.
+//   When a Review Workspace task card is expanded, it enters an editing session.
+//   No delegated action may recreate the DOM or remove focus during that session.
+//   Only an intentional gesture on the card's declared header region may collapse
+//   the card. Taps within the editing body are silently ignored by the delegate.
+//
+// RULE 3 — Gesture intent must be resolved before action.
+//   A delegated selection (e.g. POS product picker) must only fire after a
+//   deliberate tap. A scroll gesture that ends with the finger over an actionable
+//   element must not trigger selection. Gesture intent is resolved by measuring
+//   cumulative vertical displacement from touchstart to touchend.
+//
+// These rules apply to all current and future delegated interaction handlers.
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── Interaction Architecture Constants ───────────────────────────────────────
+// Change these values in one place to tune interaction behaviour globally.
+
+// Maximum vertical finger movement (px) that still classifies as a deliberate tap.
+// Displacement beyond this threshold classifies the gesture as a scroll.
+var PBSRX_TAP_MOVE_THRESHOLD = 8;
+
+// CSS class assigned to the header strip of every Review Workspace task card.
+// The delegate uses this class to identify the collapse-intent region.
+// Taps on this element collapse an open card; taps elsewhere preserve editing state.
+var PBSRX_RW_HEADER_CLASS = 'rw-card-header';
+
+// Native interactive element tags that must always own their own interaction.
+// The delegated handler checks this list before any DOM traversal.
+var PBSRX_NATIVE_INTERACTIVE = {
+  INPUT:true, TEXTAREA:true, SELECT:true,
+  BUTTON:true, LABEL:true, A:true
+};
+
+// ── Shared helper: returns true if element is a native interactive control ───
+function pbsrxIsNativeControl(el){
+  if(!el||!el.tagName) return false;
+  if(PBSRX_NATIVE_INTERACTIVE[el.tagName.toUpperCase()]) return true;
+  if(el.getAttribute&&el.getAttribute('contenteditable')!=null) return true;
+  return false;
+}
+
+// ── Shared helper: returns true if el or any ancestor is a native control ────
+// Use this when the event target may be a text node child of a button etc.
+function pbsrxTargetIsNative(el){
+  var node=el;
+  while(node&&node!==document){
+    if(pbsrxIsNativeControl(node)) return true;
+    node=node.parentElement;
+  }
+  return false;
+}
 var KEY='pbsrx_v2';
 function save(){
   try{
@@ -2025,25 +2247,23 @@ var pidParsedData = null;  // Holds parsed file data between phases
 // ── PRODUCT COMPLETENESS SCORE ───────────────────────────────────────────────
 // Computed — never stored. Called on demand.
 function computeCompleteness(p){
-  var score = 0;
-  var max = 11;
-  // Identity layer (2 pts)
-  if(p.genericName && p.genericName.length > 0) score += 2;
-  // Commercial layer (2.5 pts)
-  if(p.sellPrice && p.sellPrice > 0) score += 2;
-  if(p.costPrice && p.costPrice > 0) score += 0.5;
-  // Operational layer (3 pts)
-  if(p.shelfLocation && p.shelfLocation.length > 0) score += 1;
-  if(p.category && p.category !== 'General' && p.category !== 'Other' && p.category.length > 0) score += 0.5;
-  if(p.sellUnit && p.sellUnit !== 'unit' && p.sellUnit !== 'Unit') score += 0.5;
-  if(p.isFastMover) score += 0.5;
-  if(p.supplier && p.supplier.length > 0) score += 0.5;
-  // Enrichment layer (3 pts)
-  if(p.barcode && p.barcode.length > 0) score += 0.5;
-  if(p.nafdac && p.nafdac.length > 0) score += 0.5;
-  if(p.reorderQty && p.reorderQty > 0) score += 0.5;
-  if(p.minStock && p.minStock !== 10) score += 0.5;
-  return Math.round((score / max) * 100);
+  // RC3: implementation moved to Review Workspace Engine below
+  var score=0;var max=10.5;
+  if(p.genericName&&p.genericName.length>0)score+=2;
+  if(p.strength&&p.strength.length>0)score+=0.5;
+  if(p.form&&p.form.length>0)score+=0.5;
+  if(p.sellPrice&&p.sellPrice>0)score+=2;
+  if(p.costPrice&&p.costPrice>0)score+=0.5;
+  if(p.shelfLocation&&p.shelfLocation.length>0)score+=1;
+  if(p.category&&p.category!=='General'&&p.category!=='Other'&&p.category.length>0)score+=0.5;
+  if(p.sellUnit&&p.sellUnit!=='unit'&&p.sellUnit!=='Unit')score+=0.5;
+  if(p.isFastMover)score+=0.5;
+  if((p.supplier||p.primarySupplier||'').length>0)score+=0.5;
+  if(p.barcode&&p.barcode.length>0)score+=0.5;
+  if(p.nafdac&&p.nafdac.length>0)score+=0.5;
+  if(p.reorderQty&&p.reorderQty>0)score+=0.5;
+  if(p.minStock&&p.minStock!==10)score+=0.5;
+  return Math.round((score/max)*100);
 }
 
 // ── PRE-MIGRATION SNAPSHOT ───────────────────────────────────────────────────
@@ -2409,7 +2629,12 @@ function pidExecuteMigration(rows){
         sellPrice: sellRaw,
         minStock: Number(findCol(row,['min stock','reorder level','minimum']))||10,
         reorderQty: 0,
-        isFastMover: false,
+        // PST-006: isFastMover = operational enrollment (Stock Pulse, Dashboard, Stocktake).
+        // All migrated products with inventory are operationally active from day one.
+        // Commercial movement classification (fast/slow/dormant) is a separate concern
+        // managed by countFrequency — not coupled to operational enrollment.
+        isFastMover: true,
+        countFrequency: 'normal',  // PST-006: independent commercial classification
         shelfLocation: shelfRaw,
         supplier: supplierRaw,
         notes: migNotes,
@@ -2556,6 +2781,8 @@ function pidExecuteMigration(rows){
   renderAll();
   try{updReviewBadge();}catch(e){}
   try{if(typeof renderPulse==='function')renderPulse();}catch(e){}
+  // PIR-014: Enroll active migrated products in operational monitoring (PST-006)
+  try{pidBackfillOperationalEnrollment();}catch(e){}
 
   stats.endTime = Date.now();
   pidSetProgress(100, 'Complete!');
@@ -2658,19 +2885,75 @@ function pidStatCard(label, value, color){
 // ════════════════════════════════════════════════════════════════════════════
 
 // ════════════════════════════════════════════════════════════════════════════
-// PX-MIG-002C — REVIEW WORKSPACE ENGINE
+// PX-MIG-002C RC3 — REVIEW WORKSPACE ENGINE
 // Computed workspace — no storage, no sync, no duplicates.
-// Tasks are generated on demand by scanning S.products[].
+// Tasks generated on demand by scanning S.products[].
 // Tasks resolve automatically when the underlying data gap is filled.
+// RC3: Dashboard + Queue + Activity sub-tabs, inline editing,
+//      field filters, sort, sequential review, Resolve Later, milestones.
 // ════════════════════════════════════════════════════════════════════════════
 
+// ── State ─────────────────────────────────────────────────────────────────
 var rwCurrentFilter='all';
+var rwFieldFilter='all';
+var rwCurrentSort='pri';
+var rwCurrentTab='dash';
+var rwSkipped={};        // pid → true when "Resolve Later" tapped
+var rwExpandedPid=null;  // pid of currently expanded inline panel
+var rwExpandedType=null; // task type of expanded panel
 
+// ── Sub-tab controller ────────────────────────────────────────────────────
+function setRwTab(tab){
+  rwCurrentTab=tab;
+  ['dash','queue','act'].forEach(function(t){
+    var panel=document.getElementById('rwPanel'===t?'rwDashPanel':t==='dash'?'rwDashPanel':t==='queue'?'rwQueuePanel':'rwActPanel');
+    var btn=document.getElementById('rwtab_'+t);
+    if(panel) panel.style.display=(t===tab?'block':'none');
+    if(btn){
+      btn.style.background=t===tab?'var(--blu3)':'none';
+      btn.style.color=t===tab?'var(--blu)':'var(--mut)';
+      btn.style.border=t===tab?'none':'1px solid var(--bdr)';
+    }
+  });
+  if(tab==='dash') renderRwDashboard();
+  else if(tab==='queue'){ rwExpandedPid=null; renderReviewWorkspace(); rwRegisterQueueDelegates(); }
+  else if(tab==='act') renderRwActivity();
+}
+
+// ── Field filter controller ───────────────────────────────────────────────
+function setRwFieldFilter(f,el){
+  rwFieldFilter=f;
+  document.querySelectorAll('#rwFieldFilters .bsm').forEach(function(b){
+    b.style.background='var(--surf)';b.style.color='var(--mut)';b.style.border='1px solid var(--bdr)';
+  });
+  if(el){el.style.background='var(--blu3)';el.style.color='var(--blu)';el.style.border='none';}
+  rwExpandedPid=null;
+  renderReviewWorkspace();
+}
+
+// ── Sort controller ───────────────────────────────────────────────────────
+function setRwSort(s,el){
+  rwCurrentSort=s;
+  document.querySelectorAll('[id^="rwsort_"]').forEach(function(b){
+    b.style.background='var(--surf)';b.style.color='var(--mut)';b.style.border='1px solid var(--bdr)';
+  });
+  if(el){el.style.background='var(--blu3)';el.style.color='var(--blu)';el.style.border='none';}
+  renderReviewWorkspace();
+}
+
+// ── Priority filter controller (preserved) ────────────────────────────────
 function setRwFilter(f,el){
   rwCurrentFilter=f;
+  rwFieldFilter='all';
   document.querySelectorAll('#rwFilters .bsm').forEach(function(b){
     b.style.background='none';b.style.borderColor='var(--bdr)';b.style.color='var(--mut)';
   });
+  // Reset field filter UI
+  document.querySelectorAll('#rwFieldFilters .bsm').forEach(function(b){
+    b.style.background='var(--surf)';b.style.color='var(--mut)';b.style.border='1px solid var(--bdr)';
+  });
+  var ffAll=document.getElementById('rwff_all');
+  if(ffAll){ffAll.style.background='var(--blu3)';ffAll.style.color='var(--blu)';ffAll.style.border='none';}
   if(el){
     var colors={'1':'var(--red)','2':'var(--ora)','3':'var(--grn)','all':'var(--amb)'};
     var bg={'1':'var(--red2)','2':'rgba(249,115,22,0.15)','3':'rgba(34,197,94,0.15)','all':'rgba(245,158,11,0.15)'};
@@ -2678,10 +2961,276 @@ function setRwFilter(f,el){
     el.style.borderColor=colors[f]||'var(--amb)';
     el.style.color=colors[f]||'#000';
   }
+  rwExpandedPid=null;
   renderReviewWorkspace();
 }
 
-// Generate all tasks by scanning product master — O(n), no storage
+// ── Review log helper ─────────────────────────────────────────────────────
+function rwLog(productId,productName,field,oldVal,newVal,source){
+  if(!S.reviewLog)S.reviewLog=[];
+  var now=new Date();
+  S.reviewLog.unshift({
+    date:td(),
+    time:now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0'),
+    role:role||'owner',
+    productId:productId,
+    productName:productName,
+    field:field,
+    oldValue:oldVal,
+    newValue:newVal,
+    source:source||'ReviewWorkspace'
+  });
+  if(S.reviewLog.length>1000)S.reviewLog=S.reviewLog.slice(0,1000);
+}
+
+// ── Inline save (RC3 core — saves single field without leaving pg11) ──────
+function rwSaveInline(pid,field,value){
+  // Compare as-is: migrated product ids are strings like "pid123abc"
+  var p=S.products.find(function(x){return String(x.id)===String(pid);});
+  if(!p){toast('Product not found');return;}
+  var oldVal=p[field];
+  // Field-specific validation
+  if(field==='sellPrice'){
+    var v=Number(value);
+    if(v===0){toast('Use blank instead of \u20a60 \u2014 leave empty if price unknown');return;}
+    if(v<0){toast('Price cannot be negative');return;}
+    if(p.costPrice&&p.costPrice>0&&v<p.costPrice){
+      toast('\u26a0\ufe0f Sell price is below cost \u2014 saved with warning',2500);
+    }
+    if(p.costPrice&&p.costPrice>0&&v>0&&v!==p.costPrice){
+      if(!S.priceHistory)S.priceHistory=[];
+      S.priceHistory.unshift({pid:p.id,name:p.genericName,date:td(),
+        oldCost:p.costPrice,newCost:p.costPrice,oldPrice:p.sellPrice,newPrice:v});
+      if(S.priceHistory.length>500)S.priceHistory=S.priceHistory.slice(0,500);
+    }
+    p.sellPrice=v;
+    p.sellUnit=p.sellUnit||'unit';
+    // keep units array in sync
+    if(p.units&&p.units[0])p.units[0].price=v;
+  } else if(field==='costPrice'){
+    var cv2=Number(value);
+    if(cv2<0){toast('Cost cannot be negative');return;}
+    if(!S.priceHistory)S.priceHistory=[];
+    S.priceHistory.unshift({pid:p.id,name:p.genericName,date:td(),
+      oldCost:p.costPrice,newCost:cv2,oldPrice:p.sellPrice,newPrice:p.sellPrice});
+    if(S.priceHistory.length>500)S.priceHistory=S.priceHistory.slice(0,500);
+    p.costPrice=cv2;
+  } else if(field==='category'){
+    p.category=value;
+  } else if(field==='shelfLocation'){
+    p.shelfLocation=value;
+  } else if(field==='sellUnit'){
+    p.sellUnit=value;
+    if(p.units&&p.units[0])p.units[0].name=value;
+  } else if(field==='supplier'){
+    p.supplier=value; p.primarySupplier=value;
+  } else if(field==='barcode'){
+    // Uniqueness check
+    var dup=S.products.find(function(x){return x.id!==pid&&x.barcode&&x.barcode===value;});
+    if(dup){toast('\u26a0\ufe0f Barcode already belongs to: '+escH(dup.genericName));return;}
+    p.barcode=value;
+  } else if(field==='nafdac'){
+    p.nafdac=value;
+  } else if(field==='minStock'){
+    p.minStock=Number(value)||0;
+  } else if(field==='reorderQty'){
+    p.reorderQty=Number(value)||0;
+  } else if(field==='isFastMover'){
+    p.isFastMover=!!value;
+  } else if(field==='ownership'){
+    // Clear PID:REVIEW flag
+    if(value==='owner'||value==='consignment'){
+      p.ownership=value;
+      p.isConsignment=(value==='consignment');
+      p.notes=(p.notes||'').replace('[PID:REVIEW]','').trim();
+    }
+  } else {
+    p[field]=value;
+  }
+  rwLog(pid,p.genericName,field,oldVal,value,'ReviewWorkspace');
+  save();
+  updReviewBadge();
+  renderRwDashboard();
+  // Close inline panel and re-render queue
+  rwExpandedPid=null;
+  renderReviewWorkspace();
+  toast('\u2713 '+escH(p.genericName)+' \u2014 updated');
+  // Check milestone
+  rwCheckMilestone();
+}
+
+// ── Resolve Later ─────────────────────────────────────────────────────────
+function rwResolveLater(pid,type){
+  var key=pid+'_'+type;
+  rwSkipped[key]=true;
+  rwExpandedPid=null;
+  renderReviewWorkspace();
+  toast('Skipped \u2014 will return next session',1800);
+}
+
+// ── Inline panel renderer ─────────────────────────────────────────────────
+function rwOpenInline(pid,type){
+  // pid may be string (migrated products) or number — do not coerce
+  if(rwExpandedPid===pid&&rwExpandedType===type){
+    rwExpandedPid=null; rwExpandedType=null;
+    renderReviewWorkspace(); return;
+  }
+  rwExpandedPid=pid; rwExpandedType=type;
+  renderReviewWorkspace();
+  // Scroll inline panel into view
+  setTimeout(function(){
+    var el=document.getElementById('rwInlinePanel');
+    if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'});
+  },80);
+}
+
+function renderRwInlinePanel(p,type,allTasksForPid){
+  var cats=['Analgesics','Antibiotics','Controlled Medicines','Dermatology',
+    'Eye Care & Men\'s Health','GI & Deworming','General','Supplements & GI',
+    'Women\'s Health & Chronic Care'];
+  var units=['Tablet','Card','Pack','Bottle','Tube','Vial','Ampoule','Box','Needle'];
+  var score=computeCompleteness(p);
+  var scoreColor=score>=80?'var(--grn)':score>=50?'var(--ora)':'var(--red)';
+  var id=p.id;
+
+  var fieldHtml='';
+  if(type==='sell_price'||type==='price_inversion'){
+    var warnHtml='';
+    if(type==='price_inversion'){
+      warnHtml='<div style="background:var(--red2);color:var(--red);border-radius:8px;padding:8px 10px;font-size:11px;font-weight:700;margin-bottom:10px;">&#9888;&#65039; Sell price &#8358;'+((p.sellPrice||0).toLocaleString('en-NG'))+' is below cost &#8358;'+((p.costPrice||0).toLocaleString('en-NG'))+'</div>';
+    }
+    fieldHtml=warnHtml+
+      '<div style="margin-bottom:10px;"><div style="font-size:10px;color:var(--mut);font-weight:700;margin-bottom:4px;">COST PRICE (current)</div>'+
+      '<input type="number" id="rwin_cost" value="'+(p.costPrice||'')+'" style="width:100%;padding:10px;background:var(--surf);border:1px solid var(--bdr);border-radius:10px;color:var(--txt);font-size:15px;font-weight:700;" placeholder="Cost price &#8358;" oninput="rwInlineMarginUpdate()"/></div>'+
+      '<div style="margin-bottom:10px;"><div style="font-size:10px;color:var(--mut);font-weight:700;margin-bottom:4px;">SELLING PRICE &#8358; <span style="color:var(--red);">*</span></div>'+
+      '<input type="number" id="rwin_sell" value="'+(p.sellPrice||'')+'" style="width:100%;padding:10px;background:var(--card);border:2px solid var(--amb);border-radius:10px;color:var(--txt);font-size:18px;font-weight:900;" placeholder="e.g. 500" oninput="rwInlineMarginUpdate()" autofocus/></div>'+
+      '<div id="rwin_margin" style="font-size:11px;color:var(--mut);margin-bottom:12px;"></div>'+
+      '<button data-rwaction="saveprice" data-rwpid="'+id+'" data-rwcost="'+(p.costPrice||0)+'" style="width:100%;padding:12px;background:var(--grn);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;touch-action:manipulation;">&#128190; Save Price</button>';
+  } else if(type==='cost_price'||type==='cost_price_ns'){
+    fieldHtml='<div style="margin-bottom:10px;"><div style="font-size:10px;color:var(--mut);font-weight:700;margin-bottom:4px;">COST PRICE &#8358;</div>'+
+      '<input type="number" id="rwin_cost2" value="'+(p.costPrice||'')+'" style="width:100%;padding:10px;background:var(--card);border:2px solid var(--amb);border-radius:10px;color:var(--txt);font-size:18px;font-weight:900;" placeholder="e.g. 200" autofocus/></div>'+
+      '<button data-rwaction="savecost" data-rwpid="'+id+'" style="width:100%;padding:12px;background:var(--grn);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;touch-action:manipulation;">&#128190; Save Cost</button>';
+  } else if(type==='category'){
+    var catOpts=cats.map(function(c){return '<option value="'+c+'"'+(p.category===c?' selected':'')+'>'+c+'</option>';}).join('');
+    fieldHtml='<div style="margin-bottom:10px;"><div style="font-size:10px;color:var(--mut);font-weight:700;margin-bottom:4px;">CATEGORY</div>'+
+      '<select id="rwin_cat" style="width:100%;padding:10px;background:var(--card);border:2px solid var(--amb);border-radius:10px;color:var(--txt);font-size:14px;font-weight:700;"><option value="">-- Select category --</option>'+catOpts+'</select></div>'+
+      '<button data-rwaction="savecat" data-rwpid="'+id+'" style="width:100%;padding:12px;background:var(--grn);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;touch-action:manipulation;">&#128190; Save Category</button>';
+  } else if(type==='shelf'){
+    fieldHtml='<div style="margin-bottom:10px;"><div style="font-size:10px;color:var(--mut);font-weight:700;margin-bottom:4px;">SHELF LOCATION</div>'+
+      '<input type="text" id="rwin_shelf" value="'+(p.shelfLocation||'')+'" style="width:100%;padding:10px;background:var(--card);border:2px solid var(--amb);border-radius:10px;color:var(--txt);font-size:15px;font-weight:700;" placeholder="e.g. S05" autofocus/></div>'+
+      '<button data-rwaction="saveshelf" data-rwpid="'+id+'" style="width:100%;padding:12px;background:var(--grn);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;touch-action:manipulation;">&#128190; Save Shelf</button>';
+  } else if(type==='sell_unit'){
+    var unitOpts=units.map(function(u){return '<option value="'+u.toLowerCase()+'"'+(p.sellUnit===u.toLowerCase()||p.sellUnit===u?' selected':'')+'>'+u+'</option>';}).join('');
+    fieldHtml='<div style="margin-bottom:10px;"><div style="font-size:10px;color:var(--mut);font-weight:700;margin-bottom:4px;">SELL UNIT</div>'+
+      '<select id="rwin_unit" style="width:100%;padding:10px;background:var(--card);border:2px solid var(--amb);border-radius:10px;color:var(--txt);font-size:14px;font-weight:700;"><option value="">-- Select unit --</option>'+unitOpts+'</select></div>'+
+      '<button data-rwaction="saveunit" data-rwpid="'+id+'" style="width:100%;padding:12px;background:var(--grn);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;touch-action:manipulation;">&#128190; Save Unit</button>';
+  } else if(type==='supplier'){
+    var supOpts=S.suppliers.map(function(s){return '<option value="'+escH(s.name)+'"'+(p.primarySupplier===s.name?' selected':'')+'>'+escH(s.name)+'</option>';}).join('');
+    fieldHtml='<div style="margin-bottom:10px;"><div style="font-size:10px;color:var(--mut);font-weight:700;margin-bottom:4px;">SUPPLIER</div>'+
+      '<select id="rwin_sup" style="width:100%;padding:10px;background:var(--card);border:2px solid var(--amb);border-radius:10px;color:var(--txt);font-size:14px;font-weight:700;"><option value="">-- Select supplier --</option>'+supOpts+'</select></div>'+
+      '<button data-rwaction="savesup" data-rwpid="'+id+'" style="width:100%;padding:12px;background:var(--grn);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;touch-action:manipulation;">&#128190; Link Supplier</button>';
+  } else if(type==='barcode'){
+    fieldHtml='<div style="margin-bottom:10px;"><div style="font-size:10px;color:var(--mut);font-weight:700;margin-bottom:4px;">BARCODE</div>'+
+      '<input type="text" id="rwin_bc" value="'+(p.barcode||'')+'" style="width:100%;padding:10px;background:var(--card);border:2px solid var(--amb);border-radius:10px;color:var(--txt);font-size:15px;font-weight:700;" placeholder="Scan or type barcode" autofocus/></div>'+
+      '<button data-rwaction="savebarcode" data-rwpid="'+id+'" style="width:100%;padding:12px;background:var(--grn);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;touch-action:manipulation;">&#128190; Save Barcode</button>';
+  } else if(type==='nafdac'){
+    fieldHtml='<div style="margin-bottom:10px;"><div style="font-size:10px;color:var(--mut);font-weight:700;margin-bottom:4px;">NAFDAC NUMBER</div>'+
+      '<input type="text" id="rwin_nf" value="'+(p.nafdac||'')+'" style="width:100%;padding:10px;background:var(--card);border:2px solid var(--amb);border-radius:10px;color:var(--txt);font-size:15px;font-weight:700;" placeholder="e.g. A4-1234" autofocus/></div>'+
+      '<button data-rwaction="savenafdac" data-rwpid="'+id+'" style="width:100%;padding:12px;background:var(--grn);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;touch-action:manipulation;">&#128190; Save NAFDAC</button>';
+  } else if(type==='reorder_level'){
+    fieldHtml='<div style="margin-bottom:10px;"><div style="font-size:10px;color:var(--mut);font-weight:700;margin-bottom:4px;">MINIMUM STOCK (Reorder Point)</div>'+
+      '<input type="number" id="rwin_mn" value="'+(p.minStock||'')+'" style="width:100%;padding:10px;background:var(--card);border:2px solid var(--amb);border-radius:10px;color:var(--txt);font-size:18px;font-weight:900;" placeholder="e.g. 5" autofocus/></div>'+
+      '<button data-rwaction="saveminstock" data-rwpid="'+id+'" style="width:100%;padding:12px;background:var(--grn);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;touch-action:manipulation;">&#128190; Save Min Stock</button>';
+  } else if(type==='reorder_qty'){
+    fieldHtml='<div style="margin-bottom:10px;"><div style="font-size:10px;color:var(--mut);font-weight:700;margin-bottom:4px;">REORDER QUANTITY</div>'+
+      '<input type="number" id="rwin_rq" value="'+(p.reorderQty||'')+'" style="width:100%;padding:10px;background:var(--card);border:2px solid var(--amb);border-radius:10px;color:var(--txt);font-size:18px;font-weight:900;" placeholder="e.g. 50" autofocus/></div>'+
+      '<button data-rwaction="savereorderqty" data-rwpid="'+id+'" style="width:100%;padding:12px;background:var(--grn);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;touch-action:manipulation;">&#128190; Save Reorder Qty</button>';
+  } else if(type==='ownership'){
+    var curOwn=p.isConsignment?'consignment':'owner';
+    fieldHtml='<div style="margin-bottom:12px;"><div style="font-size:10px;color:var(--mut);font-weight:700;margin-bottom:8px;">OWNERSHIP <span style="color:var(--red);">*</span></div>'+
+      '<label style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--surf);border-radius:10px;margin-bottom:8px;cursor:pointer;">'+
+      '<input type="radio" name="rwin_own" value="owner"'+(curOwn==='owner'?' checked':'')+' style="width:18px;height:18px;"> <span style="font-size:14px;font-weight:700;">Owner Stock — D-Glopa\'s own inventory</span></label>'+
+      '<label style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--surf);border-radius:10px;cursor:pointer;">'+
+      '<input type="radio" name="rwin_own" value="consignment"'+(curOwn==='consignment'?' checked':'')+' style="width:18px;height:18px;"> <span style="font-size:14px;font-weight:700;">Consignment — belongs to supplier</span></label></div>'+
+      '<button data-rwaction="saveownership" data-rwpid="'+id+'" style="width:100%;padding:12px;background:var(--grn);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;touch-action:manipulation;">&#128190; Confirm Ownership</button>';
+  } else if(type==='fast_mover'){
+    fieldHtml='<div style="margin-bottom:12px;font-size:13px;color:var(--txt);">Enable Stock Pulse monitoring for this product? It has been sold but is not currently monitored.</div>'+
+      '<button data-rwaction="savefastmover" data-rwpid="'+id+'" style="width:100%;padding:12px;background:var(--grn);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;touch-action:manipulation;">&#128138; Enable Stock Pulse Monitoring</button>';
+  } else if(type==='expiry'){
+    fieldHtml='<div style="background:var(--surf);border-radius:10px;padding:12px;font-size:12px;color:var(--mut);line-height:1.6;">&#128336; Expiry dates are recorded during <b>Intake &rarr; Bulk Receive</b> when stock arrives.<br><br>Tap <b>Edit Full Product &nearr;</b> to see batch records, or receive new stock via Intake to add an expiry date.</div>';
+  } else if(type==='duplicate_name'){
+    fieldHtml='<div style="background:var(--red2);color:var(--red);border-radius:10px;padding:12px;font-size:12px;line-height:1.6;margin-bottom:10px;">&#128258; Another product with this name exists. Review both products and delete or rename the duplicate via <b>Edit Full Product &nearr;</b>.</div>';
+  } else {
+    fieldHtml='<div style="font-size:12px;color:var(--mut);">Tap Edit Full Product to complete this field.</div>';
+  }
+
+  // Other tasks on this product
+  var otherTasks=allTasksForPid.filter(function(t){return t.type!==type;});
+  var otherHtml='';
+  if(otherTasks.length>0){
+    var priColors={1:'var(--red)',2:'var(--ora)',3:'var(--grn)',4:'var(--mut)'};
+    otherHtml='<div style="border-top:1px solid var(--bdr);margin-top:12px;padding-top:10px;"><div style="font-size:10px;color:var(--mut);font-weight:700;margin-bottom:6px;">OTHER OPEN TASKS ('+otherTasks.length+')</div>'+
+      otherTasks.map(function(t){
+        return '<div style="font-size:11px;color:var(--mut);padding:3px 0;">'+t.icon+' [P'+t.pri+'] '+t.desc+'</div>';
+      }).join('')+'</div>';
+  }
+
+  return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'+
+    '<div><div style="font-size:14px;font-weight:900;color:var(--txt);">'+escH(p.genericName)+(p.strength?' <span style="font-size:12px;color:var(--mut);">'+escH(p.strength)+'</span>':'')+'</div>'+
+    '<div style="font-size:11px;color:var(--mut);margin-top:2px;">'+(p.category||'\u2014')+' \u00b7 '+(p.shelfLocation||'No shelf')+' \u00b7 <span style="color:'+scoreColor+';font-weight:800;">'+score+'%</span> complete</div></div>'+
+    '<button data-rwaction="editfull" data-rwpid="'+id+'" style="font-size:10px;font-weight:700;background:none;border:1px solid var(--bdr);color:var(--mut);border-radius:8px;padding:5px 8px;cursor:pointer;touch-action:manipulation;">Edit Full ↗</button>'+
+    '</div>'+
+    fieldHtml+
+    '<div style="display:flex;gap:8px;margin-top:10px;">'+
+    '<button data-rwaction="resolvelater" data-rwpid="'+id+'" data-rwtype="'+type+'" style="flex:1;padding:10px;background:var(--surf);border:1px solid var(--bdr);color:var(--mut);border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;">&#128336; Resolve Later</button>'+
+    '</div>'+
+    otherHtml;
+}
+
+function rwInlineMarginUpdate(){
+  var sellEl=document.getElementById('rwin_sell');
+  var costEl=document.getElementById('rwin_cost');
+  var margEl=document.getElementById('rwin_margin');
+  if(!sellEl||!margEl)return;
+  var s=Number(sellEl.value)||0;
+  var c=costEl?Number(costEl.value)||0:0;
+  if(s&&c){
+    var margin=Math.round((s-c)/s*100);
+    var col=margin>=20?'var(--grn)':margin>=0?'var(--ora)':'var(--red)';
+    margEl.innerHTML='Margin: <b style="color:'+col+';">'+margin+'%</b> (&#8358;'+(s-c).toLocaleString('en-NG')+' per unit)';
+  } else if(s){
+    margEl.innerHTML='<span style="color:var(--mut);">Set cost price to see margin</span>';
+  } else {
+    margEl.innerHTML='';
+  }
+}
+
+// ── Completeness function (extended in RC3) ────────────────────────────────
+function computeCompleteness(p){
+  var score=0;
+  var max=10.5;
+  // Identity layer (3 pts)
+  if(p.genericName&&p.genericName.length>0) score+=2;
+  if(p.strength&&p.strength.length>0) score+=0.5;
+  if(p.form&&p.form.length>0) score+=0.5;
+  // Commercial layer (2.5 pts)
+  if(p.sellPrice&&p.sellPrice>0) score+=2;
+  if(p.costPrice&&p.costPrice>0) score+=0.5;
+  // Operational layer (3 pts)
+  if(p.shelfLocation&&p.shelfLocation.length>0) score+=1;
+  if(p.category&&p.category!=='General'&&p.category!=='Other'&&p.category.length>0) score+=0.5;
+  if(p.sellUnit&&p.sellUnit!=='unit'&&p.sellUnit!=='Unit') score+=0.5;
+  if(p.isFastMover) score+=0.5;
+  if((p.supplier||p.primarySupplier||'').length>0) score+=0.5;
+  // Enrichment layer (2 pts)
+  if(p.barcode&&p.barcode.length>0) score+=0.5;
+  if(p.nafdac&&p.nafdac.length>0) score+=0.5;
+  if(p.reorderQty&&p.reorderQty>0) score+=0.5;
+  if(p.minStock&&p.minStock!==10) score+=0.5;
+  return Math.round((score/max)*100);
+}
+
+// ── Task generator (extended in RC3) ──────────────────────────────────────
 function generateReviewTasks(){
   var tasks=[];
   var salesMap={};
@@ -2691,132 +3240,219 @@ function generateReviewTasks(){
     });
   });
 
+  // Duplicate name detection (O(n) with Map)
+  var nameCounts={};
+  S.products.forEach(function(p){
+    var k=(p.genericName||'').toLowerCase().trim();
+    nameCounts[k]=(nameCounts[k]||0)+1;
+  });
+
   S.products.forEach(function(p){
     var id=p.id;
     var name=escH(p.genericName||'Unknown');
     var hasSales=!!salesMap[id];
     var cat=p.category||'';
     var isControlled=cat.toLowerCase().includes('controlled')||cat.toLowerCase().includes('antibiotic')||cat.toLowerCase().includes('antimalarial');
+    var isPharm=isControlled||cat.toLowerCase().includes('analgesic')||cat.toLowerCase().includes('gi ')||cat.toLowerCase().includes('eye care')||cat.toLowerCase().includes("women's");
+    var nameKey=(p.genericName||'').toLowerCase().trim();
 
-    // ── PRIORITY 1: Financial & operational gates ────────────────────────────
+    // ── PRIORITY 1 ──────────────────────────────────────────────────────────
     if(!p.sellPrice||p.sellPrice===0){
       tasks.push({pid:id,pri:1,type:'sell_price',icon:'&#8358;',
-        title:name,desc:'No selling price set — this product will sell at \u20a60',
-        action:'editProd('+id+')',actionLabel:'Set Price'});
+        title:name,desc:'No selling price \u2014 this product will sell at \u20a60',
+        hasSales:hasSales,score:computeCompleteness(p)});
+    }
+    if(p.sellPrice>0&&p.costPrice>0&&p.sellPrice<p.costPrice){
+      tasks.push({pid:id,pri:1,type:'price_inversion',icon:'&#9888;&#65039;',
+        title:name,desc:'Sell \u20a6'+(p.sellPrice||0).toLocaleString('en-NG')+' is below cost \u20a6'+(p.costPrice||0).toLocaleString('en-NG')+' \u2014 negative margin',
+        hasSales:hasSales,score:computeCompleteness(p)});
     }
     if((!p.costPrice||p.costPrice===0)&&hasSales){
       tasks.push({pid:id,pri:1,type:'cost_price',icon:'&#128179;',
-        title:name,desc:'No cost price — margin tracking unavailable (has sales)',
-        action:'editProd('+id+')',actionLabel:'Set Cost'});
+        title:name,desc:'No cost price \u2014 margin tracking unavailable (has sales)',
+        hasSales:hasSales,score:computeCompleteness(p)});
     }
     if(!p.isFastMover&&hasSales){
       tasks.push({pid:id,pri:1,type:'fast_mover',icon:'&#128138;',
-        title:name,desc:'Not monitored in Stock Pulse — but this product has been sold',
-        action:'editProd('+id+')',actionLabel:'Enable Monitoring'});
+        title:name,desc:'Not monitored in Stock Pulse \u2014 but this product has been sold',
+        hasSales:hasSales,score:computeCompleteness(p)});
     }
     if((p.notes||'').indexOf('[PID:REVIEW]')>=0){
       tasks.push({pid:id,pri:1,type:'ownership',icon:'&#10067;',
-        title:name,desc:'Ownership unconfirmed (Owner or Consignment) — verify before sale',
-        action:'editProd('+id+')',actionLabel:'Confirm Ownership'});
+        title:name,desc:'Ownership unconfirmed (Owner or Consignment) \u2014 verify before sale',
+        hasSales:hasSales,score:computeCompleteness(p)});
+    }
+    if(nameCounts[nameKey]>1){
+      tasks.push({pid:id,pri:1,type:'duplicate_name',icon:'&#128258;',
+        title:name,desc:'Duplicate product name detected \u2014 review and remove the duplicate',
+        hasSales:hasSales,score:computeCompleteness(p)});
     }
 
-    // ── PRIORITY 2: Operational intelligence ────────────────────────────────
+    // ── PRIORITY 2 ──────────────────────────────────────────────────────────
     if(!p.sellUnit||p.sellUnit==='unit'||p.sellUnit==='Unit'){
       tasks.push({pid:id,pri:2,type:'sell_unit',icon:'&#128230;',
-        title:name,desc:'Sell unit is generic "unit" — set to Tablet, Bottle, Pack, Card, etc.',
-        action:'editProd('+id+')',actionLabel:'Set Unit'});
+        title:name,desc:'Sell unit is generic \u2014 set to Tablet, Bottle, Pack, Card, etc.',
+        hasSales:hasSales,score:computeCompleteness(p)});
     }
     if(p.isFastMover&&(!p.minStock||p.minStock===10)){
       tasks.push({pid:id,pri:2,type:'reorder_level',icon:'&#128308;',
-        title:name,desc:'Using default minimum stock of 10 — set the real reorder point',
-        action:'editProd('+id+')',actionLabel:'Set Min Stock'});
+        title:name,desc:'Using default minimum stock of 10 \u2014 set the real reorder point',
+        hasSales:hasSales,score:computeCompleteness(p)});
     }
-    // Expiry missing for controlled / antibiotic / antimalarial
     if(isControlled){
       var batches=(S.stock||[]).filter(function(b){return b.productId===id&&!b.depleted;});
       var hasExpiry=batches.some(function(b){return b.expiry&&b.expiry.length>4;});
       if(!hasExpiry&&batches.length>0){
         tasks.push({pid:id,pri:2,type:'expiry',icon:'&#128337;',
-          title:name,desc:'No expiry date recorded — required for '+cat+' products',
-          action:'editProd('+id+')',actionLabel:'Log via Intake'});
+          title:name,desc:'No expiry date recorded \u2014 required for '+cat+' products',
+          hasSales:hasSales,score:computeCompleteness(p)});
       }
     }
 
-    // ── PRIORITY 3: Enrichment ───────────────────────────────────────────────
+    // ── PRIORITY 3 ──────────────────────────────────────────────────────────
     if(!p.category||p.category==='General'||p.category==='Other'){
       tasks.push({pid:id,pri:3,type:'category',icon:'&#127991;',
-        title:name,desc:'Category is "'+( p.category||'none')+'" — assign a specific category',
-        action:'editProd('+id+')',actionLabel:'Set Category'});
+        title:name,desc:'Category is \u201c'+(p.category||'none')+'\u201d \u2014 assign a specific category',
+        hasSales:hasSales,score:computeCompleteness(p)});
     }
     if(!p.costPrice||p.costPrice===0){
-      // Lower priority for products with no sales yet
       tasks.push({pid:id,pri:3,type:'cost_price_ns',icon:'&#128181;',
-        title:name,desc:'No cost price — set when product is next received',
-        action:'editProd('+id+')',actionLabel:'Set Cost'});
+        title:name,desc:'No cost price \u2014 set when product is next received',
+        hasSales:hasSales,score:computeCompleteness(p)});
     }
     if(p.isFastMover&&(!p.reorderQty||p.reorderQty===0)){
       tasks.push({pid:id,pri:3,type:'reorder_qty',icon:'&#128338;',
-        title:name,desc:'No reorder quantity — Reorder Brain cannot generate order amounts',
-        action:'editProd('+id+')',actionLabel:'Set Reorder Qty'});
+        title:name,desc:'No reorder quantity \u2014 Reorder Brain cannot generate order amounts',
+        hasSales:hasSales,score:computeCompleteness(p)});
+    }
+    if(isPharm&&!p.strength){
+      tasks.push({pid:id,pri:3,type:'strength',icon:'&#128138;',
+        title:name,desc:'No strength recorded \u2014 add dosage (e.g. 500mg, 125mg/5ml)',
+        hasSales:hasSales,score:computeCompleteness(p)});
+    }
+    if(isPharm&&!p.form){
+      tasks.push({pid:id,pri:3,type:'form',icon:'&#128137;',
+        title:name,desc:'No dosage form \u2014 add form (e.g. Tablet, Suspension, Injection)',
+        hasSales:hasSales,score:computeCompleteness(p)});
     }
 
-    // ── PRIORITY 4: Progressive enrichment ──────────────────────────────────
+    // ── PRIORITY 4 ──────────────────────────────────────────────────────────
     if(!p.barcode){
       tasks.push({pid:id,pri:4,type:'barcode',icon:'&#128211;',
-        title:name,desc:'No barcode — capture via AI Snap during next intake',
-        action:'editProd('+id+')',actionLabel:'Add Barcode'});
+        title:name,desc:'No barcode \u2014 capture via AI Snap during next intake',
+        hasSales:hasSales,score:computeCompleteness(p)});
     }
     if(!p.nafdac){
       tasks.push({pid:id,pri:4,type:'nafdac',icon:'&#128196;',
-        title:name,desc:'No NAFDAC number — capture via AI Snap during next intake',
-        action:'editProd('+id+')',actionLabel:'Add NAFDAC'});
+        title:name,desc:'No NAFDAC number \u2014 capture via AI Snap during next intake',
+        hasSales:hasSales,score:computeCompleteness(p)});
     }
-    if(!p.supplier){
+    if(!(p.supplier||p.primarySupplier)){
       tasks.push({pid:id,pri:4,type:'supplier',icon:'&#127981;',
-        title:name,desc:'No supplier linked — will be set on next Bulk Receive',
-        action:'editProd('+id+')',actionLabel:'Link Supplier'});
+        title:name,desc:'No supplier linked \u2014 will be set on next Bulk Receive',
+        hasSales:hasSales,score:computeCompleteness(p)});
     }
     if(!p.shelfLocation){
       tasks.push({pid:id,pri:4,type:'shelf',icon:'&#128205;',
-        title:name,desc:'No shelf location recorded — enter physical shelf zone',
-        action:'editProd('+id+')',actionLabel:'Set Shelf'});
+        title:name,desc:'No shelf location recorded \u2014 enter physical shelf zone',
+        hasSales:hasSales,score:computeCompleteness(p)});
     }
   });
 
   return tasks;
 }
 
+// ── Queue renderer (extended in RC3, preserves original structure) ─────────
 function renderReviewWorkspace(){
+  var qPanel=document.getElementById('rwQueuePanel');
+  if(!qPanel)return;
+
   var tasks=generateReviewTasks();
+
+  // Apply Resolve Later skips (skip list resets when page is navigated away)
+  tasks=tasks.filter(function(t){return !rwSkipped[t.pid+'_'+t.type];});
+
+  // Apply priority filter (preserved)
   var filtered=rwCurrentFilter==='all'?tasks:tasks.filter(function(t){return String(t.pri)===rwCurrentFilter;});
 
-  // Summary strip
+  // Apply field filter (RC3 new)
+  if(rwFieldFilter!=='all'){
+    var fieldMap={
+      price:['sell_price','cost_price','cost_price_ns','price_inversion'],
+      shelf:['shelf'],
+      supplier:['supplier'],
+      cat:['category'],
+      dup:['duplicate_name'],
+      owner:null, // handled by product ownership
+      cons:null
+    };
+    if(rwFieldFilter==='owner'){
+      filtered=filtered.filter(function(t){
+        var p=S.products.find(function(x){return x.id===t.pid;});
+        return p&&!p.isConsignment;
+      });
+    } else if(rwFieldFilter==='cons'){
+      filtered=filtered.filter(function(t){
+        var p=S.products.find(function(x){return x.id===t.pid;});
+        return p&&p.isConsignment;
+      });
+    } else if(fieldMap[rwFieldFilter]){
+      filtered=filtered.filter(function(t){return fieldMap[rwFieldFilter].indexOf(t.type)>=0;});
+    }
+  }
+
+  // Sort (RC3 new)
+  if(rwCurrentSort==='score'){
+    filtered.sort(function(a,b){return a.score-b.score;});
+  } else if(rwCurrentSort==='name'){
+    filtered.sort(function(a,b){return a.title.localeCompare(b.title);});
+  } else if(rwCurrentSort==='upd'){
+    var logMap={};
+    (S.reviewLog||[]).forEach(function(e){logMap[e.productId]=e.date;});
+    filtered.sort(function(a,b){
+      var da=logMap[a.pid]||'';var db=logMap[b.pid]||'';
+      return db.localeCompare(da);
+    });
+  } else {
+    // Default: priority, then hasSales desc, then score asc
+    filtered.sort(function(a,b){
+      if(a.pri!==b.pri)return a.pri-b.pri;
+      if(a.hasSales!==b.hasSales)return a.hasSales?-1:1;
+      return a.score-b.score;
+    });
+  }
+
+  // Summary strip (preserved)
+  var allTasks=generateReviewTasks();
   var counts={1:0,2:0,3:0,4:0};
-  tasks.forEach(function(t){counts[t.pri]=(counts[t.pri]||0)+1;});
+  allTasks.forEach(function(t){counts[t.pri]=(counts[t.pri]||0)+1;});
   var sumEl=document.getElementById('rwSummary');
   if(sumEl){
     var priColors={1:'var(--red)',2:'var(--ora)',3:'var(--grn)',4:'var(--mut)'};
     var priLabels={1:'Priority 1',2:'Priority 2',3:'Priority 3',4:'Priority 4'};
     sumEl.innerHTML=[1,2,3,4].map(function(p){
-      return '<div style="background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:10px 14px;text-align:center;min-width:70px;">'+
+      return '<div onclick="setRwFilter(\''+p+'\',document.getElementById(\'rwf_p'+p+'\'))" style="background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:10px 14px;text-align:center;min-width:70px;cursor:pointer;">'+
         '<div style="font-family:var(--fh);font-size:22px;color:'+priColors[p]+';font-weight:900;">'+counts[p]+'</div>'+
         '<div style="font-size:10px;color:var(--mut);font-weight:700;">'+priLabels[p]+'</div></div>';
     }).join('');
   }
 
-  // Update badge
+  // Badge (preserved)
   var p1count=counts[1]||0;
   var rwBadge=document.getElementById('rwbg');
   if(rwBadge){rwBadge.style.display=p1count>0?'inline-block':'none';rwBadge.textContent=p1count;}
 
-  // Task list
   var el=document.getElementById('rwTaskList');if(!el)return;
+  var inlineEl=document.getElementById('rwInlinePanel');
+
   if(!S.products.length){
     el.innerHTML='<div style="text-align:center;color:var(--mut);padding:40px 16px;"><div style="font-size:32px;margin-bottom:8px;">&#9989;</div><div style="font-size:14px;font-weight:700;">No products yet.</div><div style="font-size:12px;margin-top:4px;">Import products to generate Review tasks.</div></div>';
+    if(inlineEl)inlineEl.style.display='none';
     return;
   }
   if(!filtered.length){
-    el.innerHTML='<div style="text-align:center;color:var(--grn);padding:40px 16px;"><div style="font-size:32px;margin-bottom:8px;">&#9989;</div><div style="font-size:14px;font-weight:800;">All '+rwCurrentFilter==='all'?'tasks':'Priority '+rwCurrentFilter+' tasks'+'cleared!</div><div style="font-size:12px;color:var(--mut);margin-top:4px;">These fields are all populated.</div></div>';
+    el.innerHTML='<div style="text-align:center;color:var(--grn);padding:40px 16px;"><div style="font-size:32px;margin-bottom:8px;">&#9989;</div><div style="font-size:14px;font-weight:800;">All tasks cleared!</div><div style="font-size:12px;color:var(--mut);margin-top:4px;">These fields are all populated. Great work.</div></div>';
+    if(inlineEl)inlineEl.style.display='none';
     return;
   }
 
@@ -2824,28 +3460,224 @@ function renderReviewWorkspace(){
   var priBg={1:'var(--red2)',2:'rgba(249,115,22,0.12)',3:'rgba(34,197,94,0.08)',4:'var(--surf)'};
   var priLabel={1:'P1',2:'P2',3:'P3',4:'P4'};
 
-  el.innerHTML='<div style="font-size:11px;color:var(--mut);font-weight:700;padding:4px 0 8px;">'+filtered.length+' task'+(filtered.length!==1?'s':'')+' · Tap to resolve</div>'+
-  filtered.map(function(t){
-    // Show completeness score if we have it
+  // Build task cards
+  var html='<div style="font-size:11px;color:var(--mut);font-weight:700;padding:4px 0 8px;">'+
+    filtered.length+' task'+(filtered.length!==1?'s':'')+' &middot; Tap to resolve</div>';
+
+  // Render inline panel position: find the expanded task index
+  var expandedIdx=-1;
+  if(rwExpandedPid!==null){
+    expandedIdx=filtered.findIndex(function(t){return t.pid===rwExpandedPid&&t.type===rwExpandedType;});
+    if(expandedIdx<0){rwExpandedPid=null;rwExpandedType=null;}
+  }
+
+  filtered.forEach(function(t,idx){
     var prod=S.products.find(function(p){return p.id===t.pid;});
     var score=prod?computeCompleteness(prod):0;
     var scoreColor=score>=80?'var(--grn)':score>=50?'var(--ora)':'var(--red)';
-    return '<div style="background:'+priBg[t.pri]+';border:1px solid var(--bdr);border-radius:12px;padding:12px 14px;margin-bottom:6px;display:flex;align-items:center;gap:10px;">'+
+    var barPct=score;
+    var isExpanded=(t.pid===rwExpandedPid&&t.type===rwExpandedType);
+    var allTasksForPid=filtered.filter(function(x){return x.pid===t.pid;});
+    var otherCount=allTasksForPid.length-1;
+
+    html+='<div data-rwtap="1" data-pid="'+t.pid+'" data-type="'+t.type+'" style="background:'+priBg[t.pri]+';border:1px solid '+(isExpanded?'var(--amb)':'var(--bdr)')+';border-radius:12px;padding:12px 14px;margin-bottom:6px;cursor:pointer;touch-action:manipulation;user-select:none;">'+'<div class="rw-card-header" style="display:flex;align-items:center;gap:10px;">'+
       '<div style="font-size:20px;flex-shrink:0;">'+t.icon+'</div>'+
       '<div style="flex:1;min-width:0;">'+
         '<div style="font-size:13px;font-weight:800;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+t.title+'</div>'+
         '<div style="font-size:11px;color:var(--mut);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+t.desc+'</div>'+
-        '<div style="font-size:10px;margin-top:3px;"><span style="color:'+scoreColor+';font-weight:800;">'+score+'%</span><span style="color:var(--mut);"> complete</span></div>'+
+        '<div style="margin-top:5px;display:flex;align-items:center;gap:6px;">'+
+          '<div style="flex:1;height:3px;background:var(--bdr);border-radius:2px;overflow:hidden;"><div style="width:'+barPct+'%;height:100%;background:'+scoreColor+';border-radius:2px;"></div></div>'+
+          '<span style="font-size:9px;color:'+scoreColor+';font-weight:800;flex-shrink:0;">'+score+'%</span>'+
+          (otherCount>0?'<span style="font-size:9px;color:var(--mut);">+'+otherCount+' more</span>':'')+
+        '</div>'+
       '</div>'+
-      '<div style="flex-shrink:0;display:flex;align-items:center;gap:6px;">'+
+      '<div style="flex-shrink:0;display:flex;align-items:center;gap:5px;">'+
         '<span style="font-size:9px;font-weight:900;color:'+priColors[t.pri]+';background:'+priBg[t.pri]+';border:1px solid '+priColors[t.pri]+';border-radius:6px;padding:2px 5px;">'+priLabel[t.pri]+'</span>'+
-        '<button onclick="'+t.action+'" style="font-size:11px;font-weight:800;background:var(--blu);color:#fff;border:none;border-radius:8px;padding:6px 10px;cursor:pointer;white-space:nowrap;">'+t.actionLabel+'</button>'+
+        '<span style="font-size:16px;color:var(--mut);">'+(isExpanded?'&#8963;':'&#8964;')+'</span>'+
       '</div>'+
-    '</div>';
-  }).join('');
+      '</div>';
+
+    // Inline edit panel rendered directly after the expanded card
+    if(isExpanded&&prod){
+      html+='<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--bdr);">'+
+        renderRwInlinePanel(prod,t.type,allTasksForPid)+
+      '</div>';
+    }
+
+    html+='</div>';
+  });
+
+  el.innerHTML=html;
+  if(inlineEl)inlineEl.style.display='none'; // inline panel is now embedded in cards
 }
 
-// Update Review badge whenever products change
+// ── Dashboard renderer ────────────────────────────────────────────────────
+function renderRwDashboard(){
+  var el=document.getElementById('rwDashContent');if(!el)return;
+  if(!S.products.length){
+    el.innerHTML='<div style="text-align:center;color:var(--mut);padding:40px 16px;"><div style="font-size:32px;">&#128202;</div><div style="font-size:14px;font-weight:700;margin-top:8px;">No products yet.</div><div style="font-size:12px;">Import your Product Master to activate the Dashboard.</div></div>';
+    return;
+  }
+
+  var tasks=generateReviewTasks();
+  var counts={1:0,2:0,3:0,4:0};
+  tasks.forEach(function(t){counts[t.pri]=(counts[t.pri]||0)+1;});
+
+  var total=S.products.length;
+  var fullyComplete=S.products.filter(function(p){return computeCompleteness(p)>=80;}).length;
+  var masterPct=Math.round(fullyComplete/total*100);
+  var avgScore=Math.round(S.products.reduce(function(s,p){return s+computeCompleteness(p);},0)/total);
+  var withPrice=S.products.filter(function(p){return p.sellPrice&&p.sellPrice>0;}).length;
+  var withCost=S.products.filter(function(p){return p.costPrice&&p.costPrice>0;}).length;
+  var withShelf=S.products.filter(function(p){return p.shelfLocation;}).length;
+  var withSup=S.products.filter(function(p){return p.supplier||p.primarySupplier;}).length;
+
+  // Critical alerts
+  var inversions=tasks.filter(function(t){return t.type==='price_inversion';}).length;
+  var dups=tasks.filter(function(t){return t.type==='duplicate_name';}).length;
+  var noOwnership=tasks.filter(function(t){return t.type==='ownership';}).length;
+
+  // Today's activity
+  var today=td();
+  var log=S.reviewLog||[];
+  var todayLog=log.filter(function(e){return e.date===today;});
+  var todayCount=todayLog.length;
+  var todayProds=new Set(todayLog.map(function(e){return e.productId;})).size;
+
+  var barColor=masterPct>=80?'var(--grn)':masterPct>=50?'var(--ora)':'var(--red)';
+
+  var html=
+  // Completion meter
+  '<div style="background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:16px;margin-bottom:10px;">'+
+    '<div style="font-size:10px;color:var(--mut);font-weight:700;letter-spacing:1px;margin-bottom:8px;">PRODUCT MASTER COMPLETENESS</div>'+
+    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">'+
+      '<div style="flex:1;height:10px;background:var(--surf);border-radius:5px;overflow:hidden;">'+
+        '<div style="width:'+masterPct+'%;height:100%;background:'+barColor+';border-radius:5px;transition:width .4s;"></div>'+
+      '</div>'+
+      '<div style="font-family:var(--fh);font-size:24px;color:'+barColor+';font-weight:900;flex-shrink:0;">'+masterPct+'%</div>'+
+    '</div>'+
+    '<div style="font-size:11px;color:var(--mut);">'+fullyComplete+' of '+total+' products fully complete (score \u226580%)</div>'+
+  '</div>'+
+
+  // Priority summary (tappable)
+  '<div style="display:flex;gap:8px;margin-bottom:10px;">'+
+  [1,2,3,4].map(function(p){
+    var pc={1:'var(--red)',2:'var(--ora)',3:'var(--grn)',4:'var(--mut)'};
+    var pb={1:'var(--red2)',2:'rgba(249,115,22,0.12)',3:'rgba(34,197,94,0.08)',4:'var(--surf)'};
+    var pl={1:'Critical',2:'Operational',3:'Enrichment',4:'Progressive'};
+    return '<div onclick="setRwTab(\'queue\');setTimeout(function(){setRwFilter(\''+p+'\',document.getElementById(\'rwf_p'+p+'\'));},60);" style="flex:1;background:'+pb[p]+';border:1px solid var(--bdr);border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;">'+
+      '<div style="font-family:var(--fh);font-size:20px;color:'+pc[p]+';font-weight:900;">'+counts[p]+'</div>'+
+      '<div style="font-size:9px;color:var(--mut);font-weight:700;">'+pl[p]+'</div></div>';
+  }).join('')+
+  '</div>'+
+
+  // Critical alerts
+  (inversions||dups||noOwnership?
+  '<div style="background:var(--red2);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:12px 14px;margin-bottom:10px;">'+
+    '<div style="font-size:10px;font-weight:800;color:var(--red);letter-spacing:1px;margin-bottom:8px;">&#128308; CRITICAL ALERTS</div>'+
+    (inversions?'<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(239,68,68,0.2);"><span style="font-size:12px;color:var(--txt);">&#9888;&#65039; '+inversions+' products with sell price below cost</span><button onclick="setRwTab(\'queue\');setTimeout(function(){setRwFilter(\'1\',document.getElementById(\'rwf_p1\'));},60);" style="font-size:10px;font-weight:700;background:var(--red);color:#fff;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;">Fix</button></div>':'') +
+    (dups?'<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(239,68,68,0.2);"><span style="font-size:12px;color:var(--txt);">&#128258; '+dups+' duplicate product names detected</span><button onclick="setRwFieldFilter(\'dup\',document.getElementById(\'rwff_dup\'));setRwTab(\'queue\');" style="font-size:10px;font-weight:700;background:var(--red);color:#fff;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;">View</button></div>':'') +
+    (noOwnership?'<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;"><span style="font-size:12px;color:var(--txt);">&#10067; '+noOwnership+' products with unconfirmed ownership</span><button onclick="setRwFilter(\'1\',document.getElementById(\'rwf_p1\'));setRwTab(\'queue\');" style="font-size:10px;font-weight:700;background:var(--red);color:#fff;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;">Fix</button></div>':'') +
+  '</div>':
+  '<div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:12px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:var(--grn);font-weight:700;">&#9989; No critical alerts \u2014 Product Master is healthy</div>') +
+
+  // Metrics grid
+  '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">'+
+  [
+    ['Selling Price Set',withPrice+' / '+total,withPrice/total],
+    ['Cost Price Set',withCost+' / '+total,withCost/total],
+    ['Shelf Assigned',withShelf+' / '+total,withShelf/total],
+    ['Supplier Linked',withSup+' / '+total,withSup/total],
+  ].map(function(m){
+    var pct=Math.round(m[2]*100);
+    var col=pct>=80?'var(--grn)':pct>=50?'var(--ora)':'var(--red)';
+    return '<div style="background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:10px;">'+
+      '<div style="font-size:9px;color:var(--mut);font-weight:700;margin-bottom:4px;">'+m[0].toUpperCase()+'</div>'+
+      '<div style="font-size:15px;font-weight:900;color:'+col+';">'+m[1]+'</div>'+
+      '<div style="height:3px;background:var(--surf);border-radius:2px;margin-top:6px;overflow:hidden;">'+
+        '<div style="width:'+pct+'%;height:100%;background:'+col+';border-radius:2px;"></div>'+
+      '</div>'+
+    '</div>';
+  }).join('')+
+  '</div>'+
+
+  // Today's activity
+  '<div style="background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:12px 14px;margin-bottom:10px;">'+
+    '<div style="font-size:10px;color:var(--mut);font-weight:700;margin-bottom:8px;">&#128200; TODAY\'S ACTIVITY</div>'+
+    (todayCount>0?
+      '<div style="font-size:13px;color:var(--txt);">&#9989; <b>'+todayCount+'</b> changes to <b>'+todayProds+'</b> product'+(todayProds!==1?'s':'')+' today</div>'+
+      '<div style="font-size:11px;color:var(--mut);margin-top:4px;">Average score: '+avgScore+'%</div>':
+      '<div style="font-size:12px;color:var(--mut);">No changes yet today. Open the Queue to start reviewing.</div>')+
+  '</div>'+
+
+  // Quick actions
+  '<div style="display:flex;gap:8px;">'+
+    '<button onclick="setRwTab(\'queue\');setTimeout(function(){setRwFilter(\'1\',document.getElementById(\'rwf_p1\'));},60);" style="flex:1;padding:12px;background:var(--red);color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;">&#128308; Fix '+counts[1]+' Critical</button>'+
+    '<button onclick="setRwTab(\'queue\')" style="flex:1;padding:12px;background:var(--amb);color:#000;border:none;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;">&#9999;&#65039; Open Queue</button>'+
+  '</div>';
+
+  el.innerHTML=html;
+}
+
+// ── Activity renderer ─────────────────────────────────────────────────────
+function renderRwActivity(){
+  var el=document.getElementById('rwActContent');if(!el)return;
+  var log=S.reviewLog||[];
+  if(!log.length){
+    el.innerHTML='<div style="text-align:center;color:var(--mut);padding:40px 16px;"><div style="font-size:32px;">&#128203;</div><div style="font-size:14px;font-weight:700;margin-top:8px;">No activity yet.</div><div style="font-size:12px;">Changes made in the Queue will appear here.</div></div>';
+    return;
+  }
+  var fieldLabels={sellPrice:'Selling Price',costPrice:'Cost Price',category:'Category',
+    shelfLocation:'Shelf',sellUnit:'Sell Unit',supplier:'Supplier',barcode:'Barcode',
+    nafdac:'NAFDAC',minStock:'Min Stock',reorderQty:'Reorder Qty',
+    isFastMover:'Stock Pulse',ownership:'Ownership'};
+  var html='<div style="font-size:10px;color:var(--mut);font-weight:700;margin-bottom:10px;">'+log.length+' change'+(log.length!==1?'s':'')+' recorded</div>';
+  var show=log.slice(0,100);
+  show.forEach(function(e){
+    var fLabel=fieldLabels[e.field]||e.field;
+    var oldDisp=(e.oldValue===null||e.oldValue===undefined||e.oldValue===''||e.oldValue===0)?'\u2014':String(e.oldValue);
+    var newDisp=(e.newValue===null||e.newValue===undefined||e.newValue==='')?'\u2014':String(e.newValue);
+    html+='<div style="background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:10px 12px;margin-bottom:6px;">'+
+      '<div style="display:flex;justify-content:space-between;margin-bottom:4px;">'+
+        '<span style="font-size:10px;color:var(--mut);">'+e.date+' '+e.time+'</span>'+
+        '<span style="font-size:10px;color:var(--mut);font-weight:700;">'+((e.role||'owner').toUpperCase())+'</span>'+
+      '</div>'+
+      '<div style="font-size:13px;font-weight:800;color:var(--txt);margin-bottom:2px;">'+escH(e.productName||'')+'</div>'+
+      '<div style="font-size:11px;color:var(--mut);">'+fLabel+': <span style="color:var(--red);">'+escH(oldDisp)+'</span> \u2192 <span style="color:var(--grn);font-weight:700;">'+escH(newDisp)+'</span></div>'+
+    '</div>';
+  });
+  if(log.length>100){
+    html+='<div style="text-align:center;color:var(--mut);font-size:11px;padding:12px;">Showing 100 of '+log.length+' entries</div>';
+  }
+  el.innerHTML=html;
+}
+
+// ── Milestone checker ─────────────────────────────────────────────────────
+var rwLastMilestonePct=0;
+function rwCheckMilestone(){
+  if(!S.products.length)return;
+  var total=S.products.length;
+  var complete=S.products.filter(function(p){return computeCompleteness(p)>=80;}).length;
+  var pct=Math.round(complete/total*100);
+  var milestones=[80,90,95,100];
+  var hit=milestones.filter(function(m){return pct>=m&&rwLastMilestonePct<m;});
+  if(hit.length){
+    var m=hit[hit.length-1];
+    rwLastMilestonePct=pct;
+    var msg={80:'&#127881; 80% complete \u2014 Product Master is operational!',
+             90:'&#11088; 90% complete \u2014 Excellent data quality!',
+             95:'&#127942; 95% complete \u2014 Near-perfect Product Master!',
+             100:'&#127775; 100% \u2014 Perfect Product Master!'}[m]||'&#127881; Milestone reached!';
+    var el=document.getElementById('rwMilestone');
+    if(el){
+      el.innerHTML='<div style="background:linear-gradient(135deg,var(--amb),var(--grn));color:#000;border-radius:12px;padding:12px 16px;text-align:center;font-size:14px;font-weight:900;margin-top:8px;">'+msg+'</div>';
+      el.style.display='block';
+      setTimeout(function(){el.style.display='none';},5000);
+    }
+  }
+}
+
+// ── Badge updater (preserved) ─────────────────────────────────────────────
 function updReviewBadge(){
   try{
     var tasks=generateReviewTasks();
@@ -2854,6 +3686,169 @@ function updReviewBadge(){
     if(rwBadge){rwBadge.style.display=p1>0?'inline-block':'none';rwBadge.textContent=p1;}
   }catch(e){}
 }
+
+
+// ── Review Workspace Interaction Delegates (PST-007 compliant) ──────────────
+// Architecture: see PBSRX INTERACTION ARCHITECTURE block above.
+// PST-007: Listeners scoped to #rwQueuePanel — the stable container that owns
+// all task card interactions. This eliminates scroll interference on touches
+// outside the task list (filter row, sort row, sub-tabs, summary strip).
+//
+// #rwQueuePanel is never replaced by innerHTML. Only #rwTaskList inside it is.
+// Registration is idempotent — guarded by _rwDelegatesRegistered flag.
+
+var _rwDelegatesRegistered = false;
+
+function rwRegisterQueueDelegates(){
+  if(_rwDelegatesRegistered) return;
+  var panel = document.getElementById('rwQueuePanel');
+  if(!panel) return;
+  _rwDelegatesRegistered = true;
+
+  // ── Delegate 1: Card expand / collapse (Interaction Delegate) ────────────
+  panel.addEventListener('touchend', function(e){
+
+  // RULE 1 — Native controls are sovereign.
+  // If the touch originated on or within a native interactive element,
+  // return immediately. The element owns this interaction completely.
+  if(pbsrxTargetIsNative(e.target)) return;
+
+  // Walk the DOM upward to find a Review Workspace task card.
+  var el=e.target;
+  while(el&&el!==document){
+    if(el.dataset&&el.dataset.rwtap){
+      var pid=el.dataset.pid;
+      var type=el.dataset.type;
+      var alreadyOpen=(String(rwExpandedPid)===String(pid)&&rwExpandedType===type);
+
+      if(alreadyOpen){
+        // RULE 2 — Editing sessions are protected.
+        // Only collapse the card if the touch landed on the declared header region.
+        // The header carries PBSRX_RW_HEADER_CLASS and is identified structurally,
+        // not by screen coordinates — correct at any zoom, font scale, or screen size.
+        var hitHeader=false;
+        var node=e.target;
+        while(node&&node!==el){
+          if(node.classList&&node.classList.contains(PBSRX_RW_HEADER_CLASS)){
+            hitHeader=true; break;
+          }
+          node=node.parentElement;
+        }
+        if(hitHeader){
+          e.preventDefault();
+          rwExpandedPid=null; rwExpandedType=null;
+          renderReviewWorkspace();
+        }
+        // Touch was inside the editing body — silently ignore to protect session.
+        return;
+      }
+
+      // Card is closed — open it.
+      e.preventDefault();
+      if(pid&&type) rwOpenInline(pid,type);
+      return;
+    }
+    el=el.parentElement;
+  }
+}, {passive:false});
+
+  // ── Delegate 2: Action buttons — Save, Resolve Later, Edit Full ──────────
+  panel.addEventListener('touchend', function(e){
+  var el=e.target;
+  // Walk up to find a data-rwaction element
+  while(el&&el!==document){
+    if(el.dataset&&el.dataset.rwaction){
+      e.preventDefault();
+      var action=el.dataset.rwaction;
+      var pid=el.dataset.rwpid;
+      var type=el.dataset.rwtype;
+
+      if(action==='resolvelater'){
+        rwResolveLater(pid, type);
+        return;
+      }
+      if(action==='editfull'){
+        openProdEdit(pid);
+        return;
+      }
+
+      // All save actions: read from the corresponding input
+      var val=null;
+      if(action==='saveprice'){
+        var s=Number((document.getElementById('rwin_sell')||{}).value||0);
+        var c=Number((document.getElementById('rwin_cost')||{}).value||0);
+        var origCost=Number(el.dataset.rwcost||0);
+        if(c&&c!==origCost) rwSaveInline(pid,'costPrice',c);
+        if(s) rwSaveInline(pid,'sellPrice',s);
+        return;
+      }
+      if(action==='savecost'){
+        val=Number((document.getElementById('rwin_cost2')||{}).value||0);
+        if(val) rwSaveInline(pid,'costPrice',val);
+        return;
+      }
+      if(action==='savecat'){
+        val=(document.getElementById('rwin_cat')||{}).value||'';
+        if(val) rwSaveInline(pid,'category',val);
+        return;
+      }
+      if(action==='saveshelf'){
+        val=((document.getElementById('rwin_shelf')||{}).value||'').trim();
+        if(val) rwSaveInline(pid,'shelfLocation',val);
+        return;
+      }
+      if(action==='saveunit'){
+        val=(document.getElementById('rwin_unit')||{}).value||'';
+        if(val) rwSaveInline(pid,'sellUnit',val);
+        return;
+      }
+      if(action==='savesup'){
+        val=(document.getElementById('rwin_sup')||{}).value||'';
+        if(val) rwSaveInline(pid,'supplier',val);
+        return;
+      }
+      if(action==='savebarcode'){
+        val=((document.getElementById('rwin_bc')||{}).value||'').trim();
+        if(val) rwSaveInline(pid,'barcode',val);
+        return;
+      }
+      if(action==='savenafdac'){
+        val=((document.getElementById('rwin_nf')||{}).value||'').trim();
+        if(val) rwSaveInline(pid,'nafdac',val);
+        return;
+      }
+      if(action==='saveminstock'){
+        val=Number((document.getElementById('rwin_mn')||{}).value||0);
+        if(val) rwSaveInline(pid,'minStock',val);
+        return;
+      }
+      if(action==='savereorderqty'){
+        val=Number((document.getElementById('rwin_rq')||{}).value||0);
+        if(val) rwSaveInline(pid,'reorderQty',val);
+        return;
+      }
+      if(action==='saveownership'){
+        var chk=document.querySelector('input[name=rwin_own]:checked');
+        if(chk) rwSaveInline(pid,'ownership',chk.value);
+        return;
+      }
+      if(action==='savefastmover'){
+        rwSaveInline(pid,'isFastMover',true);
+        return;
+      }
+      return;
+    }
+    el=el.parentElement;
+  }
+}, {passive:false});
+
+  if(window.PBSRx&&PBSRx.Diagnostics){
+    PBSRx.Diagnostics.log('ReviewWorkspace','REVIEW-EVENT-SCOPE',
+      'PST-007: delegates registered on #rwQueuePanel (not document)','ok',
+      {element:'rwQueuePanel',count:2});
+  }
+}
+
 // ════════════════════════════════════════════════════════════════════════════
 // END REVIEW WORKSPACE ENGINE
 // ════════════════════════════════════════════════════════════════════════════
@@ -2954,25 +3949,9 @@ function pp(d){if(pinEnt.length>=4)return;pinEnt+=d;updDots();if(pinEnt.length==
 function pd2(){pinEnt=pinEnt.slice(0,-1);updDots();}
 function updDots(){for(var i=0;i<4;i++)document.getElementById('pd'+i).classList.toggle('f',i<pinEnt.length);}
 function chkPin(){/* legacy - not used */}
-// ── TEMPORARY AUTH BYPASS ── set to false to restore production auth ──────────
-var DEV_BYPASS_AUTH = true;
-// ─────────────────────────────────────────────────────────────────────────────
 function doLogin(){
   var errEl=document.getElementById('perr');
   if(errEl)errEl.textContent='';
-  if(DEV_BYPASS_AUTH){
-    role='owner';
-    document.getElementById('pin').style.display='none';
-    document.getElementById('app').classList.add('on');
-    document.getElementById('hrole').textContent='OWNER';
-    iD('cd_d');iD('pm_d');
-    try{updExpDL();}catch(e){}
-    try{renderAll();}catch(e){console.error('renderAll:',e);}
-    try{updBadges();}catch(e){}
-    try{updReviewBadge();}catch(e){}
-    toast('[DEV] Auth bypass active — set DEV_BYPASS_AUTH=false to re-enable login',4000);
-    return;
-  }
   var pass=(document.getElementById('loginPass')||{value:''}).value;
   if(!pass){
     if(errEl)errEl.textContent='Enter your password to continue.';
@@ -3028,6 +4007,11 @@ if(stored.date&&stored.date!==td()){S.chkState={date:td()};save();}
 else if(!stored.date){S.chkState={date:td()};save();}
 renderChk();
 }
+// renderChk — read-only DOM sync for the Daily Checklist widget.
+// Reads S.chkState[], updates CSS classes and checkmark glyphs. No data writes.
+// Data writes occur in toggleChk() and resetChk() which call this after saving.
+// Name retained (not renamed to syncChk or updateChk) to avoid breaking
+// any saved onclick references in cached builds. (D-020)
 function renderChk(){
 for(var i=0;i<10;i++){
 var item=document.getElementById('chk'+i),box=document.getElementById('chkb'+i);
@@ -3282,7 +4266,21 @@ setInterval(function(){
 }, 5000);
 
 // ── STOCK PULSE ──────────────────────────────────────────────────────────────
-function getCurStock(pid){return S.stock.filter(function(b){return b.productId===pid&&!b.depleted;}).reduce(function(s,b){return s+(Number(b.qty)||0);},0);}
+// getCurStock — canonical stock level reader for all subsystems.
+//
+// PST-001 invariant: pid is compared using strict equality (===) against
+// b.productId. This is safe because every stock push in the codebase uses
+// `productId: p.id` (the raw product ID string, never Number-coerced).
+// Callers MUST pass p.id directly — never pass a Number-coerced ID.
+// If in doubt, use: getCurStock(String(someId))
+//
+// b.qty coerced with Number() to handle legacy entries where qty was stored
+// as a string. b.depleted filter excludes consumed and archived batches.
+function getCurStock(pid){
+  pid=String(pid); // D-001: normalize to string — safe for both numeric and string IDs
+  return S.stock.filter(function(b){return String(b.productId)===pid&&!b.depleted;})
+    .reduce(function(s,b){return s+(Number(b.qty)||0);},0);
+}
 function getStatus(p){var st=getCurStock(p.id),mn=Number(p.minStock)||10;if(st===0)return 'out';if(st<=mn*0.5)return 'critical';if(st<=mn)return 'low';return 'ok';}
 function getBarPct(p){var st=getCurStock(p.id),mn=Number(p.minStock)||10;return Math.min(100,Math.round((st/(mn*3))*100));}
 function getExpStatus(p){
@@ -3390,7 +4388,7 @@ if(!isOpen)exp.style.display='block';
 }
 
 function openReorder(id){
-id=Number(id);var p=S.products.find(function(x){return x.id===id;});if(!p)return;
+var p=S.products.find(function(x){return String(x.id)===String(id);});if(!p)return;
 var qty=p.reorderQty||0,cost=p.costPrice||0;
 var estimatedCost=qty*cost;
 var cur=getCurStock(p.id);
@@ -3398,12 +4396,12 @@ document.getElementById('roTitle').textContent='Reorder: '+p.genericName;
 document.getElementById('roBody').innerHTML=
 '<div class="al ab" style="margin-bottom:12px;"><div class="ai">&#128230;</div><div class="at"><b>'+p.genericName+(p.strength?' '+p.strength:'')+'</b><br>'+(p.brandName?p.brandName+' | ':'')+p.category+'</div></div>'+
 '<div class="bgrid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:16px;">'+
-'<div class="bkt bkti"><div class="bkl">Current</div><div class="bkv">'+cur+'</div><div class="bkp">'+(p.sellUnit||'units')+'</div></div>'+
+'<div class="bkt bkti"><div class="bkl">Current</div><div class="bkv">'+cur+'</div><div class="bkp">'+getBaseUnitName(p)+'s</div></div>'+
 '<div class="bkt bkts"><div class="bkl">Min Stock</div><div class="bkv">'+(p.minStock||'-')+'</div><div class="bkp">alert level</div></div>'+
-'<div class="bkt bkto"><div class="bkl">Order Qty</div><div class="bkv">'+(qty||'Not set')+'</div><div class="bkp">'+(p.sellUnit||'units')+'</div></div>'+
+'<div class="bkt bkto"><div class="bkl">Order Qty</div><div class="bkv">'+(qty||'Not set')+'</div><div class="bkp">'+getBaseUnitName(p)+'s</div></div>'+
 '</div>'+
-(cost&&qty?'<div class="bkt bkts" style="margin-bottom:12px;"><div class="bkl">Estimated Cost to Reorder</div><div class="bkv">'+N(estimatedCost)+'</div><div class="bkp">Based on last cost price: '+N(cost)+' x '+qty+' '+( p.sellUnit||'units')+'</div></div>':'<div class="al ao"><div class="ai">&#9888;</div><div class="at">Set cost price and reorder quantity on this product to see cost estimate.</div></div>')+
-(p.reorderQty?'<div class="al ag"><div class="ai">&#128222;</div><div class="at">Call your supplier and order <b>'+p.reorderQty+' '+(p.sellUnit||'units')+' of '+p.genericName+'</b>. After delivery, update stock via the Stock tab.</div></div>':'');
+(cost&&qty?'<div class="bkt bkts" style="margin-bottom:12px;"><div class="bkl">Estimated Cost to Reorder</div><div class="bkv">'+N(estimatedCost)+'</div><div class="bkp">Based on last cost price: '+N(cost)+' x '+qty+' '+getBaseUnitName(p)+'s</div></div>':'<div class="al ao"><div class="ai">&#9888;</div><div class="at">Set cost price and reorder quantity on this product to see cost estimate.</div></div>')+
+(p.reorderQty?'<div class="al ag"><div class="ai">&#128222;</div><div class="at">Call your supplier and order <b>'+p.reorderQty+' '+getBaseUnitName(p)+'s of '+p.genericName+'</b>. After delivery, update stock via the Stock tab.</div></div>':'');
 openOv('reorderOv');
 }
 function renderExpiry(){
@@ -3427,9 +4425,9 @@ return '<div class="'+cls+'">'+
 '</div>';
 }).join('');
 }
-function delProd(id){id=Number(id);if(!confirm('Remove this product?'))return;S.products=S.products.filter(function(p){return p.id!==id;});save();renderPulse();updBadges();}
+function delProd(id){var sid=String(id);if(!confirm('Remove this product?'))return;S.products=S.products.filter(function(p){return String(p.id)!==sid;});save();renderPulse();updBadges();}
 function editProd(id){
-id=Number(id);var p=S.products.find(function(x){return x.id===id;});if(!p)return;
+var p=S.products.find(function(x){return String(x.id)===String(id);});if(!p)return;
 goTo(9,document.getElementById('nb9'));setIcTab(9);
 setTimeout(function(){
 var map={np_g:'genericName',np_br:'brandName',np_st:'strength',np_bc2:'barcode',np_nf:'nafdac',np_us:'unitsPerPack',np_mn:'minStock',np_rq:'reorderQty',np_co:'costPrice',np_sp_base:'sellPrice',np_u2:'unit2',np_u2q:'unit2qty',np_u2p:'unit2price',np_u3:'unit3',np_u3q:'unit3qty',np_u3p:'unit3price',np_shelf:'shelfLocation'};
@@ -3477,7 +4475,7 @@ var cur=getCurStock(p.id);
 res.innerHTML='<div class="mok"><div class="mokt">&#9989; Found in Database</div>'+
 '<div class="mokn">'+p.genericName+(p.strength?' '+p.strength:'')+'</div>'+
 '<div class="mokd">'+(p.brandName||'')+(p.form?' - '+p.form:'')+(p.category?' - '+p.category:'')+'</div>'+
-'<div class="mokd">Current stock: <b>'+cur+' '+(p.sellUnit||'units')+'</b></div></div>'+
+'<div class="mokd">Current stock: <b>'+cur+' '+getBaseUnitName(p)+'s</b></div></div>'+
 '<div class="card"><div class="fr"><div class="fg"><label class="fl">Qty Received</label><input class="fi" autocomplete="off" id="bc_q" type="number" inputmode="numeric" placeholder="0"></div>'+
 '<div class="fg"><label class="fl">Batch No.</label><input class="fi" autocomplete="off" id="bc_b" placeholder="Batch"></div></div>'+
 '<div class="fr"><div class="fg"><label class="fl">Expiry</label><input class="fi" autocomplete="off" id="bc_e" type="month"></div>'+
@@ -3522,13 +4520,17 @@ function prodDropdown(inp, dd, onSelect){
   dd.querySelectorAll('.pdd-row').forEach(function(row){
     row.addEventListener('click',function(){
       var pid=Number(row.getAttribute('data-pid'));
-      var p=S.products.find(function(x){return Number(x.id)===pid;});
+      var p=S.products.find(function(x){return String(x.id)===String(pid);});
       if(p){dd.style.display='none';dd.innerHTML='';onSelect(p);}
     });
   });
   dd.style.display='block';
 }
 // Close any open pdd when tapping outside
+// ── Autocomplete dropdown close handler ──────────────────────────────────
+// Closes any open .acl autocomplete dropdown when touching outside it.
+// These listeners do not delegate actions — they only withdraw UI.
+// No native control guard is needed as no action is taken on the tap target.
 document.addEventListener('touchstart',function(e){document.querySelectorAll('.acl').forEach(function(dd){if(dd.style.display!=='none'&&!dd.contains(e.target))dd.style.display='none';});},{passive:true});
 document.addEventListener('mousedown',function(e){document.querySelectorAll('.acl').forEach(function(dd){if(dd.style.display!=='none'&&!dd.contains(e.target))dd.style.display='none';});});
 
@@ -3546,7 +4548,7 @@ function snapPick(p){
   var cur=getCurStock(p.id);
   document.getElementById('ssRes').innerHTML='<div class="mok"><div class="mokt">&#128230; '+p.genericName+(p.strength?' '+p.strength:'')+'</div>'+
   '<div class="mokd">'+(p.brandName||'')+(p.form?' - '+p.form:'')+(p.category?' - '+p.category:'')+(p.barcode?' | BC:'+p.barcode:'')+'</div>'+
-  '<div class="mokd">Stock: <b>'+cur+' '+(p.sellUnit||'units')+'</b> | Min: '+(p.minStock||'-')+'</div></div>'+
+  '<div class="mokd">Stock: <b>'+cur+' '+getBaseUnitName(p)+'s</b> | Min: '+(p.minStock||'-')+'</div></div>'+
   '<div class="card"><div class="fr"><div class="fg"><label class="fl">Qty Received</label><input class="fi" autocomplete="off" id="ss_q" type="number" inputmode="numeric" placeholder="0"></div>'+
   '<div class="fg"><label class="fl">Batch No.</label><input class="fi" autocomplete="off" id="ss_b" placeholder="Optional"></div></div>'+
   '<div class="fr"><div class="fg"><label class="fl">Expiry</label><input class="fi" autocomplete="off" id="ss_e" type="month"></div>'+
@@ -3619,13 +4621,15 @@ if(!S.products.find(function(p){return p.genericName.toLowerCase()===name.toLowe
 var pi=hdr.findIndex(function(h){return h.includes('price')||h.includes('cost');});
 var qi=hdr.findIndex(function(h){return h.includes('qty')||h.includes('quantity');});
 var pid=Date.now()+i;
-S.products.push({id:pid,genericName:name,brandName:'',strength:'',form:'Tablet',category:'Other',barcode:'',nafdac:'',packType:'Box',unitsPerPack:1,sellUnit:'Unit',unitsPerSellUnit:1,minStock:10,reorderQty:0,costPrice:pi>=0?Number(cols[pi].replace(/[^0-9.]/g,''))||0:0,sellPrice:0,isFastMover:false,addedDate:td(),imported:true});
+S.products.push({id:pid,genericName:name,brandName:'',strength:'',form:'Tablet',category:'Other',barcode:'',nafdac:'',packType:'Box',unitsPerPack:1,sellUnit:'unit',unitsPerSellUnit:1,minStock:10,reorderQty:0,costPrice:pi>=0?Number(cols[pi].replace(/[^0-9.]/g,''))||0:0,sellPrice:0,isFastMover:true,addedDate:td(),imported:true});
 if(qi>=0&&cols[qi])S.stock.push({id:Date.now()+i+1000000,productId:pid,qty:Number(cols[qi])||0,batch:'IMPORT',expiry:'',cost:0,date:td(),depleted:false});imp++;
 }
 }
 save();
+// D-006: PST-005 — enroll active imported products in operational monitoring
+try{pidBackfillOperationalEnrollment();}catch(e){}
 var res=document.getElementById('impRes');
-if(res)res.innerHTML='<div class="al ag"><div class="ai">&#9989;</div><div class="at"><b>'+imp+' products imported.</b> Review in Stock tab and mark fast movers.</div></div>';
+if(res)res.innerHTML='<div class="al ag"><div class="ai">&#9989;</div><div class="at"><b>'+imp+' products imported.</b> Products enrolled in Stock Pulse automatically.</div></div>';
 toast('Imported '+imp+' products');renderPulse();updBadges();
 };reader.readAsText(file);
 }
@@ -3740,7 +4744,7 @@ el.innerHTML=summary+recs.map(cdCard).join('');
 function cdCard(d){
 var net=d.sales-d.expTotal,isH=d.sales===0&&d.notes;
 var expStr=d.expenses&&d.expenses.length?d.expenses.map(function(e){return e.cat+': '+N(e.amt);}).join(' | '):'';
-// Sprint 1: Show POS vs manual breakdown if both present
+// Show POS vs manual breakdown if both present
 var posRev=Number(d.posRevenue||0);
 var manRev=Number(d.manualSales||0);
 var srcNote='';
@@ -3792,10 +4796,10 @@ document.getElementById('pmTitle').textContent='Pay: '+s.company;
 document.getElementById('pmSub').textContent='Balance: '+N(getSupplierBalance(id))+' — log and pay';
 document.getElementById('pm_a').value='';document.getElementById('pm_r').value='';iD('pm_d');openOv('payOv');
 }
-// NOTE: The canonical savePay() is defined later in the Suppliers tab section (Sprint 1 version).
+// NOTE: The canonical savePay() is defined later in the Suppliers tab section.
 // This stub forwards to it for backward compatibility with any onclick="savePay()" calls above.
 function savePay(){
-  // Will be overridden by Sprint 1 savePay defined in Suppliers tab JS block below.
+  // Will be overridden by canonical savePay() defined in the Suppliers tab JS block below.
   // This stub exists only so calls before that definition don't throw.
   toast('Processing payment...');
 }
@@ -4134,7 +5138,7 @@ function goToNoHistory(idx,el){
   if(idx===6){try{renderRuleBasedCoach();}catch(e){}}
   if(idx===8){renderCustomers();try{setSfTab(0);}catch(e){}}
   if(idx===9){try{renderIntakeSummary();setIcTab(2);setTimeout(function(){icSetQuickCapture('aisnap');},100);}catch(e){}}
-  if(idx===11){try{renderReviewWorkspace();}catch(e){}}
+  if(idx===11){try{setRwTab('dash');}catch(e){try{renderReviewWorkspace();}catch(e2){}}try{rwRegisterQueueDelegates();}catch(e){}}
   if(idx===10){try{renderIntel();}catch(e){}}
 }
 function initSwipe(){
@@ -4316,7 +5320,7 @@ function gTab2(idx,el){
 var gps=document.querySelectorAll('#pg7 .gp');
 gps.forEach(function(p,i){p.classList.toggle('on',i===idx);});
 document.querySelectorAll('#pg7 .gtab').forEach(function(t,i){t.classList.toggle('on',i===idx);});
-if(idx===6){try{initVoiceToggle();}catch(e){}try{initApiKeyDisplay();}catch(e){}try{renderBERows();}catch(e){}try{populateBEInputs();}catch(e){}}
+if(idx===6){try{initVoiceToggle();}catch(e){}try{initApiKeyDisplay();}catch(e){}try{renderBERows();}catch(e){}try{populateBEInputs();}catch(e){}try{pbsrxSyncDiagUI();}catch(e){}}
 }
 
 // ── DEMAND LOG ───────────────────────────────────────────────────────────────
@@ -4581,7 +5585,7 @@ var r=reorderSelected[key];
 if(r.isDemand){
 lines.push(r.name+' — Qty needed: '+r.qty+' (customer demand)');
 }else{
-var p=S.products.find(function(x){return x.id==key;});
+var p=S.products.find(function(x){return String(x.id)===String(key);});
 if(!p)return;
 var qty=r.qty;var cost=r.cost||0;
 var est=qty*cost;total+=est;
@@ -4834,7 +5838,7 @@ function renderReorderCenter(){
 function rcToggle(id, checked){
   if(checked){
     // Use velocity cache — avoids re-running full engine on every tap
-    var pid = isNaN(id) ? id : Number(id);
+    var pid = id;
     var p = S.products.find(function(x){ return x.id===pid||String(x.id)===String(id); });
     if(p){
       var v = getVelocity(p);
@@ -5364,7 +6368,10 @@ var msg=type==='morning'?'&#127749; Morning briefing ready! Tap Coach tab to vie
 toast(msg,6000);
 var cb=document.getElementById('coachbg');if(cb){cb.style.display='flex';cb.textContent='!';}
 }
-setInterval(checkScheduledBriefing,60000);
+// D-011: PST-008 idempotent guard — prevent duplicate briefing intervals
+if(!window._pbsrxBriefingInterval){
+  window._pbsrxBriefingInterval=setInterval(checkScheduledBriefing,60000);
+}
 
 // ── INIT ADDITIONS ───────────────────────────────────────────────────────────
 function renderSnapTray(){
@@ -5682,7 +6689,7 @@ var units=getProdUnits(p);
 var stock=getCurStock(p.id);
 var stockColor=stock<=0?'var(--red)':stock<=(p.minStock||10)?'var(--amb)':'var(--grn)';
 var unitStr=units.map(function(u){return u.name+' '+N(u.price);}).join(' · ');
-return '<div class="pos-dd-row" onclick="posSelectFromDropdown('+p.id+')" style="padding:11px 14px;border-bottom:1px solid var(--bdr);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;active:background:var(--surf);">'+
+return '<div class="pos-dd-row" data-postap="1" data-pid="'+p.id+'" style="padding:11px 14px;border-bottom:1px solid var(--bdr);cursor:pointer;touch-action:manipulation;user-select:none;display:flex;align-items:center;justify-content:space-between;gap:8px;">'+
 '<div style="flex:1;min-width:0;">'+
 '<div style="font-size:14px;font-weight:800;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+escH(p.genericName)+(p.strength?' <span style="color:var(--mut);font-weight:600;font-size:12px;">'+escH(p.strength)+'</span>':'')+(p.brandName?' <span style="color:var(--mut);font-size:11px;">('+escH(p.brandName)+')</span>':'')+'</div>'+
 '<div style="font-size:11px;color:var(--mut);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+escH(unitStr)+(p.shelfLocation?' &nbsp;&#128205; '+escH(p.shelfLocation):'')+'</div>'+
@@ -5695,7 +6702,7 @@ return '<div class="pos-dd-row" onclick="posSelectFromDropdown('+p.id+')" style=
 dd.style.display='block';
 }
 function posSelectFromDropdown(pid){
-var p=S.products.find(function(x){return Number(x.id)===Number(pid);});
+var p=S.products.find(function(x){return String(x.id)===String(pid);});
 if(!p)return;
 posSelectedProd=p;
 var inp=document.getElementById('pos_name');
@@ -5707,13 +6714,27 @@ function closePosDropdown(){
 var dd=document.getElementById('posDropdown');
 if(dd)dd.style.display='none';
 }
-// Close dropdown when tapping outside
+// ── POS Product Picker Interaction Delegate ──────────────────────────────
+// Architecture: see PBSRX INTERACTION ARCHITECTURE block above.
+// Rules applied here: RULE 1 (native controls), RULE 3 (gesture intent).
+
+// Gesture tracking state — measures cumulative displacement to resolve intent.
+var _posTouchStartY=0, _posTouchMoved=false;
+
+// D-009: Consolidated touchstart — handles both close-on-outside-tap and
+// gesture origin tracking in a single listener pass (PST-008 pattern).
 document.addEventListener('touchstart',function(e){
-var dd=document.getElementById('posDropdown');
-var inp=document.getElementById('pos_name');
-if(dd&&dd.style.display!=='none'){
-if(!dd.contains(e.target)&&e.target!==inp){closePosDropdown();}
-}
+  var dd=document.getElementById('posDropdown');
+  var inp=document.getElementById('pos_name');
+  if(dd&&dd.style.display!=='none'){
+    // Close dropdown if touch landed outside it
+    if(!dd.contains(e.target)&&e.target!==inp){closePosDropdown();return;}
+    // Track touch origin for gesture intent resolution (RULE 3)
+    if(dd.contains(e.target)){
+      _posTouchStartY=e.touches[0].clientY;
+      _posTouchMoved=false;
+    }
+  }
 },{passive:true});
 document.addEventListener('mousedown',function(e){
 var dd=document.getElementById('posDropdown');
@@ -5722,6 +6743,29 @@ if(dd&&dd.style.display!=='none'){
 if(!dd.contains(e.target)&&e.target!==inp){closePosDropdown();}
 }
 });
+
+// Phase 2: Track cumulative movement. If displacement exceeds the tap threshold,
+// classify as a scroll gesture regardless of where the finger eventually lifts.
+document.addEventListener('touchmove',function(e){
+  if(Math.abs(e.touches[0].clientY-_posTouchStartY)>PBSRX_TAP_MOVE_THRESHOLD){
+    _posTouchMoved=true;
+  }
+},{passive:true});
+
+// Phase 3: On lift, select only if gesture was a deliberate tap (RULE 3).
+document.addEventListener('touchend',function(e){
+  if(_posTouchMoved){_posTouchMoved=false;return;}
+  var el=e.target;
+  while(el&&el!==document){
+    if(el.dataset&&el.dataset.postap){
+      e.preventDefault();
+      posSelectFromDropdown(el.dataset.pid);
+      return;
+    }
+    el=el.parentElement;
+  }
+},{passive:false});
+
 function posShowUnitRow(){
 var p=posSelectedProd;if(!p)return;
 closePosDropdown();
@@ -5755,6 +6799,14 @@ else{sw.style.display='none';}
 // Scroll to step 2
 document.getElementById('posStep2').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
+function posClearSelection(){
+  posSelectedProd=null;
+  var inp=document.getElementById('pos_name');
+  if(inp){inp.value='';inp.focus();}
+  var s2=document.getElementById('posStep2');if(s2)s2.style.display='none';
+  closePosDropdown();
+}
+
 var posCurrentUnit=0; // index into getProdUnits(posSelectedProd)
 function posSelectUnit(idx){
 var p=posSelectedProd;if(!p)return;
@@ -6359,7 +7411,7 @@ if(!ex){
 S.products.push({id:Date.now()+i,genericName:name,brandName:'',strength:'',form:'',
 category:cati>=0?cols[cati]:'Other',barcode:'',sellUnit:'unit',
 costPrice:ci>=0?Number(cols[ci])||0:0,sellPrice:si>=0?Number(cols[si])||0:0,
-minStock:10,reorderQty:0,isFastMover:true,addedDate:td()});
+minStock:10,reorderQty:0,isFastMover:true,countFrequency:'normal',addedDate:td()});
 if(qi>=0&&Number(cols[qi])>0){
 S.stock.push({id:Date.now()+i+10000,productId:S.products[S.products.length-1].id,
 qty:Number(cols[qi]),unit:'unit',batch:'QB-IMPORT',expiry:'',cost:ci>=0?Number(cols[ci])||0:0,date:td(),depleted:false});
@@ -6707,7 +7759,7 @@ if(ni<0||!cols[ni])continue;
 var name=cols[ni];
 var prod=S.products.find(function(p){return p.genericName.toLowerCase()===name.toLowerCase();});
 if(!prod){
-prod={id:Date.now()+i,genericName:name,brandName:'',strength:'',category:'Other',sellUnit:'unit',costPrice:ci>=0?Number(cols[ci])||0:0,sellPrice:0,minStock:10,reorderQty:0,isFastMover:true,addedDate:td()};
+prod={id:Date.now()+i,genericName:name,brandName:'',strength:'',category:'Other',sellUnit:'unit',costPrice:ci>=0?Number(cols[ci])||0:0,sellPrice:0,minStock:10,reorderQty:0,isFastMover:true,countFrequency:'normal',addedDate:td()};
 S.products.push(prod);
 }
 var qty=qi>=0?Number(cols[qi])||0:0;
@@ -6748,7 +7800,7 @@ items.forEach(function(item,i){
 if(!item.name)return;
 var prod=S.products.find(function(p){return p.genericName.toLowerCase()===item.name.toLowerCase();});
 if(!prod){
-prod={id:Date.now()+i+9000,genericName:item.name,brandName:'',strength:'',category:'Other',sellUnit:'unit',costPrice:item.cost||0,sellPrice:0,minStock:10,reorderQty:0,isFastMover:true,addedDate:td()};
+prod={id:Date.now()+i+9000,genericName:item.name,brandName:'',strength:'',category:'Other',sellUnit:'unit',costPrice:item.cost||0,sellPrice:0,minStock:10,reorderQty:0,isFastMover:true,countFrequency:'normal',addedDate:td()};
 S.products.push(prod);
 }
 if(item.qty>0){
@@ -7090,6 +8142,12 @@ function rsAutoFill(idx){
   });
 }
 function rsSuggestSell(idx){
+// PST-002 intentional exception: This function auto-suggests a selling price
+// as a pre-filled, editable default (cost × 1.30 = 30% margin).
+// It fires only when the sell field is currently empty. The pharmacist
+// can override, clear, or ignore the suggestion before saving.
+// This is a pharmacist convenience feature — not an automatic price override.
+// The sell price field remains fully user-controlled at all times.
 var cost=Number(document.getElementById('rs_cost_'+idx).value)||0;
 var sellEl=document.getElementById('rs_sell_'+idx);
 if(cost>0&&(!sellEl.value||Number(sellEl.value)===0)){
@@ -7181,7 +8239,7 @@ var qtyInBaseUnits=qtyReceived*baseQtyPer;
 var prod=S.products.find(function(p){return p.genericName.toLowerCase()===name.toLowerCase();});
 if(!prod){
 prod={id:Date.now()+i,genericName:name,brandName:'',strength:strength,category:cat,
-sellUnit:'unit',costPrice:cost,sellPrice:sell,minStock:10,reorderQty:0,isFastMover:true,addedDate:date};
+sellUnit:'unit',costPrice:cost,sellPrice:sell,minStock:10,reorderQty:0,isFastMover:true,countFrequency:'normal',addedDate:date};
 S.products.push(prod);
 } else {
 // Update prices if changed
@@ -8054,15 +9112,123 @@ function peShowUnit(n){
 if(n===2){
 document.getElementById('pe_u2_wrap').style.display='block';
 document.getElementById('pe_add_u2_btn').style.display='none';
-document.getElementById('pe_add_u3_btn').style.display='block';
+// Unit 3 button only shown if Unit 2 has values (guard for Fix B)
+peCheckU3Btn();
 } else if(n===3){
 document.getElementById('pe_u3_wrap').style.display='block';
 document.getElementById('pe_add_u3_btn').style.display='none';
 }
 }
+function peHideUnit(n){
+if(n===2){
+// Clear Unit 2 fields
+['pe_u2_name','pe_u2_price','pe_u2_base'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+// Hide Unit 3 first if shown
+peHideUnit(3);
+document.getElementById('pe_u2_wrap').style.display='none';
+document.getElementById('pe_add_u2_btn').style.display='block';
+document.getElementById('pe_add_u3_btn').style.display='none';
+} else if(n===3){
+['pe_u3_name','pe_u3_price','pe_u3_base'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+document.getElementById('pe_u3_wrap').style.display='none';
+peCheckU3Btn();
+}
+}
+function peCheckU3Btn(){
+// Show "+ Add Unit 3" only if Unit 2 has a name and baseQty filled
+var u2n=(document.getElementById('pe_u2_name')||{value:''}).value.trim();
+var u2b=(document.getElementById('pe_u2_base')||{value:''}).value;
+var u3wrap=document.getElementById('pe_u3_wrap');
+var u3Shown=u3wrap&&u3wrap.style.display!=='none';
+var btn=document.getElementById('pe_add_u3_btn');
+if(btn)btn.style.display=(u2n&&u2b&&!u3Shown)?'block':'none';
+}
+// ── PST-003: Semantic label updater ──────────────────────────────────────────
+// Replaces "Unit 2" / "Unit 3" static labels with the pharmacist's own names
+// once they are typed. Called on input on pe_u1_name / pe_u2_name / pe_u3_name.
+function peUpdateSemanticLabels(){
+  var u1=((document.getElementById('pe_u1_name')||{}).value||'').trim()||'Base Unit';
+  var u2=((document.getElementById('pe_u2_name')||{}).value||'').trim()||'Unit 2';
+  var u3=((document.getElementById('pe_u3_name')||{}).value||'').trim()||'Unit 3';
+  // Update the wrapper labels (the flex div containing .unit-label)
+  var u1Lbl=document.querySelector('.base-unit .unit-label');
+  var u2Lbl=document.querySelector('#pe_u2_wrap .unit-label');
+  var u3Lbl=document.querySelector('#pe_u3_wrap .unit-label');
+  if(u1Lbl) u1Lbl.textContent=u1;
+  if(u2Lbl) u2Lbl.textContent=u2;
+  if(u3Lbl) u3Lbl.textContent=u3;
+  // Also update the "= qty of Unit 1" hint to reference the real base unit name
+  var hints=document.querySelectorAll('.pe_base_hint');
+  hints.forEach(function(h){h.textContent='= qty of '+u1;});
+  peUpdatePreview();
+}
+
+// ── Packaging Preview & Commercial Preview ────────────────────────────────────
+// Informational only — never overwrites prices.
+function peUpdatePreview(){
+  var previewEl=document.getElementById('pe_unit_preview');
+  if(!previewEl) return;
+
+  var u1Name =((document.getElementById('pe_u1_name') ||{}).value||'unit').trim();
+  var u1Price=Number((document.getElementById('pe_u1_price')||{}).value)||0;
+  var u2Name =((document.getElementById('pe_u2_name') ||{}).value||'').trim();
+  var u2Base =Number((document.getElementById('pe_u2_base') ||{}).value)||0;
+  var u2Price=Number((document.getElementById('pe_u2_price')||{}).value)||0;
+  var u3Name =((document.getElementById('pe_u3_name') ||{}).value||'').trim();
+  var u3Base =Number((document.getElementById('pe_u3_base') ||{}).value)||0;
+  var u3Price=Number((document.getElementById('pe_u3_price')||{}).value)||0;
+
+  var u2Shown=document.getElementById('pe_u2_wrap')&&document.getElementById('pe_u2_wrap').style.display!=='none';
+  var u3Shown=document.getElementById('pe_u3_wrap')&&document.getElementById('pe_u3_wrap').style.display!=='none';
+
+  if(!u2Shown&&!u3Shown){previewEl.style.display='none';return;}
+  previewEl.style.display='block';
+
+  var html='<div style="font-size:10px;color:var(--mut);font-weight:700;letter-spacing:1px;margin-bottom:6px;">PACKAGING HIERARCHY</div>';
+
+  // Base unit row
+  html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">'+
+    '<div style="background:var(--blu3);color:var(--blu);border-radius:6px;padding:3px 8px;font-size:11px;font-weight:800;">'+escH(u1Name)+'</div>'+
+    (u1Price>0?'<div style="font-size:10px;color:var(--mut);">'+N(u1Price)+' each</div>':'')+
+  '</div>';
+
+  if(u2Shown&&u2Name&&u2Base>0){
+    html+='<div style="padding-left:6px;border-left:2px solid var(--bdr);margin:4px 0 4px 8px;">'+
+      '<div style="font-size:9px;color:var(--mut);margin-bottom:3px;">&#8595; '+u2Base+' '+escH(u1Name)+(u2Base!==1?'s':'')+'</div>'+
+      '<div style="display:flex;align-items:center;gap:8px;">'+
+        '<div style="background:var(--surf);border:1px solid var(--bdr);border-radius:6px;padding:3px 8px;font-size:11px;font-weight:800;">'+escH(u2Name)+'</div>'+
+        (u2Price>0?'<div style="font-size:10px;color:var(--mut);">'+N(u2Price)+'</div>':'')+
+        (u2Price>0&&u1Price>0?'<div style="font-size:9px;color:var(--grn);">eff. '+N(Math.round(u2Price/u2Base))+'/'+escH(u1Name)+'</div>':'')+
+      '</div>'+
+    '</div>';
+    // Savings callout
+    if(u2Price>0&&u1Price>0&&u1Price*u2Base>u2Price){
+      var saving=Math.round((1-u2Price/(u1Price*u2Base))*100);
+      html+='<div style="font-size:9px;color:var(--grn);padding-left:16px;margin-bottom:4px;">&#10003; '+saving+'% cheaper per '+escH(u1Name)+' vs buying individually</div>';
+    }
+  }
+
+  if(u3Shown&&u3Name&&u3Base>0&&u2Name&&u2Base>0){
+    var u3InU2=u2Base>0?Math.round(u3Base/u2Base*10)/10:0;
+    html+='<div style="padding-left:6px;border-left:2px solid var(--bdr);margin:4px 0 4px 8px;">'+
+      '<div style="font-size:9px;color:var(--mut);margin-bottom:3px;">&#8595; '+(u3InU2>0?u3InU2+' '+escH(u2Name)+(u3InU2!==1?'s':'')+' = ':'')+u3Base+' '+escH(u1Name)+(u3Base!==1?'s':'')+'</div>'+
+      '<div style="display:flex;align-items:center;gap:8px;">'+
+        '<div style="background:var(--surf);border:1px solid var(--bdr);border-radius:6px;padding:3px 8px;font-size:11px;font-weight:800;">'+escH(u3Name)+'</div>'+
+        (u3Price>0?'<div style="font-size:10px;color:var(--mut);">'+N(u3Price)+'</div>':'')+
+        (u3Price>0&&u1Price>0?'<div style="font-size:9px;color:var(--grn);">eff. '+N(Math.round(u3Price/u3Base))+'/'+escH(u1Name)+'</div>':'')+
+      '</div>'+
+    '</div>';
+    if(u3Price>0&&u1Price>0&&u1Price*u3Base>u3Price){
+      var saving3=Math.round((1-u3Price/(u1Price*u3Base))*100);
+      html+='<div style="font-size:9px;color:var(--grn);padding-left:16px;">&#10003; '+saving3+'% cheaper per '+escH(u1Name)+' at bulk rate</div>';
+    }
+  }
+
+  previewEl.innerHTML=html;
+}
+
 function openProdEdit(id){
-  id=Number(id);
-  var p=S.products.find(function(x){return Number(x.id)===id;});if(!p)return;
+  var p=S.products.find(function(x){return String(x.id)===String(id);});if(!p)return;
   document.getElementById('pe_id').value=p.id;
   document.getElementById('pe_name').value=p.genericName||'';
   document.getElementById('pe_brand').value=p.brandName||'';
@@ -8135,9 +9301,19 @@ function openProdEdit(id){
   document.getElementById('pe_u3_wrap').style.display='none';
   document.getElementById('pe_add_u2_btn').style.display='block';
   document.getElementById('pe_add_u3_btn').style.display='none';
+  // Fix B: live Unit 3 gate — re-evaluate whenever Unit 2 fields change
+  ['pe_u2_name','pe_u2_base'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.oninput=peCheckU3Btn;
+  });
   // Unit 1 — base
   document.getElementById('pe_u1_name').value=prodUnits[0]?prodUnits[0].name:(p.sellUnit||'unit');
   document.getElementById('pe_u1_price').value=prodUnits[0]?prodUnits[0].price:(p.sellPrice||'');
+  // Fix D: semantic labels — update dynamically from pe_u1_name
+  var peU1NameEl=document.getElementById('pe_u1_name');
+  if(peU1NameEl) peU1NameEl.oninput=function(){ peUpdateSemanticLabels(); };
+  // Initial preview render on open
+  setTimeout(function(){peUpdateSemanticLabels();peUpdatePreview();},50);
   // Unit 2
   if(prodUnits[1]){
     document.getElementById('pe_u2_name').value=prodUnits[1].name||'';
@@ -8175,17 +9351,17 @@ function updPeMargin(){
   bar.textContent='Margin: '+margin+'% · Markup: '+markup+'% · Profit per unit: '+N(price-cost);
 }
 function deleteProdFromEdit(){
-  var id=Number(document.getElementById('pe_id').value);
+  var id=document.getElementById('pe_id').value;
   if(!confirm('Delete this product? This cannot be undone.'))return;
-  S.products=S.products.filter(function(x){return Number(x.id)!==id;});
-  S.stock=S.stock.filter(function(x){return Number(x.productId)!==id;});
+  S.products=S.products.filter(function(x){return String(x.id)!==String(id);});
+  S.stock=S.stock.filter(function(x){return String(x.productId)!==String(id);});
   save();renderProdManager();renderPulse();updBadges();updProdCount();
   document.getElementById('prodEditModal').style.display='none';
   toast('Product deleted.',2000);
 }
 function saveProdEdit(){
-  var id=Number(document.getElementById('pe_id').value);
-  var p=S.products.find(function(x){return Number(x.id)===id;});if(!p)return;
+  var id=document.getElementById('pe_id').value;
+  var p=S.products.find(function(x){return String(x.id)===String(id);});if(!p)return;
   // Record price history if changed
   if(!S.priceHistory)S.priceHistory=[];
   var newCost=Number(document.getElementById('pe_cost').value)||0;
@@ -8217,7 +9393,13 @@ function saveProdEdit(){
   var u3Base=Number(document.getElementById('pe_u3_base').value)||0;
   var u3Price=Number(document.getElementById('pe_u3_price').value)||0;
   if(u3Name&&u3Base>0&&newUnits.length>=2){newUnits.push({name:u3Name,baseQty:u3Base,price:u3Price});}
+  else if(u3Name&&u3Base>0&&newUnits.length<2){toast('Add a secondary unit before adding a third unit',2800);}
   p.units=newUnits;
+  if(window.PBSRx&&PBSRx.Diagnostics){
+    PBSRx.Diagnostics.log('PED','PED-UNITS-WRITE',
+      newUnits.map(function(u,i){return u.name+'(x'+u.baseQty+','+u.price+'N)';}).join(' > '),
+      'ok',{count:newUnits.length,units:newUnits.map(function(u){return{name:u.name,baseQty:u.baseQty,price:u.price};})});
+  }
   // Keep legacy fields in sync for backward compat with any old code paths
   p.sellUnit=u1Name;
   p.sellPrice=u1Price;
@@ -8229,6 +9411,16 @@ function saveProdEdit(){
   var supSel=document.getElementById('pe_supplier');
   if(supSel)p.primarySupplier=supSel.value;
   save();renderProdManager();renderPulse();updBadges();updProdCount();
+  // PIR-013: Refresh Review Workspace so resolved tasks disappear immediately.
+  // generateReviewTasks() is demand-computed — calling renderReviewWorkspace()
+  // is sufficient; no manual task removal is needed. PST-007: scoped to queue tab only.
+  try{updReviewBadge();}catch(e){}
+  try{if(typeof rwCurrentTab!=='undefined'&&rwCurrentTab==='queue')renderReviewWorkspace();}catch(e){}
+  if(window.PBSRx&&PBSRx.Diagnostics){
+    PBSRx.Diagnostics.log('ReviewWorkspace','REVIEW-QUEUE-REFRESH',
+      'saveProdEdit triggered queue refresh','ok',
+      {tab:typeof rwCurrentTab!=='undefined'?rwCurrentTab:'?'});
+  }
   document.getElementById('peStatus').textContent='✅ Saved!';
   setTimeout(function(){document.getElementById('prodEditModal').style.display='none';},800);
 }
@@ -8409,7 +9601,7 @@ function importFromQB(){
         unitsPerPack:1,sellUnit:'unit',unitsPerSellUnit:1,
         minStock:item.reorder||0,reorderQty:item.reorder?item.reorder*2:0,
         costPrice:item.cost||0,sellPrice:item.price||0,
-        isFastMover:false,addedDate:td(),source:'QuickBooks'});
+        isFastMover:true,countFrequency:'normal',addedDate:td(),source:'QuickBooks'});
       newProds++;
       if(item.qty>0){
         S.stock.push({id:Date.now()+Math.random(),productId:pid,qty:item.qty,unit:'unit',
@@ -8417,7 +9609,8 @@ function importFromQB(){
         stockAdded++;
       }
     });
-    save();renderAll();updBadges();
+    save();try{pidBackfillOperationalEnrollment();}catch(e){}renderAll();updBadges();
+    // D-007: PST-005 — backfill enrolls active imported products in Stock Pulse
     var msg='✅ Done: '+newProds+' products added';
     if(updProds>0)msg+=', '+updProds+' prices updated';
     if(stockAdded>0)msg+=', '+stockAdded+' stock entries added';
@@ -8493,6 +9686,8 @@ function icHideQuickCapture(){
 
 function setIcTab(idx){
   icTab=idx;
+  // Reset pg9 scroll so panel content is always visible at top
+  var pg9el=document.getElementById('pg9');if(pg9el)pg9el.scrollTop=0;
   // Hide quick capture panels when switching to any tool tab
   icHideQuickCapture();
   [0,1,2,3,4,7,8,9,10,11].forEach(function(i){
@@ -8638,7 +9833,7 @@ function poItemAc(inp,idx){
 }
 
 function selectPoItem(pid,idx){
-  var p=S.products.find(function(x){return Number(x.id)===Number(pid);});
+  var p=S.products.find(function(x){return String(x.id)===String(pid);});
   if(!p)return;
   var inp=document.querySelector('#poItem'+idx+' input.fi');
   if(inp)inp.value=p.genericName+(p.strength?' '+p.strength:'');
@@ -8858,12 +10053,12 @@ function addRcItem(name,qty,pid,cost){
 }
 
 function showRcPriceInfo(idx){
-  var pid=Number((document.getElementById('rcIpid'+idx)||{value:0}).value);
+  var pid=(document.getElementById('rcIpid'+idx)||{value:''}).value;
   var cost=Number((document.getElementById('rcIcost'+idx)||{value:0}).value);
   var infoEl=document.getElementById('rcIPriceInfo'+idx);
   if(!infoEl)return;
   if(!pid){infoEl.style.display='none';return;}
-  var p=S.products.find(function(x){return Number(x.id)===pid;});
+  var p=S.products.find(function(x){return String(x.id)===String(pid);});
   if(!p){infoEl.style.display='none';return;}
   var units=getProdUnits(p);
   var costDisplay=cost||p.costPrice||0;
@@ -8888,7 +10083,7 @@ function rcItemAc(inp,idx){
 }
 
 function selectRcItem(pid,idx){
-  var p=S.products.find(function(x){return Number(x.id)===Number(pid);});if(!p)return;
+  var p=S.products.find(function(x){return String(x.id)===String(pid);});if(!p)return;
   var inp=document.querySelector('#rcItem'+idx+' input.fi');
   if(inp)inp.value=p.genericName+(p.strength?' '+p.strength:'');
   var pidInp=document.getElementById('rcIpid'+idx);if(pidInp)pidInp.value=pid;
@@ -8903,7 +10098,7 @@ function checkVariance(idx){
   var newCost=Number(document.getElementById('rcIcost'+idx)?document.getElementById('rcIcost'+idx).value:0);
   var varEl=document.getElementById('rcIvar'+idx);if(!varEl)return;
   if(!pid||!newCost){varEl.textContent='';return;}
-  var p=S.products.find(function(x){return Number(x.id)===pid;});if(!p){varEl.textContent='';return;}
+  var p=S.products.find(function(x){return String(x.id)===String(pid);});if(!p){varEl.textContent='';return;}
   var ordered=Number(document.getElementById('rcIord'+idx)?document.getElementById('rcIord'+idx).value:0);
   var received=Number(document.getElementById('rcIqty'+idx)?document.getElementById('rcIqty'+idx).value:0);
   var msgs=[];
@@ -8949,7 +10144,7 @@ function confirmReceive(){
     var cost=Number(document.getElementById('rcIcost'+idx)?document.getElementById('rcIcost'+idx).value:0);
     if(!name||qty<=0)return;
     var totalUnits=qty*pack;
-    var p=pid?S.products.find(function(x){return Number(x.id)===pid;}):S.products.find(function(x){return x.genericName.toLowerCase()===name.toLowerCase();});
+    var p=pid?S.products.find(function(x){return String(x.id)===String(pid);}):S.products.find(function(x){return x.genericName.toLowerCase()===name.toLowerCase();});
     if(p){
       // Check duplicate batch
       var dupBatch=batch&&S.stock.find(function(s){return String(s.productId)===String(p.id)&&s.batch===batch&&!s.depleted;});
@@ -9016,7 +10211,7 @@ function qlSearch(){
 }
 
 function selectQLProd(pid){
-  var p=S.products.find(function(x){return Number(x.id)===pid;});if(!p)return;
+  var p=S.products.find(function(x){return String(x.id)===String(pid);});if(!p)return;
   qlSelectedProd=p;
   document.getElementById('ql_name').value=p.genericName+(p.strength?' '+p.strength:'');
   document.getElementById('qlAc').innerHTML='';
@@ -9137,7 +10332,7 @@ function retSearch(){
 }
 
 function selectRetProd(pid){
-  var p=S.products.find(function(x){return Number(x.id)===pid;});if(!p)return;
+  var p=S.products.find(function(x){return String(x.id)===String(pid);});if(!p)return;
   retSelectedProd=p;
   document.getElementById('ret_name').value=p.genericName;
   document.getElementById('retAc').innerHTML='';
@@ -9247,16 +10442,25 @@ function removePOItem(idx){var el=document.getElementById('poItem'+idx);if(el)el
 function removeRcItem(idx){var el=document.getElementById('rcItem'+idx);if(el)el.remove();}
 
 // ═══ SNAP & LOG ══════════════════════════════════════════════════════════════
-// ── INTAKE SNAP/BARCODE PANEL STUBS ─────────────────────────────────────────
-// These panels were removed from Intake. AI Snap and Barcode now live in
-// icQcAIPanel / icQcBCPanel (inline Quick Capture). Stubs kept for safety.
+// ── INTAKE SNAP/BARCODE PANEL COMPATIBILITY STUBS (D-019) ───────────────────
+// These functions were removed when AI Snap moved from a dedicated Intake panel
+// to the inline Quick Capture system (icQcAIPanel / icQcBCPanel).
+//
+// Retained as empty stubs because:
+//   • Any existing onclick="initSnapPanel()" or onclick="snapAnalyze()" in saved
+//     bookmarks, cached HTML, or external integrations will fail silently
+//     rather than throw a ReferenceError.
+//   • snapConfirmLog() provides a user-facing redirect message.
+//
+// Do not remove without confirming no external references exist.
+// Do not add business logic — these stubs are intentionally inert.
 var snapPhotoData=null;
 var snapMatchedProd=null;
-function initSnapPanel(){} // retired — use icSetQuickCapture('aisnap')
-function snapHandlePhoto(){}
-function snapAnalyze(){}
+function initSnapPanel(){} // D-019: inert stub — use icSetQuickCapture('aisnap')
+function snapHandlePhoto(){} // D-019: inert stub
+function snapAnalyze(){} // D-019: inert stub
 function snapConfirmLog(){toast('Use Intake → AI Snap or Quick Search to log stock.');}
-function snapReset(){}
+function snapReset(){} // D-019: inert stub
 function renderSnapRecent(){}
 function initBarcodePanel(){} // retired — use icSetQuickCapture('bc')
 function bcStartScan(){ goTo(9,document.getElementById('nb9')); setTimeout(function(){icSetQuickCapture('bc');},200); }
@@ -9297,7 +10501,7 @@ function brcSearch(){
 
 function brcSelectProd(el){
   var pid=Number(el.getAttribute('data-pid'));
-  var p=S.products.find(function(x){return Number(x.id)===pid;});if(!p)return;
+  var p=S.products.find(function(x){return String(x.id)===String(pid);});if(!p)return;
   brcSelectedProd=p;
   document.getElementById('brc_name').value=p.genericName+(p.strength?' '+p.strength:'');
   document.getElementById('brcAc').innerHTML='';
@@ -10049,6 +11253,8 @@ function initStocktakeFields(){
   S.products.forEach(function(p){
     if(!p.lastCountDate) p.lastCountDate = null;
     if(!p.countFrequency){
+      // PST-006 safety net: countFrequency is set at product creation normally.
+      // This fallback handles products created before PST-006. Do not remove.
       p.countFrequency = p.isFastMover ? 'fast' : 'normal';
     }
   });
@@ -10244,7 +11450,7 @@ function submitCycleStocktake(){
   var adjusted = 0;
   var variances = [];
   pids.forEach(function(pid){
-    var p = S.products.find(function(x){ return Number(x.id) === Number(pid); });
+    var p = S.products.find(function(x){ return String(x.id) === String(pid); });
     if(!p) return;
     var newQty = Number(cycleCounts[pid]);
     var cur = getCurStock(p.id);
@@ -10427,11 +11633,11 @@ function stUpdSummary(){
   var counted = Object.keys(stCounts).length;
   var total = stProds.length;
   var variances = Object.keys(stCounts).filter(function(pid){
-    var p = S.products.find(function(x){return Number(x.id)===Number(pid);});
+    var p = S.products.find(function(x){return String(x.id)===String(pid);});
     return p && stCounts[pid] !== getCurStock(p.id);
   });
   var shrink = variances.reduce(function(s,pid){
-    var p = S.products.find(function(x){return Number(x.id)===Number(pid);});
+    var p = S.products.find(function(x){return String(x.id)===String(pid);});
     var diff = stCounts[pid] - getCurStock(p.id);
     return diff<0 ? s + Math.abs(diff)*(p.costPrice||0) : s;
   },0);
@@ -10450,7 +11656,7 @@ function stUpdSummary(){
     if(!variances.length){
       vs.textContent = counted+' products counted · No variances ✅';
     } else {
-      var gains = variances.filter(function(pid){return stCounts[pid]>getCurStock(S.products.find(function(x){return Number(x.id)===Number(pid);}));}).length;
+      var gains = variances.filter(function(pid){return stCounts[pid]>getCurStock(S.products.find(function(x){return String(x.id)===String(pid);}));}).length;
       var losses = variances.length - gains;
       vs.textContent = counted+' counted · '+variances.length+' variances ('+losses+' shortfalls, '+gains+' overages) · Shrinkage: '+N(Math.round(shrink));
     }
@@ -10462,7 +11668,7 @@ function applyStocktakePanel(){
   if(!pids.length){toast('Count at least one product first.');return;}
   var adjusted=0, variances=[];
   pids.forEach(function(pid){
-    var p = S.products.find(function(x){return Number(x.id)===Number(pid);});
+    var p = S.products.find(function(x){return String(x.id)===String(pid);});
     if(!p)return;
     var newQty = Number(stCounts[pid]);
     var cur = getCurStock(p.id);
@@ -11267,37 +12473,43 @@ Thank you for your patronage! 🙏<br>Powered by PBSRx
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
     <div>
       <div style="font-size:12px;font-weight:800;color:var(--amb);letter-spacing:1px;text-transform:uppercase;">📦 Selling Units</div>
-      <div style="font-size:11px;color:var(--mut);margin-top:2px;">Define how this product is sold. Unit 1 is the base unit.</div>
+      <div style="font-size:11px;color:var(--mut);margin-top:2px;">Define how this product is sold. The Base Unit is what stock is tracked in.</div>
     </div>
   </div>
   <!-- Unit 1 — Base Unit (always shown) -->
-  <div class="unit-label">Unit 1 — Base Unit</div>
+  <div class="unit-label">Base Unit</div>
   <div class="unit-row base-unit">
     <input class="fi" id="pe_u1_name" placeholder="e.g. tablet" style="margin:0;font-size:13px;">
-    <input class="fi" id="pe_u1_price" type="number" inputmode="decimal" placeholder="Price ₦" style="margin:0;width:90px;font-size:13px;">
+    <input class="fi" id="pe_u1_price" type="number" inputmode="decimal" placeholder="Price ₦" style="margin:0;width:90px;font-size:13px;" oninput="peUpdatePreview();">
     <div style="font-size:10px;color:var(--amb);font-weight:800;white-space:nowrap;">BASE<br>= 1</div>
   </div>
   <!-- Unit 2 — Optional -->
   <div id="pe_u2_wrap" style="display:none;">
-    <div class="unit-label" style="margin-top:8px;">Unit 2</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+      <div class="unit-label">Unit 2</div>
+      <button type="button" onclick="peHideUnit(2)" style="background:none;border:none;color:var(--mut);font-size:16px;cursor:pointer;padding:2px 6px;touch-action:manipulation;" title="Remove Unit 2">&#10005;</button>
+    </div>
     <div class="unit-row">
-      <input class="fi" id="pe_u2_name" placeholder="e.g. strip" style="margin:0;font-size:13px;">
-      <input class="fi" id="pe_u2_price" type="number" inputmode="decimal" placeholder="Price ₦" style="margin:0;width:90px;font-size:13px;">
+      <input class="fi" id="pe_u2_name" placeholder="e.g. strip" style="margin:0;font-size:13px;" oninput="peCheckU3Btn();peUpdateSemanticLabels();">
+      <input class="fi" id="pe_u2_price" type="number" inputmode="decimal" placeholder="Price ₦" style="margin:0;width:90px;font-size:13px;" oninput="peUpdatePreview();">
       <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-        <div style="font-size:9px;color:var(--mut);white-space:nowrap;">= qty of Unit 1</div>
-        <input class="fi" id="pe_u2_base" type="number" inputmode="numeric" placeholder="e.g. 12" style="margin:0;width:60px;font-size:13px;text-align:center;">
+        <div class="pe_base_hint" style="font-size:9px;color:var(--mut);white-space:nowrap;">= qty of Unit 1</div>
+        <input class="fi" id="pe_u2_base" type="number" inputmode="numeric" placeholder="e.g. 12" style="margin:0;width:60px;font-size:13px;text-align:center;" oninput="peCheckU3Btn();peUpdatePreview();">
       </div>
     </div>
   </div>
   <!-- Unit 3 — Optional -->
   <div id="pe_u3_wrap" style="display:none;">
-    <div class="unit-label" style="margin-top:8px;">Unit 3</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+      <div class="unit-label">Unit 3</div>
+      <button type="button" onclick="peHideUnit(3)" style="background:none;border:none;color:var(--mut);font-size:16px;cursor:pointer;padding:2px 6px;touch-action:manipulation;" title="Remove Unit 3">&#10005;</button>
+    </div>
     <div class="unit-row">
-      <input class="fi" id="pe_u3_name" placeholder="e.g. pack" style="margin:0;font-size:13px;">
-      <input class="fi" id="pe_u3_price" type="number" inputmode="decimal" placeholder="Price ₦" style="margin:0;width:90px;font-size:13px;">
+      <input class="fi" id="pe_u3_name" placeholder="e.g. pack" style="margin:0;font-size:13px;" oninput="peUpdateSemanticLabels();">
+      <input class="fi" id="pe_u3_price" type="number" inputmode="decimal" placeholder="Price ₦" style="margin:0;width:90px;font-size:13px;" oninput="peUpdatePreview();">
       <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-        <div style="font-size:9px;color:var(--mut);white-space:nowrap;">= qty of Unit 1</div>
-        <input class="fi" id="pe_u3_base" type="number" inputmode="numeric" placeholder="e.g. 96" style="margin:0;width:60px;font-size:13px;text-align:center;">
+        <div class="pe_base_hint" style="font-size:9px;color:var(--mut);white-space:nowrap;">= qty of Unit 1</div>
+        <input class="fi" id="pe_u3_base" type="number" inputmode="numeric" placeholder="e.g. 96" style="margin:0;width:60px;font-size:13px;text-align:center;" oninput="peUpdatePreview();">
       </div>
     </div>
   </div>
@@ -11307,6 +12519,8 @@ Thank you for your patronage! 🙏<br>Powered by PBSRx
     <button id="pe_add_u3_btn" onclick="peShowUnit(3)" style="flex:1;padding:8px;background:none;border:1.5px dashed var(--bdr);color:var(--mut);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;display:none;">+ Add Unit 3</button>
   </div>
   <div style="font-size:10px;color:var(--mut);margin-top:8px;padding-top:8px;border-top:1px solid var(--bdr);">Example: tablet (base) → strip (12 tablets, ₦220) → pack (96 tablets, ₦1,500)</div>
+  <!-- Packaging + Commercial Preview -->
+  <div id="pe_unit_preview" style="display:none;background:var(--surf);border-radius:10px;padding:10px 12px;margin-top:10px;border:1px solid var(--bdr);"></div>
 </div>
 <!-- ── END MULTI-UNIT SECTION ─────────────────────────────── -->
 <div style="display:flex;align-items:center;gap:8px;margin:8px 0 10px;padding:8px 12px;background:var(--surf);border-radius:10px;">
@@ -11361,5 +12575,1073 @@ Thank you for your patronage! 🙏<br>Powered by PBSRx
 </div>
 </div>
 <datalist id="productSuggestions"></datalist>
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').then(function(r){console.log('PBSRx SW registered:',r.scope);}).catch(function(e){console.warn('PBSRx SW registration failed:',e);});}</script>
+<script>if('serviceWorker'in navigator&&location.protocol!=='file:'&&location.hostname!=='www.claudeusercontent.com'){navigator.serviceWorker.register('./sw.js').catch(console.warn);}
+// ════════════════════════════════════════════════════════════════════════════
+// PBSRx.Diagnostics — Permanent Workflow Diagnostics Framework
+// Version: 1.0.0 | Introduced: RC3.4-DIAG
+//
+// ARCHITECTURE
+// ─────────────────────────────────────────────────────────────────────────
+// This namespace provides a modular, zero-impact diagnostics capability for
+// the PBSRx platform. All modules are disabled in production (when developer
+// mode is off). The framework observes execution — it never alters it.
+//
+// DEVELOPER MODE
+// ─────────────────────────────────────────────────────────────────────────
+// Enable:  PBSRx.Diagnostics.enable()   or hold vol-down 3s on any screen
+// Disable: PBSRx.Diagnostics.disable()  or tap the [■] close button
+// Persist: localStorage key 'pbsrx_devmode' = 'on' survives page reload
+//
+// MODULE TOGGLES (in developer panel or programmatically):
+//   PBSRx.Diagnostics.modules.interaction = true|false
+//   PBSRx.Diagnostics.modules.workflow    = true|false
+//   PBSRx.Diagnostics.modules.navigation  = true|false
+//   PBSRx.Diagnostics.modules.rendering   = true|false
+//   PBSRx.Diagnostics.modules.state       = true|false
+//   PBSRx.Diagnostics.modules.storage     = true|false
+//   PBSRx.Diagnostics.modules.exceptions  = true|false
+//   PBSRx.Diagnostics.modules.performance = true|false
+//
+// EXTENSION (future modules — Cockpit, KoboFlow, VitalFlow, BibleBuddy)
+// ─────────────────────────────────────────────────────────────────────────
+// Register a custom module:
+//   PBSRx.Diagnostics.register('MyModule', { onEvent: fn, onReport: fn });
+// Log to a custom module:
+//   PBSRx.Diagnostics.log('MyModule', 'EVENT', 'message', level, data);
+//
+// REPORT
+// ─────────────────────────────────────────────────────────────────────────
+//   PBSRx.Diagnostics.report()  — generates full diagnostic report
+//   PBSRx.Diagnostics.snapshot() — captures current application state
+// ════════════════════════════════════════════════════════════════════════════
+
+var PBSRx = window.PBSRx || {};
+
+PBSRx.Diagnostics = (function(){
+  'use strict';
+
+  // ── Constants ─────────────────────────────────────────────────────────────
+  var VERSION    = '1.0.0';
+  var MAX_EVENTS = 500;   // rolling log size
+  var MAX_PANEL  = 25;    // visible rows in panel
+  var PERSIST_KEY = 'pbsrx_devmode';
+  var SESSION_START = Date.now();
+
+  // ── Module flags ──────────────────────────────────────────────────────────
+  var modules = {
+    interaction : true,
+    workflow    : true,
+    navigation  : true,
+    rendering   : true,
+    state       : true,
+    storage     : true,
+    exceptions  : true,
+    performance : true
+  };
+
+  // ── Internal state ────────────────────────────────────────────────────────
+  var enabled    = false;
+  var events     = [];      // [{ts, module, type, msg, level, data, dur}]
+  var hooks      = {};      // registered external modules
+  var panel      = null;    // DOM panel element
+  var activeTab  = 'session';
+  var perfMarks  = {};      // name → start timestamp
+
+  // ── Level colours for panel ───────────────────────────────────────────────
+  var LEVEL_COLOR = {
+    info  : '#88b4f5',
+    ok    : '#86efac',
+    warn  : '#fbbf24',
+    error : '#f87171',
+    trace : '#c4b5fd',
+    perf  : '#67e8f9'
+  };
+
+  // ── Core: log ─────────────────────────────────────────────────────────────
+  function log(module, type, msg, level, data){
+    if(!enabled) return;
+    if(modules[module.toLowerCase()] === false) return;
+    var entry = {
+      ts    : Date.now() - SESSION_START,
+      tsAbs : new Date().toISOString().slice(11, 23),
+      module: module,
+      type  : type,
+      msg   : msg,
+      level : level || 'info',
+      data  : data || null
+    };
+    events.unshift(entry);
+    if(events.length > MAX_EVENTS) events.length = MAX_EVENTS;
+    // Notify registered external hooks
+    Object.keys(hooks).forEach(function(k){
+      try{ if(hooks[k].onEvent) hooks[k].onEvent(entry); }catch(e){}
+    });
+    _updatePanel();
+  }
+
+  // ── Core: performance marks ───────────────────────────────────────────────
+  function mark(name){
+    if(!enabled) return;
+    perfMarks[name] = Date.now();
+  }
+  function measure(name, label){
+    if(!enabled || !perfMarks[name]) return;
+    var dur = Date.now() - perfMarks[name];
+    delete perfMarks[name];
+    log('performance', 'MEASURE', (label||name)+': '+dur+'ms',
+        dur > 100 ? 'warn' : 'perf', {dur: dur});
+    return dur;
+  }
+
+  // ── Core: state snapshot ──────────────────────────────────────────────────
+  function snapshot(){
+    var S = window.S || {};
+    var snap = {
+      ts           : new Date().toISOString(),
+      version      : (document.querySelector('[data-version]')||{}).dataset,
+      module       : typeof curPg !== 'undefined' ? curPg : '?',
+      navStack     : typeof _navHistory !== 'undefined' ? _navHistory.slice() : [],
+      rwExpanded   : typeof rwExpandedPid !== 'undefined' ? rwExpandedPid : null,
+      rwTab        : typeof rwCurrentTab !== 'undefined' ? rwCurrentTab : null,
+      posProduct   : typeof posSelectedProd !== 'undefined' && posSelectedProd
+                      ? posSelectedProd.genericName : null,
+      products     : S.products ? S.products.length : 0,
+      sales        : S.sales ? S.sales.length : 0,
+      stock        : S.stock ? S.stock.length : 0,
+      reviewLog    : S.reviewLog ? S.reviewLog.length : 0,
+      openDialogs  : _getOpenDialogs(),
+      activeElement: document.activeElement
+                      ? document.activeElement.tagName+'#'+document.activeElement.id
+                      : null,
+      devMode      : enabled
+    };
+    return snap;
+  }
+
+  function _getOpenDialogs(){
+    var open = [];
+    ['receiptModal','prodEditModal','prodMgrModal','stocktakeModal',
+     'receiveStockModal','payOv','reorderOv','rcSupOv'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el && (el.classList.contains('on') || el.style.display === 'block' ||
+                el.style.display === 'flex')){
+        open.push(id);
+      }
+    });
+    return open;
+  }
+
+  // ── Core: full diagnostic report ──────────────────────────────────────────
+  function report(){
+    var snap = snapshot();
+    var nav  = window.navigator || {};
+    var lines = [
+      '═══════════════════════════════════════════════════════',
+      'PBSRx Diagnostic Report',
+      '═══════════════════════════════════════════════════════',
+      'Generated : '+snap.ts,
+      'Version   : v7.6.7-RC3.9',
+      'Browser   : '+nav.userAgent,
+      'Platform  : '+nav.platform,
+      '',
+      '── State Snapshot ─────────────────────────────────────',
+      JSON.stringify(snap, null, 2),
+      '',
+      '── Session Timeline (last 50 events) ─────────────────'
+    ];
+    events.slice(0, 50).forEach(function(e){
+      lines.push(
+        '['+pad(e.ts)+'ms] ['+e.module+'] '+e.type+': '+e.msg+
+        (e.data ? ' | '+JSON.stringify(e.data) : '')
+      );
+    });
+    lines.push('═══════════════════════════════════════════════════════');
+    var txt = lines.join('\n');
+    // Copy to clipboard if available
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(txt).then(function(){
+        if(window.toast) toast('Diagnostic report copied to clipboard',3000);
+      }).catch(function(){_showReportModal(txt);});
+    } else {
+      _showReportModal(txt);
+    }
+    return txt;
+  }
+
+  function pad(n){ var s=String(n); while(s.length<7)s='0'+s; return s; }
+
+  function _showReportModal(txt){
+    var m = document.createElement('div');
+    m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:999999;'+
+      'overflow-y:auto;padding:16px;font:11px/1.5 monospace;color:#e2e8f0;';
+    m.innerHTML = '<div style="display:flex;justify-content:space-between;margin-bottom:8px;">'+
+      '<span style="color:#f59e0b;font-weight:900;font-size:13px;">Diagnostic Report</span>'+
+      '<button onclick="this.parentElement.parentElement.remove()" '+
+      'style="background:none;border:1px solid #555;color:#fff;border-radius:6px;padding:2px 8px;cursor:pointer;">✕</button>'+
+      '</div>'+
+      '<textarea style="width:100%;height:80vh;background:#0d1117;color:#e2e8f0;border:1px solid #333;'+
+      'border-radius:8px;padding:8px;font:11px monospace;" readonly>'+escH(txt)+'</textarea>';
+    document.body.appendChild(m);
+  }
+
+  // ── Developer Panel ───────────────────────────────────────────────────────
+  var TABS = ['session','interaction','workflow','navigation','rendering',
+              'state','storage','exceptions','performance'];
+
+  function _buildPanel(){
+    if(panel) return;
+    panel = document.createElement('div');
+    panel.id = '_pbsrx_diag';
+    panel.style.cssText =
+      'position:fixed;top:56px;left:0;right:0;background:rgba(8,12,22,0.98);'+
+      'border-bottom:2px solid #f59e0b;z-index:999998;font-family:monospace;'+
+      'font-size:11px;color:#e2e8f0;display:flex;flex-direction:column;max-height:50vh;';
+
+    // Header bar
+    var hdr = document.createElement('div');
+    hdr.style.cssText = 'display:flex;align-items:center;gap:4px;padding:4px 6px;'+
+      'background:#0d1117;border-bottom:1px solid #333;flex-shrink:0;overflow-x:auto;';
+    hdr.innerHTML =
+      '<span style="color:#f59e0b;font-weight:900;font-size:10px;white-space:nowrap;'+
+      'flex-shrink:0;">⚙ DIAG</span>'+
+      TABS.map(function(t){
+        return '<button data-diaTab="'+t+'" onclick="PBSRx.Diagnostics._setTab(\''+t+'\')" '+
+          'style="background:'+(t==='session'?'#f59e0b':'#1c2128')+';color:'+
+          (t==='session'?'#000':'#888')+';border:none;border-radius:4px;padding:2px 6px;'+
+          'font-size:10px;cursor:pointer;white-space:nowrap;touch-action:manipulation;">'+t+'</button>';
+      }).join('')+
+      '<button onclick="PBSRx.Diagnostics.report()" '+
+      'style="margin-left:auto;flex-shrink:0;background:#0969da;color:#fff;border:none;'+
+      'border-radius:4px;padding:2px 8px;font-size:10px;cursor:pointer;white-space:nowrap;'+
+      'touch-action:manipulation;">📋 Report</button>'+
+      '<button onclick="PBSRx.Diagnostics.disable()" '+
+      'style="flex-shrink:0;background:none;border:1px solid #444;color:#888;border-radius:4px;'+
+      'padding:2px 6px;font-size:11px;cursor:pointer;touch-action:manipulation;">■</button>';
+
+    // Module toggle bar
+    var mtbar = document.createElement('div');
+    mtbar.id='_diag_mbar';
+    mtbar.style.cssText='display:none;padding:4px 6px;background:#0a0f1a;'+
+      'border-bottom:1px solid #1c2128;flex-wrap:wrap;gap:3px;flex-shrink:0;';
+    Object.keys(modules).forEach(function(m){
+      var btn=document.createElement('button');
+      btn.id='_diag_mt_'+m;
+      btn.textContent=m+(modules[m]?'✓':'✗');
+      btn.style.cssText='background:'+(modules[m]?'#1c4532':'#2d1a1a')+';color:'+
+        (modules[m]?'#86efac':'#f87171')+';border:none;border-radius:3px;'+
+        'padding:2px 5px;font-size:9px;cursor:pointer;touch-action:manipulation;';
+      btn.onclick=function(){
+        modules[m]=!modules[m];
+        btn.textContent=m+(modules[m]?'✓':'✗');
+        btn.style.background=modules[m]?'#1c4532':'#2d1a1a';
+        btn.style.color=modules[m]?'#86efac':'#f87171';
+      };
+      mtbar.appendChild(btn);
+    });
+
+    // Log area
+    var logArea = document.createElement('div');
+    logArea.id = '_diag_log';
+    logArea.style.cssText = 'overflow-y:auto;flex:1;padding:4px 6px;';
+
+    // Snap area (State tab)
+    var snapArea = document.createElement('div');
+    snapArea.id = '_diag_snap';
+    snapArea.style.cssText = 'display:none;overflow-y:auto;flex:1;padding:6px;'+
+      'font-size:10px;white-space:pre;color:#c4b5fd;';
+
+    panel.appendChild(hdr);
+    panel.appendChild(mtbar);
+    panel.appendChild(logArea);
+    panel.appendChild(snapArea);
+    document.body.appendChild(panel);
+  }
+
+  function _setTab(tab){
+    activeTab = tab;
+    var mbar = document.getElementById('_diag_mbar');
+    if(mbar) mbar.style.display = tab==='session' ? 'none' : 'flex';
+    TABS.forEach(function(t){
+      var btn = panel.querySelector('[data-diaTab="'+t+'"]');
+      if(btn){
+        btn.style.background = t===tab?'#f59e0b':'#1c2128';
+        btn.style.color = t===tab?'#000':'#888';
+      }
+    });
+    if(tab==='state'){
+      var sa=document.getElementById('_diag_snap');
+      var la=document.getElementById('_diag_log');
+      if(sa){ sa.style.display='block'; sa.textContent=JSON.stringify(snapshot(),null,2); }
+      if(la) la.style.display='none';
+    } else {
+      var sa=document.getElementById('_diag_snap');
+      var la=document.getElementById('_diag_log');
+      if(sa) sa.style.display='none';
+      if(la) la.style.display='block';
+    }
+    _updatePanel();
+  }
+
+  function _updatePanel(){
+    if(!enabled || !panel) return;
+    var la = document.getElementById('_diag_log');
+    if(!la || la.style.display==='none') return;
+    var tabFilter = activeTab === 'session' ? null : activeTab;
+    var filtered = tabFilter
+      ? events.filter(function(e){ return e.module.toLowerCase()===tabFilter; })
+      : events;
+    la.innerHTML = filtered.slice(0, MAX_PANEL).map(function(e){
+      var col = LEVEL_COLOR[e.level] || '#e2e8f0';
+      return '<div style="color:'+col+';border-bottom:1px solid rgba(255,255,255,0.04);'+
+        'padding:2px 0;line-height:1.3;">'+
+        '<span style="opacity:0.45;font-size:9px;">+'+e.ts+'ms</span> '+
+        '<span style="font-weight:700;color:'+(LEVEL_COLOR[e.level]||'#aaa')+'">['+e.module+']</span> '+
+        '<span style="color:#94a3b8;">'+e.type+'</span> '+
+        escH(e.msg)+
+        (e.data?'<span style="opacity:0.5;font-size:9px;"> '+escH(JSON.stringify(e.data))+'</span>':'')+
+        '</div>';
+    }).join('') || '<div style="color:#444;padding:8px;">No events for this module.</div>';
+  }
+
+  // ── Public API ────────────────────────────────────────────────────────────
+  function enable(){
+    enabled = true;
+    localStorage.setItem(PERSIST_KEY,'on');
+    _buildPanel();
+    _installHooks();
+    log('diagnostics','ENABLED','PBSRx Diagnostics v'+VERSION+' active','ok');
+    if(window.toast) toast('⚙ Developer Mode ON',1500);
+    setTimeout(pbsrxSyncDiagUI,50);
+  }
+
+  function disable(){
+    enabled = false;
+    localStorage.removeItem(PERSIST_KEY);
+    if(panel){ panel.remove(); panel=null; }
+    _removeHooks();
+    setTimeout(pbsrxSyncDiagUI,50);
+  }
+
+  function register(name, hooks_obj){
+    hooks[name] = hooks_obj;
+  }
+
+  // ── Hook installation ────────────────────────────────────────────────────
+  // All instrumentation is installed here — no scattered monkeypatching elsewhere.
+  var _hooksInstalled = false;
+  var _originals = {};
+
+  function _installHooks(){
+    if(_hooksInstalled) return;
+    _hooksInstalled = true;
+
+    // ── 1. INTERACTION: global touch events ──────────────────────────────
+    document.addEventListener('touchstart', _onTouchStart, {passive:true});
+    document.addEventListener('touchend',   _onTouchEnd,   {passive:true});
+
+    // ── 2. NAVIGATION: popstate (Android back) ───────────────────────────
+    window.addEventListener('popstate', _onPopState, {passive:true});
+
+    // ── 3. EXCEPTIONS: global error capture ──────────────────────────────
+    window.addEventListener('error', _onError);
+    window.addEventListener('unhandledrejection', _onRejection);
+
+    // ── 4. WORKFLOW: wrap key application functions ───────────────────────
+    _wrap('rwOpenInline',       'ReviewWorkspace', 'EXPAND',      _wrapRwOpen);
+    _wrap('rwSaveInline',       'ReviewWorkspace', 'SAVE',        _wrapRwSave);
+    _wrap('rwResolveLater',     'ReviewWorkspace', 'RESOLVE',     null);
+    _wrap('openProdEdit',       'ReviewWorkspace', 'EDIT_FULL',   null);
+    _wrap('posSelectFromDropdown','POS',            'SELECT',      _wrapPosSel);
+    _wrap('showReceipt',        'POS',              'RECEIPT',     _wrapReceipt);
+    _wrap('goToNoHistory',      'navigation',       'SCREEN',      _wrapNav);
+    _wrap('renderReviewWorkspace','rendering',      'RW_RENDER',   _wrapRender);
+    _wrap('save',               'storage',          'SAVE',        _wrapSave);
+  }
+
+  function _removeHooks(){
+    document.removeEventListener('touchstart', _onTouchStart);
+    document.removeEventListener('touchend',   _onTouchEnd);
+    window.removeEventListener('popstate',     _onPopState);
+    window.removeEventListener('error',        _onError);
+    window.removeEventListener('unhandledrejection', _onRejection);
+    // Restore originals
+    Object.keys(_originals).forEach(function(k){
+      if(window[k]) window[k] = _originals[k];
+    });
+    _originals = {};
+    _hooksInstalled = false;
+  }
+
+  // Generic function wrapper
+  function _wrap(name, module, type, customWrapper){
+    if(typeof window[name] !== 'function') return;
+    _originals[name] = window[name];
+    window[name] = customWrapper
+      ? customWrapper(name, module, type, _originals[name])
+      : _makeDefaultWrapper(name, module, type, _originals[name]);
+  }
+
+  function _makeDefaultWrapper(name, module, type, orig){
+    return function(){
+      var args = Array.prototype.slice.call(arguments);
+      log(module, type, name+'('+args.slice(0,2).map(function(a){
+        return typeof a === 'string' ? a.slice(0,30) : a;
+      }).join(', ')+')', 'trace');
+      mark(name);
+      var result;
+      try{ result = orig.apply(this, arguments); }
+      catch(ex){
+        log('exceptions','ERROR',name+': '+ex.message,'error',{stack:ex.stack});
+        throw ex;
+      }
+      measure(name, type);
+      return result;
+    };
+  }
+
+  // ── Custom wrappers ───────────────────────────────────────────────────────
+  function _wrapRwOpen(name, module, type, orig){
+    return function(pid, taskType){
+      var p = window.S && window.S.products
+        ? window.S.products.find(function(x){return String(x.id)===String(pid);})
+        : null;
+      log(module, type, p ? p.genericName+' ['+taskType+']' : 'pid='+pid+' NOT FOUND',
+          p ? 'trace' : 'error', {pid:pid, type:taskType, found:!!p});
+      mark(name);
+      try{ orig.apply(this, arguments); }
+      catch(ex){ log('exceptions','ERROR',name+': '+ex.message,'error'); throw ex; }
+      measure(name, type);
+    };
+  }
+
+  function _wrapRwSave(name, module, type, orig){
+    return function(pid, field, value){
+      var p = window.S && window.S.products
+        ? window.S.products.find(function(x){return String(x.id)===String(pid);})
+        : null;
+      var focused = document.activeElement;
+      log(module, type,
+          (p?p.genericName:'pid='+pid+' NOT FOUND')+' → '+field+'='+JSON.stringify(value),
+          p?'ok':'error', {pid:pid, field:field, hasFocus:focused&&focused.tagName});
+      mark(name);
+      try{ orig.apply(this, arguments); }
+      catch(ex){ log('exceptions','ERROR',name+': '+ex.message,'error'); throw ex; }
+      measure(name, type);
+    };
+  }
+
+  function _wrapPosSel(name, module, type, orig){
+    return function(pid){
+      var p = window.S && window.S.products
+        ? window.S.products.find(function(x){return String(x.id)===String(pid);})
+        : null;
+      log(module, type, p?p.genericName:'pid='+pid+' NOT FOUND',
+          p?'ok':'error', {pid:pid, found:!!p});
+      try{ orig.apply(this, arguments); }
+      catch(ex){ log('exceptions','ERROR',name+': '+ex.message,'error'); throw ex; }
+    };
+  }
+
+  function _wrapReceipt(name, module, type, orig){
+    return function(autoTrigger){
+      var printer = typeof printerOn !== 'undefined' ? printerOn : '?';
+      var wa      = typeof whatsappOn !== 'undefined' ? whatsappOn : '?';
+      log(module, 'CONFIRM_SALE',
+          'autoTrigger='+autoTrigger+' printerOn='+printer+' waOn='+wa,
+          autoTrigger && printer ? 'warn' : 'ok',
+          {autoTrigger:autoTrigger, printerOn:printer, whatsappOn:wa});
+      if(autoTrigger && printer)
+        log(module,'AUTO_PRINT','Print will fire in 300ms','warn');
+      if(autoTrigger && wa)
+        log(module,'AUTO_WA','WhatsApp share will fire','warn');
+      try{ orig.apply(this, arguments); }
+      catch(ex){ log('exceptions','ERROR',name+': '+ex.message,'error'); throw ex; }
+    };
+  }
+
+  function _wrapNav(name, module, type, orig){
+    return function(idx){
+      var screens=['Dashboard','Stock','(pg2)','POS','Reorder','Suppliers',
+                   'Coach','Guide','Customers','Intake','Intel','Review'];
+      log(module,'NAVIGATE','→ pg'+idx+' ('+( screens[idx]||'?')+')',
+          'info', {from: typeof curPg!=='undefined'?curPg:null, to:idx});
+      try{ return orig.apply(this, arguments); }
+      catch(ex){ log('exceptions','ERROR',name+': '+ex.message,'error'); throw ex; }
+    };
+  }
+
+  function _wrapRender(name, module, type, orig){
+    return function(){
+      var focused = document.activeElement;
+      var hasFocus = focused && focused !== document.body && focused.tagName !== 'BODY';
+      if(hasFocus)
+        log(module,'DOM_REPLACE','renderReviewWorkspace() — focus on '+
+            focused.tagName+'#'+focused.id+' will be lost','warn',
+            {tag:focused.tagName, id:focused.id, value:focused.value});
+      else
+        log(module,'DOM_REPLACE','renderReviewWorkspace()','trace');
+      mark(name);
+      try{ orig.apply(this, arguments); }
+      catch(ex){ log('exceptions','ERROR',name+': '+ex.message,'error'); throw ex; }
+      measure(name, type);
+    };
+  }
+
+  function _wrapSave(name, module, type, orig){
+    return function(){
+      mark(name);
+      var before = localStorage.length;
+      try{ orig.apply(this, arguments); }
+      catch(ex){ log('exceptions','ERROR',name+': '+ex.message,'error'); throw ex; }
+      var dur = measure(name, 'STORAGE');
+      log(module,'WRITE','localStorage persisted',
+          dur>200?'warn':'ok', {keys:localStorage.length});
+    };
+  }
+
+  // ── Event handlers ────────────────────────────────────────────────────────
+  function _onTouchStart(e){
+    if(!modules.interaction) return;
+    var t = e.target;
+    var native = typeof pbsrxTargetIsNative==='function' && pbsrxTargetIsNative(t);
+    log('interaction','TOUCHSTART',
+        (t.tagName||'?')+(t.id?'#'+t.id:'')+(native?' [NATIVE]':''),
+        'trace', {native:native, data:t.dataset?_dataKeys(t.dataset):null});
+  }
+
+  function _onTouchEnd(e){
+    if(!modules.interaction) return;
+    var t = e.target;
+    var native = typeof pbsrxTargetIsNative==='function' && pbsrxTargetIsNative(t);
+    log('interaction','TOUCHEND',
+        (t.tagName||'?')+(t.id?'#'+t.id:'')+(native?' [NATIVE→browser handles]':''),
+        native?'ok':'trace',
+        {native:native, data:t.dataset?_dataKeys(t.dataset):null});
+  }
+
+  function _onPopState(){
+    var open = _getOpenDialogs();
+    log('navigation','BACK_BUTTON',
+        'Android back. curPg='+(typeof curPg!=='undefined'?curPg:'?')+
+        ' expanded='+(typeof rwExpandedPid!=='undefined'?rwExpandedPid:'?')+
+        (open.length?' dialogs=['+open.join(',')+']':''),
+        open.length?'warn':'info',
+        {openDialogs:open, navStack:typeof _navHistory!=='undefined'?_navHistory:[]});
+  }
+
+  function _onError(e){
+    log('exceptions','UNHANDLED_ERROR',e.message+' ('+e.filename+':'+e.lineno+')','error',
+        {filename:e.filename, lineno:e.lineno, colno:e.colno});
+  }
+
+  function _onRejection(e){
+    var msg = e.reason
+      ? (e.reason.message||String(e.reason)).slice(0,80)
+      : 'unknown rejection';
+    log('exceptions','UNHANDLED_REJECTION', msg, 'error');
+  }
+
+  function _dataKeys(ds){
+    return Object.keys(ds).slice(0,3).join(',');
+  }
+
+  // ── Activation: Settings → Developer Tools toggle button ─────────────────
+  // The volume-key approach (keydown/keyup) does not fire reliably on Android
+  // Chrome for hardware media keys. Use the toggle button in Guide → Settings
+  // → Developer Tools instead. The button calls pbsrxToggleDiag() which is
+  // defined outside this IIFE so it is always accessible.
+
+  // ── Auto-restore if persisted ─────────────────────────────────────────────
+  if(localStorage.getItem(PERSIST_KEY)==='on'){
+    // Defer until DOM ready
+    setTimeout(function(){ enable(); }, 600);
+  }
+
+  // ── Expose public interface ───────────────────────────────────────────────
+  return {
+    enable    : enable,
+    disable   : disable,
+    _isEnabled: function(){ return enabled; },
+    log       : log,
+    mark      : mark,
+    measure   : measure,
+    snapshot  : snapshot,
+    report    : report,
+    register  : register,
+    modules   : modules,
+    _setTab   : _setTab,
+    _events   : events     // read-only reference for external tools
+  };
+})();
+
+
+// ── Settings panel toggle button ──────────────────────────────────────────
+function pbsrxToggleDiag(){
+  if(PBSRx&&PBSRx.Diagnostics){
+    if(PBSRx.Diagnostics._isEnabled()){
+      PBSRx.Diagnostics.disable();
+    } else {
+      PBSRx.Diagnostics.enable();
+    }
+    pbsrxSyncDiagUI();
+  }
+}
+
+function pbsrxSyncDiagUI(){
+  var on=PBSRx&&PBSRx.Diagnostics&&PBSRx.Diagnostics._isEnabled();
+  var lbl=document.getElementById('devModeLabel');
+  var btn=document.getElementById('devModeToggle');
+  var mods=document.getElementById('devModeModules');
+  var modToggles=document.getElementById('devModuleToggles');
+  if(lbl){
+    lbl.textContent=on?'ON':'OFF';
+    lbl.style.color=on?'var(--grn)':'var(--mut)';
+  }
+  if(btn){
+    btn.textContent=on?'Disable':'Enable';
+    btn.style.background=on?'var(--red2)':'var(--surf)';
+    btn.style.color=on?'var(--red)':'var(--mut)';
+    btn.style.borderColor=on?'var(--red)':'var(--bdr)';
+  }
+  if(mods) mods.style.display=on?'block':'none';
+  // Populate module toggles
+  if(on&&modToggles&&PBSRx.Diagnostics.modules){
+    var mObj=PBSRx.Diagnostics.modules;
+    modToggles.innerHTML='';
+    Object.keys(mObj).forEach(function(m){
+      var b=document.createElement('button');
+      b.type='button';
+      b.textContent=m+(mObj[m]?' ✓':' ✗');
+      b.style.cssText='background:'+(mObj[m]?'rgba(34,197,94,0.15)':'rgba(239,68,68,0.1)')+
+        ';color:'+(mObj[m]?'var(--grn)':'var(--red)')+';border:1px solid '+
+        (mObj[m]?'var(--grn)':'var(--red)')+';border-radius:8px;padding:4px 8px;'+
+        'font-size:10px;font-weight:700;cursor:pointer;touch-action:manipulation;';
+      b.onclick=function(){
+        mObj[m]=!mObj[m];
+        pbsrxSyncDiagUI();
+      };
+      modToggles.appendChild(b);
+    });
+  }
+}
+
+
+// ── PIR-014: Operational Enrollment Backfill ─────────────────────────────────
+// PST-006 compliant backfill for products created before isFastMover was
+// corrected in pidExecuteMigration().
+//
+// Enrollment criteria (Option C — smart backfill):
+//   - Product was created via migration (has migrationBatch field)
+//   - Product has at least one active (non-depleted) stock batch
+//   - That batch is NOT tagged 'EXPIRED-OPENING' (expired stock is not operational)
+//
+// This corrects the operational visibility gap without:
+//   - Enrolling products with no active inventory
+//   - Enrolling products with only expired opening stock
+//   - Changing countFrequency (commercial classification field)
+//   - Touching any non-migration product
+//
+// Called once: after save() completes in pidExecuteMigration().
+function pidBackfillOperationalEnrollment(){
+  if(!S.products||!S.stock) return;
+  var enrolled=0, skipped=0;
+  S.products.forEach(function(p){
+    // Only target migrated products not yet enrolled
+    if(!p.migrationBatch) return;
+    if(p.isFastMover) return; // already enrolled — skip
+    // Check for at least one active, non-expired-opening batch
+    var hasActiveStock = S.stock.some(function(b){
+      return String(b.productId)===String(p.id) &&
+             !b.depleted &&
+             b.batch !== 'EXPIRED-OPENING';
+    });
+    if(hasActiveStock){
+      p.isFastMover = true;
+      // PST-006: do not set countFrequency here — commercial classification
+      // is determined by sales velocity, not by migration status.
+      enrolled++;
+    } else {
+      skipped++;
+    }
+  });
+  if(enrolled>0){
+    if(window.PBSRx&&PBSRx.Diagnostics){
+      // PST-005: Canonical Product Ingestion — operational enrollment backfill
+  PBSRx.Diagnostics.log('migration','STOCK-PULSE-ENROLLED',
+        'PST-005 backfill: '+enrolled+' products enrolled, '+skipped+' skipped (no active stock)',
+        'ok',{enrolled:enrolled,skipped:skipped});
+    }
+    save();
+    if(typeof renderPulse==='function') renderPulse();
+    if(typeof updBadges==='function') updBadges();
+  }
+  return {enrolled:enrolled,skipped:skipped};
+}
+
+window.PBSRx = PBSRx;
+
+// ── PIR-014 Diagnostics — Migration & Enrollment Events ──────────────────────
+(function(){
+  function _migLog(type, msg, level, data){
+    if(window.PBSRx&&PBSRx.Diagnostics) PBSRx.Diagnostics.log('migration',type,msg,level||'trace',data||null);
+  }
+
+  // Wrap renderPulse to log STOCK-PULSE-FILTER
+  var _origRenderPulse = window.renderPulse;
+  if(_origRenderPulse){
+    window.renderPulse = function(){
+      var total = window.S&&window.S.products ? window.S.products.length : 0;
+      var enrolled = window.S&&window.S.products ? window.S.products.filter(function(p){return p.isFastMover;}).length : 0;
+      _migLog('STOCK-PULSE-FILTER',
+        'Rendering: '+enrolled+' enrolled of '+total+' total products ('+(total-enrolled)+' excluded)',
+        'trace',{total:total,enrolled:enrolled,excluded:total-enrolled});
+      return _origRenderPulse.apply(this,arguments);
+    };
+  }
+
+  // Wrap renderExpiry to log EXPIRY-FILTER
+  var _origRenderExpiry = window.renderExpiry;
+  if(_origRenderExpiry){
+    window.renderExpiry = function(){
+      var totalBatches = window.S&&window.S.stock ? window.S.stock.filter(function(b){return b.expiry&&!b.depleted;}).length : 0;
+      _migLog('EXPIRY-FILTER',
+        'Rendering expiry monitor: '+totalBatches+' batches with expiry dates',
+        'trace',{totalBatches:totalBatches});
+      return _origRenderExpiry.apply(this,arguments);
+    };
+  }
+})();
+
+
+// ════════════════════════════════════════════════════════════════════════════
+// PBSRx.Diagnostics — Product Editor (PED) Module
+// RC3.4.1 — PIR-002 Investigation Instrument
+//
+// Instruments the complete Product Editor save lifecycle:
+//   PED-OPEN    : openProdEdit called, product lookup, field population
+//   PED-LOADED  : Modal shown, all fields confirmed populated
+//   PED-FIELD   : Any pe_* input change detected (value + field name)
+//   PED-MARGIN  : updPeMargin called (cost/price interaction)
+//   PED-SAVE-TAP: Save Changes button tapped (touchend on btn)
+//   PED-SAVE-IN : saveProdEdit() function entered
+//   PED-ID-READ : pe_id.value read + Number() coercion result
+//   PED-PROD-RES: Product lookup result (found / NOT FOUND)
+//   PED-VALIDATE: Price history condition check
+//   PED-FIELDS  : All field values captured before write
+//   PED-WRITE   : Each field written to product object
+//   PED-PERSIST : save() called
+//   PED-RENDER  : renderProdManager / renderPulse called
+//   PED-MODAL   : Modal close scheduled
+//   PED-DONE    : Workflow complete (success) or aborted (failure)
+//   PED-DELETE  : deleteProdFromEdit called
+//   PED-SMART   : applySmartReorder called
+//
+// Known PIR-002 risk point (flagged inline):
+//   pe_id stores a string product ID (e.g. "pid1784921474239ia2")
+//   saveProdEdit reads it with Number(), producing NaN for migrated products.
+//   PED-ID-READ will expose this in the diagnostic log.
+// ════════════════════════════════════════════════════════════════════════════
+
+(function(){
+  'use strict';
+
+  // Wait for PBSRx.Diagnostics to be available
+  function _pedLog(type, msg, level, data){
+    if(window.PBSRx && window.PBSRx.Diagnostics){
+      PBSRx.Diagnostics.log('PED', type, msg, level||'trace', data||null);
+    }
+  }
+
+  function _install(){
+    var D = window.PBSRx && window.PBSRx.Diagnostics;
+    if(!D) return;
+
+    // Register PED as a named module in the framework
+    D.register('PED', {
+      onEvent: function(e){ /* PED events bubble through the main log */ }
+    });
+
+    // ── Wrap openProdEdit ─────────────────────────────────────────────────
+    var _origOpen = window.openProdEdit;
+    window.openProdEdit = function(id){
+      _pedLog('PED-OPEN', 'openProdEdit called. id='+id+' type='+typeof id, 'trace');
+
+      // Check product lookup
+      var p = window.S && window.S.products
+        ? window.S.products.find(function(x){ return String(x.id)===String(id); })
+        : null;
+
+      if(!p){
+        _pedLog('PED-OPEN', 'PRODUCT NOT FOUND for id='+id+'. Modal will not open.', 'error',
+          {id: id, productsCount: window.S && window.S.products ? window.S.products.length : 0});
+      } else {
+        _pedLog('PED-OPEN', 'Product found: "'+p.genericName+'" id='+p.id, 'ok',
+          {id: p.id, idType: typeof p.id, name: p.genericName,
+           costPrice: p.costPrice, sellPrice: p.sellPrice,
+           units: p.units ? p.units.length : 0});
+      }
+
+      D.mark('PED_open');
+      var result;
+      try {
+        result = _origOpen.apply(this, arguments);
+      } catch(ex) {
+        _pedLog('PED-OPEN', 'ERROR in openProdEdit: '+ex.message, 'error', {stack: ex.stack});
+        throw ex;
+      }
+
+      // After open: verify modal is visible and key fields populated
+      setTimeout(function(){
+        var modal = document.getElementById('prodEditModal');
+        var isVisible = modal && modal.style.display !== 'none';
+        var peIdVal   = (document.getElementById('pe_id')||{}).value || '';
+        var peNameVal = (document.getElementById('pe_name')||{}).value || '';
+        _pedLog('PED-LOADED',
+          isVisible
+            ? 'Modal open. pe_id="'+peIdVal+'" pe_name="'+peNameVal+'"'
+            : 'Modal NOT visible after openProdEdit — open failed silently',
+          isVisible ? 'ok' : 'error',
+          { modalVisible: isVisible, pe_id: peIdVal, pe_name: peNameVal,
+            pe_cost: (document.getElementById('pe_cost')||{}).value,
+            pe_price: (document.getElementById('pe_price')||{}).value });
+      }, 150);
+
+      D.measure('PED_open', 'PED-OPEN');
+      return result;
+    };
+
+    // ── Wrap saveProdEdit ─────────────────────────────────────────────────
+    var _origSave = window.saveProdEdit;
+    window.saveProdEdit = function(){
+      _pedLog('PED-SAVE-IN', 'saveProdEdit() entered', 'trace');
+
+      // ── PIR-002 Risk Point: pe_id Number() coercion ───────────────────
+      var peIdRaw    = (document.getElementById('pe_id')||{}).value || '';
+      var peIdNumber = Number(peIdRaw);
+      var peIdIsNaN  = isNaN(peIdNumber);
+
+      _pedLog('PED-ID-READ',
+        // PST-001: Product Identity integrity check — String ID must not be coerced
+        peIdIsNaN
+          ? 'PIR-002 CONFIRMED: pe_id="'+peIdRaw+'" → Number()=NaN. Product lookup will fail!'
+          : 'pe_id="'+peIdRaw+'" → Number()='+peIdNumber+' (numeric ID — safe)',
+        peIdIsNaN ? 'error' : 'ok',
+        { rawValue: peIdRaw, numberResult: peIdNumber, isNaN: peIdIsNaN,
+          risk: peIdIsNaN ? 'PIR-002: migrated product string ID cannot be Number()-coerced' : 'none' });
+
+      // Product lookup using String comparison (same as the rest of RC3)
+      var p = window.S && window.S.products
+        ? window.S.products.find(function(x){ return String(x.id)===String(peIdRaw); })
+        : null;
+      var pByNumber = window.S && window.S.products
+        ? window.S.products.find(function(x){ return x.id === peIdNumber; })
+        : null;
+
+      _pedLog('PED-PROD-RES',
+        p
+          ? 'String lookup: FOUND "'+p.genericName+'"'+(pByNumber ? ' (Number lookup also works)' : ' (Number lookup FAILS — PIR-002)')
+          : 'String lookup: NOT FOUND. Save will abort.',
+        p ? 'ok' : 'error',
+        { foundByString: !!p, foundByNumber: !!pByNumber,
+          willAbort: !p,
+          productName: p ? p.genericName : null });
+
+      // Capture all field values before save
+      var fields = {
+        pe_id       : peIdRaw,
+        pe_name     : (document.getElementById('pe_name')||{}).value,
+        pe_brand    : (document.getElementById('pe_brand')||{}).value,
+        pe_strength : (document.getElementById('pe_strength')||{}).value,
+        pe_cat      : (document.getElementById('pe_cat')||{}).value,
+        pe_form     : (document.getElementById('pe_form')||{}).value,
+        pe_unit     : (document.getElementById('pe_unit')||{}).value,
+        pe_cost     : (document.getElementById('pe_cost')||{}).value,
+        pe_price    : (document.getElementById('pe_price')||{}).value,
+        pe_min      : (document.getElementById('pe_min')||{}).value,
+        pe_nafdac   : (document.getElementById('pe_nafdac')||{}).value,
+        pe_barcode  : (document.getElementById('pe_barcode')||{}).value,
+        pe_u1_name  : (document.getElementById('pe_u1_name')||{}).value,
+        pe_u1_price : (document.getElementById('pe_u1_price')||{}).value,
+        pe_u2_name  : (document.getElementById('pe_u2_name')||{}).value,
+        pe_u2_price : (document.getElementById('pe_u2_price')||{}).value,
+        pe_u2_base  : (document.getElementById('pe_u2_base')||{}).value,
+        pe_fm       : (document.getElementById('pe_fm')||{}).checked
+      };
+      _pedLog('PED-FIELDS', 'Field snapshot before save', 'trace', fields);
+      // PED-UNITS-LOAD: capture unit structure
+      var u2w=document.getElementById('pe_u2_wrap');
+      var u3w=document.getElementById('pe_u3_wrap');
+      _pedLog('PED-UNITS-LOAD',
+        'u1='+fields.pe_u1_name+' u2='+(u2w&&u2w.style.display!=='none'?fields.pe_u2_name:'hidden')+
+        ' u3='+(u3w&&u3w.style.display!=='none'?fields.pe_u3_name:'hidden'),
+        'trace',{u2visible:!!(u2w&&u2w.style.display!=='none'),u3visible:!!(u3w&&u3w.style.display!=='none'),
+        u2base:fields.pe_u2_base,u3base:fields.pe_u3_base});
+
+      D.mark('PED_save');
+      var threw = false;
+      try {
+        _origSave.apply(this, arguments);
+      } catch(ex) {
+        threw = true;
+        _pedLog('PED-DONE', 'SAVE FAILED with exception: '+ex.message, 'error',
+          {exception: ex.message, stack: ex.stack});
+        throw ex;
+      }
+
+      if(!threw){
+        // Check if modal closed (success signal)
+        setTimeout(function(){
+          var modal  = document.getElementById('prodEditModal');
+          var closed = !modal || modal.style.display === 'none';
+          var status = (document.getElementById('peStatus')||{}).textContent || '';
+          _pedLog('PED-DONE',
+            closed || status.includes('Saved')
+              ? 'Save workflow completed. Modal closing. status="'+status+'"'
+              : 'Save handler ran but modal still open — may have aborted silently',
+            closed || status.includes('Saved') ? 'ok' : 'warn',
+            { modalClosed: closed, statusText: status });
+        }, 900);
+      }
+
+      D.measure('PED_save', 'PED-SAVE');
+    };
+
+    // ── Wrap updPeMargin ──────────────────────────────────────────────────
+    var _origMargin = window.updPeMargin;
+    if(_origMargin){
+      window.updPeMargin = function(){
+        var cost  = Number((document.getElementById('pe_cost')||{}).value)||0;
+        var price = Number((document.getElementById('pe_price')||{}).value)||0;
+        _pedLog('PED-MARGIN',
+          cost && price
+            ? 'cost='+cost+' price='+price+' margin='+Math.round((price-cost)/price*100)+'%'
+            : 'cost='+cost+' price='+price+' (margin not calculable)',
+          'trace', {cost:cost, price:price});
+        try{ _origMargin.apply(this, arguments); }catch(ex){
+          _pedLog('PED-MARGIN','ERROR: '+ex.message,'error'); throw ex;
+        }
+      };
+    }
+
+    // ── Wrap deleteProdFromEdit ───────────────────────────────────────────
+    var _origDelete = window.deleteProdFromEdit;
+    if(_origDelete){
+      window.deleteProdFromEdit = function(){
+        var peIdRaw    = (document.getElementById('pe_id')||{}).value || '';
+        var peIdNumber = Number(peIdRaw);
+        _pedLog('PED-DELETE',
+          'deleteProdFromEdit called. pe_id="'+peIdRaw+'" → Number()='+
+          (isNaN(peIdNumber)?'NaN (PIR-002 risk — delete may fail)':peIdNumber),
+          isNaN(peIdNumber)?'error':'warn',
+          {rawId: peIdRaw, numberId: peIdNumber, isNaN: isNaN(peIdNumber)});
+        try{ _origDelete.apply(this, arguments); }catch(ex){
+          _pedLog('PED-DELETE','ERROR: '+ex.message,'error'); throw ex;
+        }
+      };
+    }
+
+    // ── Wrap applySmartReorder ────────────────────────────────────────────
+    var _origSmart = window.applySmartReorder;
+    if(_origSmart){
+      window.applySmartReorder = function(suggestion){
+        _pedLog('PED-SMART','applySmartReorder('+suggestion+') called','trace',{suggestion:suggestion});
+        try{ _origSmart.apply(this, arguments); }catch(ex){
+          _pedLog('PED-SMART','ERROR: '+ex.message,'error'); throw ex;
+        }
+      };
+    }
+
+    // ── Field change observer on all pe_* inputs ──────────────────────────
+    // Attached once after modal first becomes visible via MutationObserver
+    var _fieldObserverInstalled = false;
+    function _installFieldObserver(){
+      if(_fieldObserverInstalled) return;
+      var modal = document.getElementById('prodEditModal');
+      if(!modal) return;
+      _fieldObserverInstalled = true;
+
+      var peInputIds = ['pe_name','pe_brand','pe_strength','pe_cat','pe_form',
+        'pe_unit','pe_cost','pe_price','pe_min','pe_nafdac','pe_barcode',
+        'pe_u1_name','pe_u1_price','pe_u2_name','pe_u2_price','pe_u2_base',
+        'pe_u3_name','pe_u3_price','pe_u3_base','pe_supplier'];
+
+      peInputIds.forEach(function(inputId){
+        var el = document.getElementById(inputId);
+        if(!el) return;
+        el.addEventListener('change', function(){
+          _pedLog('PED-FIELD',
+            inputId+'="'+el.value+'"',
+            'trace', {field: inputId, value: el.value});
+        });
+      });
+
+      var fmEl = document.getElementById('pe_fm');
+      if(fmEl){
+        fmEl.addEventListener('change',function(){
+          _pedLog('PED-FIELD','pe_fm (isFastMover)='+fmEl.checked,'trace',
+            {field:'pe_fm', value:fmEl.checked});
+        });
+      }
+
+      _pedLog('PED-FIELD','Field change observers installed on '+peInputIds.length+' inputs','ok');
+    }
+
+    // Observe modal visibility to install field observers when it opens
+    var modal = document.getElementById('prodEditModal');
+    if(modal && window.MutationObserver){
+      var obs = new MutationObserver(function(mutations){
+        mutations.forEach(function(m){
+          if(m.type==='attributes' && m.attributeName==='style'){
+            var visible = modal.style.display !== 'none';
+            if(visible) _installFieldObserver();
+          }
+        });
+      });
+      obs.observe(modal, {attributes:true, attributeFilter:['style']});
+    }
+
+    // ── Save button touchend delegate ─────────────────────────────────────
+    // PST-007: Scoped to #prodEditModal — not document — to avoid global touch cost.
+    // The Save Changes button uses onclick= in the DOM (not data-rwaction).
+    // We add a touchend observer to log the tap before onclick fires.
+    var pedModal = document.getElementById('prodEditModal');
+    if(pedModal){
+      pedModal.addEventListener('touchend', function(e){
+        var node = e.target;
+        while(node && node !== pedModal){
+          if(node.tagName === 'BUTTON' &&
+             node.getAttribute('onclick') &&
+             node.getAttribute('onclick').includes('saveProdEdit')){
+            _pedLog('PED-SAVE-TAP',
+              'Save Changes button tapped. Modal visible='+
+              (pedModal.style.display!=='none'),
+              'trace', {target: e.target.tagName, id: e.target.id});
+            return;
+          }
+          node = node.parentElement;
+        }
+      }, {passive:true});
+    }
+
+    _pedLog('PED-INIT','Product Editor instrumentation installed (RC3.4.1)','ok',{
+      wraps: ['openProdEdit','saveProdEdit','updPeMargin','deleteProdFromEdit','applySmartReorder'],
+      observers: ['modal style mutation','field change (deferred)','Save button touchend'],
+      pirCoverage: {
+        'PIR-002': 'Full — pe_id Number() coercion exposed at PED-ID-READ',
+        'PIR-DELETE': 'Partial — same Number() risk flagged in PED-DELETE'
+      }
+    });
+  }
+
+  // Install after everything else is ready
+  if(document.readyState === 'complete'){
+    setTimeout(_install, 700);
+  } else {
+    window.addEventListener('load', function(){ setTimeout(_install, 700); });
+  }
+
+})();
+
+
+</script>
 </body></html>

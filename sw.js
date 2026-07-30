@@ -25,7 +25,7 @@
 
 'use strict';
 
-var CACHE_NAME = 'pbsrx-phoenix-v7.6.7-RC3.9';
+var CACHE_NAME = 'pbsrx-phoenix-v7.6.7-RC3.9.1';
 
 var SHELL_ASSETS = [
   './',

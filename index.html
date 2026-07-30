@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="v7.6.7-RC3.9">
+<meta name="version" content="v7.6.7-RC3.9.1">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>PBSRx — Pharmacy Business System</title>
 <link rel="manifest" href="./manifest.json">
@@ -254,7 +254,7 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 
 .empty{text-align:center;padding:36px 20px;}.ei{font-size:44px;margin-bottom:10px;}.et{font-size:14px;color:var(--mut);font-weight:600;line-height:1.6;}
 /* ── MULTI-UNIT STYLES ── */
-.unit-row{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;background:var(--surf);border-radius:10px;padding:10px 12px;margin-bottom:6px;border:1px solid var(--bdr);}
+.unit-row{display:flex;flex-direction:column;gap:8px;background:var(--surf);border-radius:10px;padding:10px 12px;margin-bottom:6px;border:1px solid var(--bdr);}
 .unit-row.base-unit{border-color:var(--amb);background:rgba(245,158,11,0.06);}
 .unit-label{font-size:10px;font-weight:800;color:var(--amb);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
 .unit-btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;border:1.5px solid var(--bdr);background:var(--surf);color:var(--txt);transition:all .15s;min-width:72px;flex-direction:column;gap:2px;}
@@ -321,13 +321,13 @@ body{background:var(--bg);}
 <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:16px;text-align:center;">First time? Enter any password to set it.</div>
 <button onclick="doLogin()" style="width:100%;padding:16px;border-radius:14px;background:linear-gradient(135deg,var(--amb),#d97706);border:none;color:#000;font-size:16px;font-weight:800;cursor:pointer;font-family:var(--fb);touch-action:manipulation;">&#128274; Sign In</button>
 <div id="perr" style="font-size:13px;color:#f87171;text-align:center;margin-top:12px;font-weight:600;min-height:20px;"></div>
-<div style="font-size:10px;color:rgba(255,255,255,0.2);text-align:center;margin-top:16px;">D-Glopa Pharm LTD. · v7.6.7-RC3.9</div>
+<div style="font-size:10px;color:rgba(255,255,255,0.2);text-align:center;margin-top:16px;">D-Glopa Pharm LTD. · v7.6.7-RC3.9.1</div>
 </div>
 </div>
 
 <div id="app">
 <div class="hdr">
-<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v7.6.7-RC3.9</div>
+<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v7.6.7-RC3.9.1</div>
 <div style="display:flex;align-items:center;gap:10px;">
 <div class="hrole" id="hrole">ADMIN</div>
 <button class="hso" onclick="signOut()">Sign out</button>
@@ -8268,7 +8268,7 @@ setTimeout(closeReceiveStock,1500);
 
 // ══ RECEIPT ══════════════════════════════════════════════════════
 var lastSaleRecord=null;
-var printerOn=localStorage.getItem('pbsrx_printer')!=='off';
+var printerOn=localStorage.getItem('pbsrx_printer')==='on'; // PCIR-001: opt-in (default OFF)
 var whatsappOn=localStorage.getItem('pbsrx_wa_receipt')==='on';
 function _applyPrintUI(){
 var on=printerOn;
@@ -8338,6 +8338,20 @@ rt.innerHTML=
 // Sync toggle UI state
 _applyPrintUI();
 _applyWAUI();
+// PCIR-001: Respect user receipt preferences.
+// If autoTrigger (fresh sale) and both print and WA are OFF, skip the modal entirely.
+// The sale is already saved. Show a brief success confirmation and stay in POS.
+if(autoTrigger && !printerOn && !whatsappOn){
+  toast('\u2705 Sale recorded \u2014 \u20a6'+N(sale.total||0),2200);
+  // PST-013 Workflow Continuity: return focus to POS search for next customer
+  setTimeout(function(){
+    var inp=document.getElementById('pos_name');
+    if(inp){inp.value='';inp.focus();}
+    var s2=document.getElementById('posStep2');if(s2)s2.style.display='none';
+    posSelectedProd=null;posCurrentUnit=0;
+  },100);
+  return;
+}
 document.getElementById('receiptModal').classList.add('on');
 // Auto-trigger based on receipt settings (only on fresh sale, not when re-opening)
 if(autoTrigger){
@@ -8345,7 +8359,19 @@ if(autoTrigger){
   if(whatsappOn){setTimeout(function(){shareReceiptWA();},printerOn?900:300);}
 }
 }
-function closeReceipt(){document.getElementById('receiptModal').classList.remove('on');}
+function closeReceipt(){
+  document.getElementById('receiptModal').classList.remove('on');
+  // PST-013 Workflow Continuity: return naturally to POS for next customer
+  setTimeout(function(){
+    var inp=document.getElementById('pos_name');
+    if(inp&&document.getElementById('pg3').classList.contains('on')){
+      inp.value='';
+      inp.focus();
+    }
+    var s2=document.getElementById('posStep2');if(s2)s2.style.display='none';
+    posSelectedProd=null;posCurrentUnit=0;
+  },150);
+}
 function printReceipt(){
 if(!printerOn){toast('Printer is OFF — tap the toggle to enable');return;}
 var r=lastSaleRecord;if(!r)return;
@@ -12479,9 +12505,11 @@ Thank you for your patronage! 🙏<br>Powered by PBSRx
   <!-- Unit 1 — Base Unit (always shown) -->
   <div class="unit-label">Base Unit</div>
   <div class="unit-row base-unit">
-    <input class="fi" id="pe_u1_name" placeholder="e.g. tablet" style="margin:0;font-size:13px;">
-    <input class="fi" id="pe_u1_price" type="number" inputmode="decimal" placeholder="Price ₦" style="margin:0;width:90px;font-size:13px;" oninput="peUpdatePreview();">
-    <div style="font-size:10px;color:var(--amb);font-weight:800;white-space:nowrap;">BASE<br>= 1</div>
+    <input class="fi" id="pe_u1_name" placeholder="e.g. tablet" style="margin:0;font-size:15px;font-weight:700;width:100%;box-sizing:border-box;" oninput="peUpdateSemanticLabels();">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <input class="fi" id="pe_u1_price" type="number" inputmode="decimal" placeholder="Selling price ₦" style="margin:0;flex:1;font-size:14px;" oninput="peUpdatePreview();">
+      <div style="font-size:10px;color:var(--amb);font-weight:800;white-space:nowrap;flex-shrink:0;">BASE<br>= 1</div>
+    </div>
   </div>
   <!-- Unit 2 — Optional -->
   <div id="pe_u2_wrap" style="display:none;">
@@ -12490,11 +12518,13 @@ Thank you for your patronage! 🙏<br>Powered by PBSRx
       <button type="button" onclick="peHideUnit(2)" style="background:none;border:none;color:var(--mut);font-size:16px;cursor:pointer;padding:2px 6px;touch-action:manipulation;" title="Remove Unit 2">&#10005;</button>
     </div>
     <div class="unit-row">
-      <input class="fi" id="pe_u2_name" placeholder="e.g. strip" style="margin:0;font-size:13px;" oninput="peCheckU3Btn();peUpdateSemanticLabels();">
-      <input class="fi" id="pe_u2_price" type="number" inputmode="decimal" placeholder="Price ₦" style="margin:0;width:90px;font-size:13px;" oninput="peUpdatePreview();">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-        <div class="pe_base_hint" style="font-size:9px;color:var(--mut);white-space:nowrap;">= qty of Unit 1</div>
-        <input class="fi" id="pe_u2_base" type="number" inputmode="numeric" placeholder="e.g. 12" style="margin:0;width:60px;font-size:13px;text-align:center;" oninput="peCheckU3Btn();peUpdatePreview();">
+      <input class="fi" id="pe_u2_name" placeholder="e.g. strip, bottle, pack" style="margin:0;font-size:15px;font-weight:700;width:100%;box-sizing:border-box;" oninput="peCheckU3Btn();peUpdateSemanticLabels();">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input class="fi" id="pe_u2_price" type="number" inputmode="decimal" placeholder="Price ₦" style="margin:0;flex:1;font-size:14px;" oninput="peUpdatePreview();">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;">
+          <div class="pe_base_hint" style="font-size:9px;color:var(--mut);white-space:nowrap;">= qty of base</div>
+          <input class="fi" id="pe_u2_base" type="number" inputmode="numeric" placeholder="e.g. 12" style="margin:0;width:72px;font-size:14px;text-align:center;" oninput="peCheckU3Btn();peUpdatePreview();">
+        </div>
       </div>
     </div>
   </div>
@@ -12505,11 +12535,13 @@ Thank you for your patronage! 🙏<br>Powered by PBSRx
       <button type="button" onclick="peHideUnit(3)" style="background:none;border:none;color:var(--mut);font-size:16px;cursor:pointer;padding:2px 6px;touch-action:manipulation;" title="Remove Unit 3">&#10005;</button>
     </div>
     <div class="unit-row">
-      <input class="fi" id="pe_u3_name" placeholder="e.g. pack" style="margin:0;font-size:13px;" oninput="peUpdateSemanticLabels();">
-      <input class="fi" id="pe_u3_price" type="number" inputmode="decimal" placeholder="Price ₦" style="margin:0;width:90px;font-size:13px;" oninput="peUpdatePreview();">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-        <div class="pe_base_hint" style="font-size:9px;color:var(--mut);white-space:nowrap;">= qty of Unit 1</div>
-        <input class="fi" id="pe_u3_base" type="number" inputmode="numeric" placeholder="e.g. 96" style="margin:0;width:60px;font-size:13px;text-align:center;" oninput="peUpdatePreview();">
+      <input class="fi" id="pe_u3_name" placeholder="e.g. pack, box, carton" style="margin:0;font-size:15px;font-weight:700;width:100%;box-sizing:border-box;" oninput="peUpdateSemanticLabels();">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input class="fi" id="pe_u3_price" type="number" inputmode="decimal" placeholder="Price ₦" style="margin:0;flex:1;font-size:14px;" oninput="peUpdatePreview();">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;">
+          <div class="pe_base_hint" style="font-size:9px;color:var(--mut);white-space:nowrap;">= qty of base</div>
+          <input class="fi" id="pe_u3_base" type="number" inputmode="numeric" placeholder="e.g. 96" style="margin:0;width:72px;font-size:14px;text-align:center;" oninput="peUpdatePreview();">
+        </div>
       </div>
     </div>
   </div>
@@ -12740,7 +12772,7 @@ PBSRx.Diagnostics = (function(){
       'PBSRx Diagnostic Report',
       '═══════════════════════════════════════════════════════',
       'Generated : '+snap.ts,
-      'Version   : v7.6.7-RC3.9',
+      'Version   : v7.6.7-RC3.9.1',
       'Browser   : '+nav.userAgent,
       'Platform  : '+nav.platform,
       '',

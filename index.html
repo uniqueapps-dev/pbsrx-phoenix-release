@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="v7.6.7-RC3.9.1">
+<meta name="version" content="v7.6.7-RC3.9.3">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>PBSRx — Pharmacy Business System</title>
 <link rel="manifest" href="./manifest.json">
@@ -321,13 +321,13 @@ body{background:var(--bg);}
 <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:16px;text-align:center;">First time? Enter any password to set it.</div>
 <button onclick="doLogin()" style="width:100%;padding:16px;border-radius:14px;background:linear-gradient(135deg,var(--amb),#d97706);border:none;color:#000;font-size:16px;font-weight:800;cursor:pointer;font-family:var(--fb);touch-action:manipulation;">&#128274; Sign In</button>
 <div id="perr" style="font-size:13px;color:#f87171;text-align:center;margin-top:12px;font-weight:600;min-height:20px;"></div>
-<div style="font-size:10px;color:rgba(255,255,255,0.2);text-align:center;margin-top:16px;">D-Glopa Pharm LTD. · v7.6.7-RC3.9.1</div>
+<div style="font-size:10px;color:rgba(255,255,255,0.2);text-align:center;margin-top:16px;">D-Glopa Pharm LTD. · v7.6.7-RC3.9.3</div>
 </div>
 </div>
 
 <div id="app">
 <div class="hdr">
-<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v7.6.7-RC3.9.1</div>
+<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v7.6.7-RC3.9.3</div>
 <div style="display:flex;align-items:center;gap:10px;">
 <div class="hrole" id="hrole">ADMIN</div>
 <button class="hso" onclick="signOut()">Sign out</button>
@@ -2186,6 +2186,8 @@ function save(){
     console.error('PBSRx save() failed:',e);
     toast('\ud83d\udea8 SAVE FAILED — storage full! Export your data NOW.',9000);
   }
+  // PCIR-019: persist held baskets separately (not in S — avoids bloat)
+  try{localStorage.setItem('pbsrx_held_baskets',JSON.stringify(heldBaskets));}catch(e){}
 }
 function load(){
 try{
@@ -3054,7 +3056,14 @@ function rwSaveInline(pid,field,value){
   // Close inline panel and re-render queue
   rwExpandedPid=null;
   renderReviewWorkspace();
-  toast('\u2713 '+escH(p.genericName)+' \u2014 updated');
+  // PCIR-017 Tier 1: Show saved values for price fields — helps catch data-entry errors
+  var _toastMsg='\u2713 '+escH(p.genericName)+' \u2014 ';
+  if(field==='sellPrice'||field==='costPrice'){
+    _toastMsg+='Cost: '+N(p.costPrice||0)+' \u00b7 Sell: '+N(p.sellPrice||0);
+  } else {
+    _toastMsg+='updated';
+  }
+  toast(_toastMsg, 3000);
   // Check milestone
   rwCheckMilestone();
 }
@@ -3575,9 +3584,9 @@ function renderRwDashboard(){
   (inversions||dups||noOwnership?
   '<div style="background:var(--red2);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:12px 14px;margin-bottom:10px;">'+
     '<div style="font-size:10px;font-weight:800;color:var(--red);letter-spacing:1px;margin-bottom:8px;">&#128308; CRITICAL ALERTS</div>'+
-    (inversions?'<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(239,68,68,0.2);"><span style="font-size:12px;color:var(--txt);">&#9888;&#65039; '+inversions+' products with sell price below cost</span><button onclick="setRwTab(\'queue\');setTimeout(function(){setRwFilter(\'1\',document.getElementById(\'rwf_p1\'));},60);" style="font-size:10px;font-weight:700;background:var(--red);color:#fff;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;">Fix</button></div>':'') +
-    (dups?'<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(239,68,68,0.2);"><span style="font-size:12px;color:var(--txt);">&#128258; '+dups+' duplicate product names detected</span><button onclick="setRwFieldFilter(\'dup\',document.getElementById(\'rwff_dup\'));setRwTab(\'queue\');" style="font-size:10px;font-weight:700;background:var(--red);color:#fff;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;">View</button></div>':'') +
-    (noOwnership?'<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;"><span style="font-size:12px;color:var(--txt);">&#10067; '+noOwnership+' products with unconfirmed ownership</span><button onclick="setRwFilter(\'1\',document.getElementById(\'rwf_p1\'));setRwTab(\'queue\');" style="font-size:10px;font-weight:700;background:var(--red);color:#fff;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;">Fix</button></div>':'') +
+    (inversions?'<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(239,68,68,0.2);"><span style="font-size:12px;color:var(--txt);">&#9888;&#65039; '+inversions+' products with sell price below cost</span><button onclick="setRwTab(\'queue\');setTimeout(function(){setRwFilter(\'1\',document.getElementById(\'rwf_p1\'));},60);" style="font-size:10px;font-weight:700;background:var(--red);color:#fff;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;touch-action:manipulation;">Fix</button></div>':'') +
+    (dups?'<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(239,68,68,0.2);"><span style="font-size:12px;color:var(--txt);">&#128258; '+dups+' duplicate product names detected</span><button onclick="setRwFieldFilter(\'dup\',document.getElementById(\'rwff_dup\'));setRwTab(\'queue\');" style="font-size:10px;font-weight:700;background:var(--red);color:#fff;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;touch-action:manipulation;">View</button></div>':'') +
+    (noOwnership?'<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;"><span style="font-size:12px;color:var(--txt);">&#10067; '+noOwnership+' products with unconfirmed ownership</span><button onclick="setRwFilter(\'1\',document.getElementById(\'rwf_p1\'));setRwTab(\'queue\');" style="font-size:10px;font-weight:700;background:var(--red);color:#fff;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;touch-action:manipulation;">Fix</button></div>':'') +
   '</div>':
   '<div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:12px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:var(--grn);font-weight:700;">&#9989; No critical alerts \u2014 Product Master is healthy</div>') +
 
@@ -3712,6 +3721,17 @@ function rwRegisterQueueDelegates(){
   // If the touch originated on or within a native interactive element,
   // return immediately. The element owns this interaction completely.
   if(pbsrxTargetIsNative(e.target)) return;
+
+  // RULE 4 — Scroll gestures must not expand cards. (PCIR-016)
+  // Measure vertical displacement from touch origin to lift point.
+  // Uses _swTouchY set by initSwipe's document touchstart — always fires first.
+  // Null-safety: if _swTouchY is undefined (initSwipe removed), dy=0 → guard skips.
+  // Failure mode is self-revealing (scroll causes expansion), not silent.
+  if(!e.changedTouches || !e.changedTouches[0]) return;
+  var dy = (_swTouchY !== undefined)
+    ? Math.abs(e.changedTouches[0].clientY - _swTouchY)
+    : 0;
+  if(dy > PBSRX_TAP_MOVE_THRESHOLD) return;
 
   // Walk the DOM upward to find a Review Workspace task card.
   var el=e.target;
@@ -4324,7 +4344,7 @@ var expWarn=exS&&exS.status==='expired'?' &#9888;&#65039;':exS&&exS.status==='ex
 var lbl={ok:'OK',low:'Low',critical:'Crit',out:'Out'}[st];
 var col=dotCol[st];
 // Compact row
-return '<div class="pulse-row" id="pr_'+p.id+'" onclick="togglePulseRow('+p.id+')" style="display:flex;align-items:center;gap:8px;padding:9px 10px;background:var(--surf);border-radius:10px;margin-bottom:4px;border:1px solid var(--bdr);cursor:pointer;">'+
+return '<div class="pulse-row" id="pr_'+p.id+'" onclick="togglePulseRow('\'+p.id+'\')'" style="display:flex;align-items:center;gap:8px;padding:9px 10px;background:var(--surf);border-radius:10px;margin-bottom:4px;border:1px solid var(--bdr);cursor:pointer;">'+
 '<div style="width:10px;height:10px;border-radius:50%;background:'+col+';flex-shrink:0;box-shadow:0 0 6px '+col+'88;"></div>'+
 '<div style="flex:1;min-width:0;">'+
 '<div style="font-size:13px;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+p.genericName+(p.strength?' <span style="font-size:11px;color:var(--mut);">'+p.strength+'</span>':'')+expWarn+'</div>'+
@@ -4364,9 +4384,9 @@ return '<div class="pulse-row" id="pr_'+p.id+'" onclick="togglePulseRow('+p.id+'
 // Actions
 '<div style="display:flex;gap:6px;">'+
 '<button class="bsm bg2" onclick="event.stopPropagation();showReceiveStock(this.dataset.name)" data-name="'+p.genericName+'" style="flex:1;">&#128230; Receive</button>'+
-'<button class="bsm bsb" onclick="event.stopPropagation();editProd('+p.id+')" style="flex:1;">&#9998; Edit</button>'+
-'<button class="bsm" onclick="event.stopPropagation();openReorder('+p.id+')" style="flex:1;background:var(--ora2);color:var(--ora);">&#128338; Order</button>'+
-'<button class="bsm bsr" onclick="event.stopPropagation();delProd('+p.id+')" style="flex:0.5;">&#128465;</button>'+
+'<button class="bsm bsb" onclick="event.stopPropagation();editProd('\'+p.id+'\')" style="flex:1;">&#9998; Edit</button>'+
+'<button class="bsm" onclick="event.stopPropagation();openReorder('\'+p.id+'\')" style="flex:1;background:var(--ora2);color:var(--ora);">&#128338; Order</button>'+
+'<button class="bsm bsr" onclick="event.stopPropagation();delProd('\'+p.id+'\')" style="flex:0.5;">&#128465;</button>'+
 '</div></div>';
 }).join('');
 // Alerts
@@ -4519,7 +4539,7 @@ function prodDropdown(inp, dd, onSelect){
   // Attach click handlers
   dd.querySelectorAll('.pdd-row').forEach(function(row){
     row.addEventListener('click',function(){
-      var pid=Number(row.getAttribute('data-pid'));
+      var pid=row.getAttribute('data-pid'); // PST-001: preserve raw ID — used only in String(pid) identity comparison
       var p=S.products.find(function(x){return String(x.id)===String(pid);});
       if(p){dd.style.display='none';dd.innerHTML='';onSelect(p);}
     });
@@ -5518,8 +5538,8 @@ return '<div style="background:'+bg+';border:1.5px solid '+urgency+';border-radi
 'Stock: '+item.cur+(item.dailyUse>0?' | Daily use: '+item.dailyUse.toFixed(1)+' units':'')+(item.daysLeft<999?' | Lasts: '+item.daysLeft+'d':'')+
 '</div></div>'+
 '<div style="text-align:right;flex-shrink:0;">'+
-(item.isOrdered?'<div style="font-size:11px;font-weight:800;color:var(--grn);">&#9989; Ordered</div><button onclick="unmarkOrdered('+pid+')" style="font-size:10px;color:var(--mut);background:none;border:none;cursor:pointer;text-decoration:underline;">Undo</button>':
-'<button onclick="markOrdered('+pid+')" style="background:var(--grn);border:none;color:#fff;border-radius:8px;padding:5px 8px;font-size:11px;font-weight:700;cursor:pointer;">Mark Ordered</button>')+
+(item.isOrdered?'<div style="font-size:11px;font-weight:800;color:var(--grn);">&#9989; Ordered</div><button onclick="unmarkOrdered('\'+pid+'\')" style="font-size:10px;color:var(--mut);background:none;border:none;cursor:pointer;text-decoration:underline;">Undo</button>':
+'<button onclick="markOrdered('\'+pid+'\')" style="background:var(--grn);border:none;color:#fff;border-radius:8px;padding:5px 8px;font-size:11px;font-weight:700;cursor:pointer;">Mark Ordered</button>')+
 '</div></div>'+
 '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.1);">'+
 '<div><label style="font-size:11px;color:var(--mut);font-weight:700;">Reorder Qty</label>'+
@@ -7014,7 +7034,7 @@ document.getElementById('pos_note').value='';document.getElementById('pos_cash')
 var pt=document.getElementById('pos_transfer');if(pt)pt.value='';
 var pc=document.getElementById('pos_customer');if(pc)pc.value='';
 var pcp=document.getElementById('pos_cust_phone');if(pcp)pcp.value='';
-document.getElementById('pos_change').textContent='\u20A80';
+document.getElementById('pos_change').textContent='\u20a60'; // PCIR-028: \u20A6=₦ Naira (was \u20A8=₨ Rupee)
 // Reset search and step 2
 var pn=document.getElementById('pos_name');if(pn)pn.value='';
 var s2=document.getElementById('posStep2');if(s2)s2.style.display='none';
@@ -7037,7 +7057,7 @@ var ds=document.getElementById('discSection');if(ds)ds.style.display='none';
 var dt=document.getElementById('discToggle');if(dt)dt.innerHTML='&#127991;&#65039; Add Discount (optional) &#9660;';
 var pc=document.getElementById('pos_cash');if(pc)pc.value='';
 var pt=document.getElementById('pos_transfer');if(pt)pt.value='';
-var pch=document.getElementById('pos_change');if(pch)pch.textContent='&#8358;0';
+var pch=document.getElementById('pos_change');if(pch)pch.textContent='\u20a60'; // PCIR-028: Unicode ₦ in textContent
 posCurrentUnit=0;posSelectedProd=null;
 var pn=document.getElementById('pos_name');if(pn)pn.value='';
 var s2=document.getElementById('posStep2');if(s2)s2.style.display='none';
@@ -7647,7 +7667,7 @@ var sb=S.stockBalance;
 var val=document.getElementById('sbValue');
 var qty=document.getElementById('sbQty');
 var date=document.getElementById('sbDate');
-if(val)val.textContent=sb?N(sb.value):'\u20A80';
+if(val)val.textContent=sb?N(sb.value):'\u20a60'; // PCIR-028: ₦ Naira
 if(qty)qty.textContent=sb?sb.qty.toLocaleString('en-NG'):'0';
 if(date){if(sb){var dparts=new Date(sb.date+'T00:00:00');var dstr=dparts.getDate()+'/'+(dparts.getMonth()+1);var src=sb.source?' ('+sb.source+')':'';date.textContent=dstr+src;}else{date.textContent='Not set';}}
 renderStockTrendChart();
@@ -8446,13 +8466,14 @@ window.open(url,'_blank');
 }
 
 // ══ HOLD BASKET ══════════════════════════════════════════════════
-var heldBaskets=[];
+var heldBaskets=(function(){try{return JSON.parse(localStorage.getItem('pbsrx_held_baskets')||'[]');}catch(e){return [];}}()); // PCIR-019: persisted across reloads
 function holdBasket(){
 if(!basket.length){toast('Nothing in basket to hold');return;}
 var label='Basket '+(heldBaskets.length+1)+' — '+basket.length+' items — '+N(basket.reduce(function(s,i){return s+i.total;},0));
 heldBaskets.push({label:label,basket:basket.slice(),discount:posDiscount,time:new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})});
 basket=[];posDiscount=0;
 renderBasket();renderHeldBaskets();
+try{localStorage.setItem('pbsrx_held_baskets',JSON.stringify(heldBaskets));}catch(e){} // PCIR-019
 toast('Basket held. Start new sale.',2000);
 }
 function renderHeldBaskets(){
@@ -8472,6 +8493,7 @@ if(basket.length&&!confirm('Replace current basket with held basket?'))return;
 var h=heldBaskets.splice(i,1)[0];
 basket=h.basket;posDiscount=h.discount||0;
 renderBasket();renderHeldBaskets();
+try{localStorage.setItem('pbsrx_held_baskets',JSON.stringify(heldBaskets));}catch(e){} // PCIR-019
 toast('Basket resumed',1500);
 }
 
@@ -8870,7 +8892,7 @@ function renderLowStock(){
     var isCrit=!isOut&&s<=mn*0.5;
     var col=isOut?'var(--red)':isCrit?'var(--amb)':'var(--blu)';
     var label=isOut?'OUT':'CRITICAL';
-    html+='<div style="padding:10px 14px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="openProdEdit('+p.id+')">'+
+    html+='<div style="padding:10px 14px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="openProdEdit('\'+p.id+'\')">'+
       '<div style="width:6px;height:40px;border-radius:3px;background:'+col+';flex-shrink:0;"></div>'+
       '<div style="flex:1;min-width:0;">'+
         '<div style="font-size:13px;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+escH(p.genericName)+'</div>'+
@@ -9118,7 +9140,7 @@ function prodRow(p){
   var unitBadge=units.length>1?'<span style="background:rgba(99,102,241,0.15);color:#818cf8;font-size:9px;font-weight:800;border-radius:4px;padding:1px 5px;margin-left:4px;">'+units.length+' UNITS</span>':'';
   var stockStr=stock+' '+getBaseUnitName(p);
   if(units.length>1&&units[1]&&units[1].baseQty>1){var lg=Math.floor(stock/units[1].baseQty);if(lg>0)stockStr+=' ≈ '+lg+' '+units[1].name+'s';}
-  return '<div style="padding:10px 14px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="openProdEdit('+p.id+')">'+
+  return '<div style="padding:10px 14px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="openProdEdit('\'+p.id+'\')">'+
     '<div style="flex:1;min-width:0;">'+
       '<div style="font-size:13px;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+escH(p.genericName)+(p.brandName?' <span style="color:var(--mut);font-weight:400;">('+escH(p.brandName)+')</span>':'')+unitBadge+'</div>'+
       '<div style="font-size:11px;color:var(--mut);">'+stockStr+(stock>0?' · '+N(stockVal):'')+(missingPrice?' · <span style="color:var(--red);">⚠ No price</span>':'')+supLabel+'</div>'+
@@ -9526,7 +9548,7 @@ function renderDeadStock(){
     var val=stock*(p.costPrice||0);
     var daysOld=getDays(p);
     var col=daysOld>=90?'var(--red)':daysOld>=60?'var(--amb)':'var(--mut)';
-    html+='<div style="padding:10px 14px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="openProdEdit('+p.id+')">'+
+    html+='<div style="padding:10px 14px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="openProdEdit('\'+p.id+'\')">'+
       '<div style="text-align:center;flex-shrink:0;width:40px;">'+
         '<div style="font-size:18px;">&#9760;&#65039;</div>'+
         '<div style="font-size:9px;color:'+col+';font-weight:800;">'+daysOld+'d+</div>'+
@@ -9748,7 +9770,7 @@ function renderIntakeSummary(){
     if(g.date>=mStr){mVal+=g.totalValue||0;}
   });
   var openPOs=(S.purchaseOrders||[]).filter(function(po){return po.status==='open'||po.status==='partial';}).length;
-  var wv=document.getElementById('ic_wVal');if(wv)wv.textContent=wVal.toLocaleString('en-NG');
+  var wv=document.getElementById('ic_wVal');if(wv)wv.textContent=Math.round(wVal).toLocaleString('en-NG') // RC3.9.2: eliminate float artefacts;
   var wq=document.getElementById('ic_wQty');if(wq)wq.textContent=wQty.toLocaleString();
   var mv=document.getElementById('ic_mVal');if(mv)mv.textContent='₦'+Math.round(mVal/1000)+'k';
   var pc=document.getElementById('ic_poCount');if(pc)pc.textContent=openPOs;
@@ -10353,7 +10375,7 @@ function retSearch(){
   if(q.length<2){ac.innerHTML='';return;}
   var matches=S.products.filter(function(p){return getCurStock(p.id)>0&&p.genericName.toLowerCase().includes(q);}).slice(0,8);
   ac.innerHTML=matches.map(function(p){
-    return '<div class="aci" onclick="selectRetProd('+p.id+')">'+escH(p.genericName)+'<span style="color:var(--mut);font-size:10px;"> · In stock: '+getCurStock(p.id)+'</span></div>';
+    return '<div class="aci" onclick="selectRetProd('\'+p.id+'\')">'+escH(p.genericName)+'<span style="color:var(--mut);font-size:10px;"> · In stock: '+getCurStock(p.id)+'</span></div>';
   }).join('');
 }
 
@@ -10526,7 +10548,7 @@ function brcSearch(){
 }
 
 function brcSelectProd(el){
-  var pid=Number(el.getAttribute('data-pid'));
+  var pid=el.getAttribute('data-pid'); // PST-001: raw string — identity only
   var p=S.products.find(function(x){return String(x.id)===String(pid);});if(!p)return;
   brcSelectedProd=p;
   document.getElementById('brc_name').value=p.genericName+(p.strength?' '+p.strength:'');
@@ -11454,7 +11476,7 @@ function renderCycleList(){
 }
 
 function cycleHandleCount(inp){
-  var pid = Number(inp.getAttribute('data-pid'));
+  var pid = inp.getAttribute('data-pid'); // PST-001: raw string — used as object key and DOM suffix only
   var sys = Number(inp.getAttribute('data-sys'));
   var val = inp.value === '' ? null : Number(inp.value);
   if(val === null){ delete cycleCounts[pid]; } else { cycleCounts[pid] = val; }
@@ -11638,7 +11660,7 @@ function renderStocktakeList(){
 }
 
 function stHandleCount(inp){
-  var pid = Number(inp.getAttribute('data-pid'));
+  var pid = inp.getAttribute('data-pid'); // PST-001: raw string — used as object key and DOM suffix only
   var sys = Number(inp.getAttribute('data-sys'));
   var val = inp.value==='' ? null : Number(inp.value);
   if(val===null){delete stCounts[pid];}
@@ -12772,7 +12794,7 @@ PBSRx.Diagnostics = (function(){
       'PBSRx Diagnostic Report',
       '═══════════════════════════════════════════════════════',
       'Generated : '+snap.ts,
-      'Version   : v7.6.7-RC3.9.1',
+      'Version   : v7.6.7-RC3.9.3',
       'Browser   : '+nav.userAgent,
       'Platform  : '+nav.platform,
       '',

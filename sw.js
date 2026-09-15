@@ -1,6 +1,6 @@
 'use strict';
-var CACHE_NAME = 'pbsrx-phoenix-v7.6.7-RC3.9.3';
-var SHELL_ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
+var CACHE_NAME = 'pbsrx-phoenix-v7.6.7-RC3.9.4';
+var SHELL_ASSETS = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png'];
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {

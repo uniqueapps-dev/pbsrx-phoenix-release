@@ -1,41 +1,6 @@
 'use strict';
-var CACHE_NAME = 'pbsrx-phoenix-v7.6.7-RC3.9.4';
+var CACHE_NAME = 'pbsrx-phoenix-v7.6.7-RC3.9.4A';
 var SHELL_ASSETS = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png'];
-self.addEventListener('install', function(event) {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(function(cache) {
-      return cache.addAll(SHELL_ASSETS);
-    }).then(function() { return self.skipWaiting(); })
-  );
-});
-self.addEventListener('activate', function(event) {
-  event.waitUntil(
-    caches.keys().then(function(cacheNames) {
-      return Promise.all(
-        cacheNames.filter(function(name) { return name !== CACHE_NAME; })
-          .map(function(name) { return caches.delete(name); })
-      );
-    }).then(function() { return self.clients.claim(); })
-  );
-});
-self.addEventListener('fetch', function(event) {
-  var url = new URL(event.request.url);
-  if (event.request.method !== 'GET') return;
-  if (url.protocol === 'chrome-extension:') return;
-  var isExternal = url.origin !== self.location.origin;
-  if (isExternal) { event.respondWith(fetch(event.request)); return; }
-  event.respondWith(
-    caches.match(event.request).then(function(cachedResponse) {
-      if (cachedResponse) return cachedResponse;
-      return fetch(event.request).then(function(networkResponse) {
-        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type === 'error') return networkResponse;
-        var responseToCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then(function(cache) { cache.put(event.request, responseToCache); });
-        return networkResponse;
-      });
-    }).catch(function() {
-      if (event.request.mode === 'navigate') return caches.match('./index.html');
-      return new Response('Offline', {status: 503, statusText: 'Service Unavailable'});
-    })
-  );
-});
+self.addEventListener('install', function(e){e.waitUntil(caches.open(CACHE_NAME).then(function(c){return c.addAll(SHELL_ASSETS);}).then(function(){return self.skipWaiting();}));});
+self.addEventListener('activate', function(e){e.waitUntil(caches.keys().then(function(n){return Promise.all(n.filter(function(k){return k!==CACHE_NAME;}).map(function(k){return caches.delete(k);}));}).then(function(){return self.clients.claim();}));});
+self.addEventListener('fetch', function(e){var u=new URL(e.request.url);if(e.request.method!=='GET')return;if(u.protocol==='chrome-extension:')return;if(u.origin!==self.location.origin){e.respondWith(fetch(e.request));return;}e.respondWith(caches.match(e.request).then(function(r){if(r)return r;return fetch(e.request).then(function(n){if(!n||n.status!==200||n.type==='error')return n;var c=n.clone();caches.open(CACHE_NAME).then(function(ca){ca.put(e.request,c);});return n;});}).catch(function(){if(e.request.mode==='navigate')return caches.match('./index.html');return new Response('Offline',{status:503});}));});

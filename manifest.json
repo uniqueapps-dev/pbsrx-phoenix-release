@@ -1,7 +1,7 @@
 {
-  "name": "PBSRx \u2014 Pharmacy Business System",
+  "name": "PBSRx — Pharmacy Business System",
   "short_name": "PBSRx",
-  "description": "D-Glopa Pharm LTD. \u2014 Pharmacy Point of Sale, Inventory, and Business Intelligence Platform",
+  "description": "D-Glopa Pharm LTD. — Pharmacy Point of Sale, Inventory, and Business Intelligence Platform",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -9,11 +9,7 @@
   "theme_color": "#0a1e3d",
   "background_color": "#040d1a",
   "lang": "en-NG",
-  "categories": [
-    "business",
-    "productivity",
-    "medical"
-  ],
+  "categories": ["business", "productivity", "medical"],
   "icons": [
     {
       "src": "./icons/icon-192.png",

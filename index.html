@@ -6670,7 +6670,43 @@ toast((isNew?'Added: ':'Updated: ')+gen+(qty>0?' — '+qty+' units stocked':''),
 // ══ POS SYSTEM ═══════════════════════════════════════════════════════════════
 var basket=[];var posSelectedProd=null;
 
+// Active-basket persistence: survives app/process restart (e.g. Android recent-apps swipe-away).
+// Same localStorage approach as heldBaskets (PCIR-019), kept in its own key so it never
+// mixes with the explicit Hold Basket list.
+var ACTIVE_BASKET_KEY='pbsrx_active_basket';
+// One-shot snapshot of an unfinished sale from a previous session. Never auto-applied —
+// renderPOS() prompts the user before touching the live basket, then clears this.
+var _pendingActiveBasket=(function(){
+try{
+var raw=localStorage.getItem(ACTIVE_BASKET_KEY);
+if(!raw)return null;
+var d=JSON.parse(raw);
+if(d&&Array.isArray(d.basket)&&d.basket.length)return d;
+}catch(e){}
+return null;
+}());
+function persistActiveBasket(){
+try{
+if(basket.length)localStorage.setItem(ACTIVE_BASKET_KEY,JSON.stringify({basket:basket,discount:posDiscount}));
+else localStorage.removeItem(ACTIVE_BASKET_KEY);
+}catch(e){}
+}
+
 function renderPOS(){
+if(_pendingActiveBasket){
+var pend=_pendingActiveBasket;_pendingActiveBasket=null;
+if(!basket.length){
+var pTot=pend.basket.reduce(function(s,i){return s+i.total;},0);
+if(confirm('An unfinished sale was found from your last session ('+pend.basket.length+' item(s) — '+N(pTot)+').\n\nResume it?')){
+basket=pend.basket;posDiscount=pend.discount||0;
+toast('Unfinished sale restored',2000);
+}else{
+try{localStorage.removeItem(ACTIVE_BASKET_KEY);}catch(e){}
+}
+}else{
+try{localStorage.removeItem(ACTIVE_BASKET_KEY);}catch(e){}
+}
+}
 renderBasket();renderPosSalesLog();
 var bd=document.getElementById('basketDate');if(bd)bd.textContent=td();
 updPosSuggestions();
@@ -6893,6 +6929,7 @@ var srch=document.getElementById('pos_name');if(srch)srch.focus();
 toast(p.genericName+' ('+unitName+') added to basket',1500);
 }
 function renderBasket(){
+persistActiveBasket();
 var el=document.getElementById('posBasket');if(!el)return;
 var tot=basket.reduce(function(s,i){return s+i.total;},0);
 var units=basket.reduce(function(s,i){return s+i.qty;},0);
@@ -6932,6 +6969,7 @@ else discRow.style.display='none';
 var tdEl=document.getElementById('pos_total_due');
 if(tdEl)tdEl.textContent=N(Math.max(0,tot-posDiscount));
 posCalcChange();
+persistActiveBasket();
 }
 function posCalcChange(){
 var tot=basket.reduce(function(s,i){return s+i.total;},0);

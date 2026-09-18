@@ -2177,6 +2177,10 @@ function save(){
   // S is already mutated by the caller before save() runs, regardless of
   // whether persistence below succeeds — so this must be unconditional.
   rwTaskListDataStale=true;
+  // REVIEW WORKSPACE V2 PHASE 2: same reasoning, separate flag — see
+  // rw2CaseCacheStale near rw2EnsureCaseCache() for why this is not
+  // simply reusing rwTaskListDataStale above.
+  rw2CaseCacheStale=true;
   try{
     // Strip volatile runtime cache — rebuilt on demand, should never persist
     var toSave=Object.assign({},S);
@@ -3495,7 +3499,7 @@ var RW2_CATEGORY = {
   ENRICHMENT:                'enrichment',                // data quality / reporting clarity
   METADATA:                  'metadata',                  // optional, lowest urgency
   SPECIAL_REVIEW:             'special_review',            // not resolvable via the normal single-field editor (duplicate_name, expiry)
-  RELOCATED_PENDING_REVIEW:   'relocated_pending_review'   // reorder_level/reorder_qty — see open question below; kept, not removed
+  RELOCATED_PENDING_REVIEW:   'relocated_pending_review'   // Phase 1 placeholder for reorder_level/reorder_qty; unused as of Phase 2, which reclassified both to OPERATIONAL after investigating Reorder Center (see RW2_LEGACY_TYPE_TO_CATEGORY below). Kept defined for forward compatibility, not currently referenced by any mapping.
 };
 
 var RW2_STATUS = {
@@ -3525,17 +3529,29 @@ var RW2_LEGACY_TYPE_TO_CATEGORY = {
   shelf:              RW2_CATEGORY.METADATA,
   duplicate_name:     RW2_CATEGORY.SPECIAL_REVIEW,
   expiry:             RW2_CATEGORY.SPECIAL_REVIEW,
-  // OPEN QUESTION (see final report): whether these belong in Review
-  // Workspace at all depends on what Reorder Center already exposes, which
-  // has not been investigated in this phase. Kept, not removed, per the
-  // Master Build Specification Part 5 ("If Reorder Center already
-  // adequately exposes and manages these problems: REMOVE... If it does
-  // not: keep temporarily"). Given that has not been established, they are
-  // classified as their own pending-relocation category rather than folded
-  // into Operational/Enrichment, so they can be found and reconsidered as
-  // a group later without re-auditing every finding.
-  reorder_level:      RW2_CATEGORY.RELOCATED_PENDING_REVIEW,
-  reorder_qty:        RW2_CATEGORY.RELOCATED_PENDING_REVIEW
+  // PHASE 2 RECLASSIFICATION (was RELOCATED_PENDING_REVIEW in Phase 1,
+  // pending exactly this investigation — Master Build Spec Part 5/10).
+  // Investigated reorderBrainEngine()/getVelocity() (the actual "Reorder
+  // Center" AI engine): it computes reorderPoint/suggestedQty entirely
+  // from sales velocity (avgDaily, supplier leadTime, demand log) and
+  // never reads p.minStock or p.reorderQty anywhere. Those two fields are
+  // NOT owned or duplicated by Reorder Center's engine — they are instead
+  // read directly by getStatus()/getBarPct() (Stock Pulse's own low-stock
+  // status/bar rendering), by the Product Editor (#pe_min), by CSV export,
+  // by multiple low-stock dashboard counts, and by renderReorderCalendar()
+  // (a separate, simpler manual reorder-alerts list, which pre-fills its
+  // "Reorder Qty" input from p.reorderQty||p.minStock||10). This is
+  // concrete evidence, not inference: these fields have real, active
+  // consumers outside Review Workspace, are not redundant with Reorder
+  // Center, and there is no other screen where a pharmacist can edit them
+  // except the Product Editor's general catch-all and this inline panel.
+  // Reclassified to OPERATIONAL: leaving them unset degrades Stock Pulse's
+  // own alerting quality (getStatus()/getBarPct() fall back to a generic
+  // default), which is an operational concern, not a redundant one.
+  // Neither Reorder Center nor any other module was modified to reach
+  // this conclusion — read-only investigation only.
+  reorder_level:      RW2_CATEGORY.OPERATIONAL,
+  reorder_qty:        RW2_CATEGORY.OPERATIONAL
 };
 
 // The underlying product field each finding is primarily about, where one
@@ -3614,7 +3630,13 @@ function rw2GenerateFindings(){
         description:hasSalesForThis
           ?'No cost price — margin tracking unavailable (has sales)'
           :'No cost price — set when product is next received',
-        currentValue:prod?prod.costPrice:undefined,
+        // This finding is itself a Phase 1 synthesis (merging two legacy
+        // tasks into one) — description/suggestedAction were authored for
+        // that merged concept, not copied unfaithfully from a single
+        // legacy source (there wasn't one). Distinct from the generic
+        // branch below, where reusing the same text for both fields would
+        // fabricate a distinction the legacy data doesn't actually have.
+        currentValue:prod?(prod.costPrice!=null?prod.costPrice:null):null,
         suggestedAction:'Enter the cost price for this product.',
         deferKey:t.pid+'_missing_cost_price'
       });
@@ -3631,8 +3653,14 @@ function rw2GenerateFindings(){
       severity:cat,
       actionable:RW2_NON_ACTIONABLE_TYPES.indexOf(t.type)===-1,
       description:t.desc,
-      currentValue:(prodForField&&field)?prodForField[field]:undefined,
-      suggestedAction:t.desc,
+      currentValue:(prodForField&&field&&prodForField[field]!=null)?prodForField[field]:null,
+      // PHASE 2 FIX: Phase 1 set this to t.desc (duplicating description).
+      // The legacy task model provides exactly one text field per task —
+      // there is no genuinely distinct "suggested action" string in the
+      // source data for these types, so fabricating one by duplicating
+      // description would violate the "leave absent/null rather than
+      // fabricate" instruction. null here is accurate, not a gap.
+      suggestedAction:null,
       deferKey:t.pid+'_'+t.type
     });
   });
@@ -3666,22 +3694,36 @@ function rw2ComputeOverallSeverity(productFindings){
 // Status is derived, not stored (per V2 design spec Part 1). deferSet
 // defaults to the existing session-scoped rwSkipped map (unchanged,
 // reused as-is) but accepts an explicit map so this stays a pure,
-// independently testable function. Semantics:
-//   RESOLVED            — zero open findings (the underlying data was
-//                          actually fixed for all of them)
-//   OPEN                — findings exist, none deferred yet
-//   DEFERRED             — findings exist, ALL of them are deferred
-//   PARTIALLY_RESOLVED   — findings exist, SOME (not all) are deferred
-// This is a Phase 1 design decision, not an assumption drawn from existing
-// code (rwSkipped currently only gates visibility in the flat queue, it
-// has no product-level status concept today) — flagged in the final
-// report's open questions for confirmation.
+// independently testable function.
+//
+// PHASE 2 REFINEMENT: only ACTIONABLE findings drive status (Master Build
+// Spec Phase 2 item 5: "OPEN means unresolved ACTIONABLE findings
+// remain"). A product whose only remaining findings are non-actionable
+// (duplicate_name/expiry — see RW2_NON_ACTIONABLE_TYPES) is treated as
+// RESOLVED for THIS UI's purposes, because there is currently no
+// resolution mechanism for those findings here at all (Master Build Spec
+// Phase 2 item 11 explicitly forbids inventing one). This is a real,
+// disclosed limitation of the current data/UI model, not a claim that the
+// underlying fact (e.g. the duplicate name) has actually been fixed —
+// rw2ComputeOverallSeverity() deliberately still considers ALL findings
+// (actionable or not) when ranking urgency, so a product with only a
+// special-review finding remains visible/urgent by severity even though
+// its status here reads RESOLVED. Semantics:
+//   RESOLVED            — zero actionable findings remain (either there
+//                          were never any, they were all fixed, or only
+//                          non-actionable special-review findings remain)
+//   OPEN                — actionable findings exist, none deferred yet
+//   DEFERRED             — actionable findings exist, ALL are deferred
+//   PARTIALLY_RESOLVED   — actionable findings exist, SOME are deferred
 function rw2DeriveStatus(productFindings,deferSet){
   deferSet=deferSet||(typeof rwSkipped!=='undefined'?rwSkipped:{});
-  if(!productFindings||!productFindings.length)return RW2_STATUS.RESOLVED;
-  var deferredCount=productFindings.filter(function(f){return !!deferSet[f.deferKey];}).length;
+  var all=productFindings||[];
+  if(!all.length)return RW2_STATUS.RESOLVED;
+  var actionable=all.filter(function(f){return f.actionable;});
+  if(!actionable.length)return RW2_STATUS.RESOLVED;
+  var deferredCount=actionable.filter(function(f){return !!deferSet[f.deferKey];}).length;
   if(deferredCount===0)return RW2_STATUS.OPEN;
-  if(deferredCount===productFindings.length)return RW2_STATUS.DEFERRED;
+  if(deferredCount===actionable.length)return RW2_STATUS.DEFERRED;
   return RW2_STATUS.PARTIALLY_RESOLVED;
 }
 
@@ -3717,6 +3759,135 @@ function rw2BuildProductReviewCases(){
 }
 // ════════════════════════════════════════════════════════════════════════════
 // END REVIEW WORKSPACE V2 — PHASE 1
+// ════════════════════════════════════════════════════════════════════════════
+
+// ════════════════════════════════════════════════════════════════════════════
+// REVIEW WORKSPACE V2 — PHASE 2: Product Review Case engine
+// ════════════════════════════════════════════════════════════════════════════
+// Purely additive, internal-only, same as Phase 1 — nothing below is
+// called by any existing UI, handler, or render function. Builds on
+// Phase 1's rw2GenerateFindings()/rw2GroupByProduct() without modifying
+// them (except the two disclosed refinements above: suggestedAction no
+// longer duplicates description, and rw2DeriveStatus() now considers only
+// actionable findings — both documented in place and in the Phase 2
+// commit message). Adds: a lightweight per-product case cache (so a
+// future UI can fetch/recompute one product's case without rescanning the
+// whole catalog on every interaction), a pure single-product recompute
+// path for use after a future save operation, and a deterministic
+// review-ordering comparator. No save/persistence logic is implemented
+// here — see Master Build Specification Phase 2, item 7.
+
+// ── Case cache ────────────────────────────────────────────────────────────
+// _rw2CaseCache: null until first built, otherwise Map<String(pid), case>.
+// rw2CaseCacheStale: set true by save() (see save(), alongside the
+// existing rwTaskListDataStale=true line added in the Queue-entry
+// experiment). Kept as its OWN flag rather than reusing rwTaskListDataStale
+// directly, because that flag is only ever cleared by the legacy
+// renderReviewWorkspace() — coupling this cache to it would leave the V2
+// cache permanently "stale" if a future V2 UI never calls the legacy full
+// render, or incorrectly "fresh" on first use before this cache has ever
+// been populated. A dedicated flag, set at the same single choke point
+// (save()), avoids both failure modes.
+var _rw2CaseCache=null;
+var rw2CaseCacheStale=true;
+
+function rw2EnsureCaseCache(){
+  if(_rw2CaseCache&&!rw2CaseCacheStale)return;
+  var cases=rw2BuildProductReviewCases();
+  _rw2CaseCache={};
+  cases.forEach(function(c){_rw2CaseCache[c.productId]=c;});
+  rw2CaseCacheStale=false;
+}
+
+// O(1) after the cache is warm (only rebuilds the full catalog scan when
+// rw2CaseCacheStale is true, i.e. something changed via save() since the
+// cache was last built). Returns null for a clean product (no case),
+// matching rw2GroupByProduct()'s existing "clean product -> no case"
+// behavior — this is NOT an error/not-found signal, it means the product
+// currently has zero findings.
+function rw2GetCase(pid){
+  rw2EnsureCaseCache();
+  return _rw2CaseCache[String(pid)]||null;
+}
+
+function rw2GetAllCases(){
+  rw2EnsureCaseCache();
+  return Object.keys(_rw2CaseCache).map(function(k){return _rw2CaseCache[k];});
+}
+
+// ── Single-product recompute ─────────────────────────────────────────────
+// Recomputes exactly one product's case (one rw2FindingsForProduct() call
+// — internally still runs the full generateReviewTasks() detection pass,
+// since that engine has no per-product entry point and Master Build Spec
+// Phase 2 item 9 forbids rewriting it; that pass is independently measured
+// cheap, see the Phase 2 scale test). Intended to be called by a FUTURE
+// phase immediately after a field save has already been persisted via the
+// existing save mechanism (rwSaveInline()-style) — this function does not
+// save, validate, or persist anything itself, and does not call
+// S.products.find(...).costPrice=... or similar. If a case cache is
+// already warm, patches just that one entry (or removes it, if the
+// product is now fully resolved with zero findings) rather than
+// invalidating/rebuilding the whole cache.
+function rw2RecomputeProductCase(pid){
+  var findings=rw2FindingsForProduct(pid);
+  var product=S.products.find(function(x){return String(x.id)===String(pid);})||null;
+  var recomputed={
+    product:product,
+    productId:String(pid),
+    findings:findings,
+    overallSeverity:rw2ComputeOverallSeverity(findings),
+    status:rw2DeriveStatus(findings)
+  };
+  if(_rw2CaseCache){
+    if(findings.length){
+      _rw2CaseCache[String(pid)]=recomputed;
+    } else {
+      delete _rw2CaseCache[String(pid)];
+    }
+  }
+  return recomputed;
+}
+
+// ── Deterministic review ordering ────────────────────────────────────────
+// Comparator only — builds no UI, no persistent queue/position (Master
+// Build Spec Phase 2 item 8). Ranks by overallSeverity first (reusing
+// RW2_SEVERITY_RANK from Phase 1 — internal category ranks, never P1-P4
+// terminology), then by fewest remaining actionable findings (a product
+// closer to fully resolved sorts earlier — a disclosed judgment call, see
+// the Phase 2 report's Open Questions; "sales relevance" from the design
+// spec's suggested ordering was not implemented because Finding does not
+// carry a hasSales field per Phase 1's exact requested shape, and adding
+// one was judged out of this phase's scope), then a stable productId
+// string comparison as the final deterministic tiebreak. Never mutates
+// its inputs.
+function rw2CompareCasesForReview(a,b){
+  var rankA=RW2_SEVERITY_RANK[a.overallSeverity]||99;
+  var rankB=RW2_SEVERITY_RANK[b.overallSeverity]||99;
+  if(rankA!==rankB)return rankA-rankB;
+  var actA=a.findings.filter(function(f){return f.actionable;}).length;
+  var actB=b.findings.filter(function(f){return f.actionable;}).length;
+  if(actA!==actB)return actA-actB;
+  return String(a.productId).localeCompare(String(b.productId));
+}
+
+// Returns a NEW sorted array (never mutates the cache's internal array or
+// re-sorts it in place).
+function rw2GetOrderedCases(){
+  return rw2GetAllCases().slice().sort(rw2CompareCasesForReview);
+}
+
+// The single next case for a future sequential-review UI to show,
+// optionally excluding the product just worked on. Pure data query — does
+// not track "current position" or any other session state itself.
+function rw2GetNextCase(excludePid){
+  var ordered=rw2GetOrderedCases();
+  if(excludePid!==undefined&&excludePid!==null){
+    ordered=ordered.filter(function(c){return String(c.productId)!==String(excludePid);});
+  }
+  return ordered.length?ordered[0]:null;
+}
+// ════════════════════════════════════════════════════════════════════════════
+// END REVIEW WORKSPACE V2 — PHASE 2
 // ════════════════════════════════════════════════════════════════════════════
 
 // ── Queue renderer (extended in RC3, preserves original structure) ─────────

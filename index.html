@@ -3467,6 +3467,258 @@ function generateReviewTasks(){
   return tasks;
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+// REVIEW WORKSPACE V2 — PHASE 1: Finding / Product Review Case abstraction
+// ════════════════════════════════════════════════════════════════════════════
+// Purely additive, internal-only. Nothing below is called by any existing
+// UI, render function, or event handler — generateReviewTasks(),
+// renderReviewWorkspace(), and every existing Review Workspace control are
+// completely unchanged and remain the live UI. This block exists so V2's
+// eventual product-centric UI (a later phase, not this one) has a clean
+// data layer to build on, without touching POS/Stock/Reorder/Intake or any
+// other module.
+//
+// Design basis: REVIEW WORKSPACE V2 — Product-Centric Workflow Design
+// Specification, Parts 1-3, and the Master Build Specification, Parts 1-3.
+//
+// A "finding" is a machine-detected fact about one product (V2 vocabulary).
+// A "task" (generateReviewTasks()'s existing output) is that same fact
+// represented as a flat, ungrouped, human-work item (legacy vocabulary).
+// rw2GenerateFindings() reuses the EXISTING, UNCHANGED detection engine
+// (generateReviewTasks()) and transforms its output into the finding shape
+// — it does not reimplement any detection rule.
+
+var RW2_CATEGORY = {
+  SALE_CRITICAL:            'sale_critical',            // blocks or distorts the sale itself
+  SALE_CRITICAL_ADJACENT:   'sale_critical_adjacent',    // impairs margin/financial correctness, but doesn't block the sale (see cost-price note below)
+  OPERATIONAL:               'operational',              // affects day-to-day operation, not the sale
+  ENRICHMENT:                'enrichment',                // data quality / reporting clarity
+  METADATA:                  'metadata',                  // optional, lowest urgency
+  SPECIAL_REVIEW:             'special_review',            // not resolvable via the normal single-field editor (duplicate_name, expiry)
+  RELOCATED_PENDING_REVIEW:   'relocated_pending_review'   // reorder_level/reorder_qty — see open question below; kept, not removed
+};
+
+var RW2_STATUS = {
+  OPEN:                 'OPEN',
+  PARTIALLY_RESOLVED:    'PARTIALLY_RESOLVED',
+  RESOLVED:              'RESOLVED',
+  DEFERRED:              'DEFERRED'
+};
+
+// Maps every generateReviewTasks() `type` EXCEPT cost_price/cost_price_ns
+// (handled separately below, since those two are the confirmed duplicate
+// pair being merged into one finding) to its V2 category. Classification
+// per the V2 design specification's Part 2 table — see that document for
+// the reasoning behind each placement.
+var RW2_LEGACY_TYPE_TO_CATEGORY = {
+  sell_price:        RW2_CATEGORY.SALE_CRITICAL,
+  price_inversion:    RW2_CATEGORY.SALE_CRITICAL,
+  ownership:          RW2_CATEGORY.SALE_CRITICAL,
+  sell_unit:          RW2_CATEGORY.OPERATIONAL,
+  fast_mover:         RW2_CATEGORY.OPERATIONAL,
+  category:           RW2_CATEGORY.ENRICHMENT,
+  strength:           RW2_CATEGORY.ENRICHMENT,
+  form:               RW2_CATEGORY.ENRICHMENT,
+  barcode:            RW2_CATEGORY.METADATA,
+  nafdac:             RW2_CATEGORY.METADATA,
+  supplier:           RW2_CATEGORY.METADATA,
+  shelf:              RW2_CATEGORY.METADATA,
+  duplicate_name:     RW2_CATEGORY.SPECIAL_REVIEW,
+  expiry:             RW2_CATEGORY.SPECIAL_REVIEW,
+  // OPEN QUESTION (see final report): whether these belong in Review
+  // Workspace at all depends on what Reorder Center already exposes, which
+  // has not been investigated in this phase. Kept, not removed, per the
+  // Master Build Specification Part 5 ("If Reorder Center already
+  // adequately exposes and manages these problems: REMOVE... If it does
+  // not: keep temporarily"). Given that has not been established, they are
+  // classified as their own pending-relocation category rather than folded
+  // into Operational/Enrichment, so they can be found and reconsidered as
+  // a group later without re-auditing every finding.
+  reorder_level:      RW2_CATEGORY.RELOCATED_PENDING_REVIEW,
+  reorder_qty:        RW2_CATEGORY.RELOCATED_PENDING_REVIEW
+};
+
+// The underlying product field each finding is primarily about, where one
+// exists. null for findings that aren't about a single product field
+// (duplicate_name is a cross-product relationship; expiry is a batch-level
+// fact, not a product field; ownership touches three fields at once — see
+// rwSaveInline's 'ownership' branch — 'ownership' is used as a label here,
+// not a literal S.products key).
+var RW2_TYPE_TO_FIELD = {
+  sell_price:        'sellPrice',
+  price_inversion:    'sellPrice',
+  ownership:          'ownership',
+  sell_unit:          'sellUnit',
+  fast_mover:         'isFastMover',
+  category:           'category',
+  strength:           'strength',
+  form:               'form',
+  barcode:            'barcode',
+  nafdac:             'nafdac',
+  supplier:           'supplier',
+  shelf:              'shelfLocation',
+  duplicate_name:     null,
+  expiry:             null,
+  reorder_level:      'minStock',
+  reorder_qty:        'reorderQty'
+};
+
+// Findings that cannot be resolved via the normal input -> Save pattern in
+// this UI (see V2 design spec Part 4). duplicate_name is a cross-product
+// relationship problem; expiry is recorded during Intake, not editable
+// here (the existing inline panel already says as much verbatim).
+var RW2_NON_ACTIONABLE_TYPES = ['duplicate_name', 'expiry'];
+
+// Relative urgency ordering for rw2ComputeOverallSeverity(). Lower = more
+// urgent. Intentionally coarse (one rank per category) — no finer-grained
+// scoring is introduced within a category, per the instruction not to
+// invent unnecessary ranking complexity.
+var RW2_SEVERITY_RANK = {};
+RW2_SEVERITY_RANK[RW2_CATEGORY.SALE_CRITICAL] = 1;
+RW2_SEVERITY_RANK[RW2_CATEGORY.SALE_CRITICAL_ADJACENT] = 2;
+RW2_SEVERITY_RANK[RW2_CATEGORY.SPECIAL_REVIEW] = 3;
+RW2_SEVERITY_RANK[RW2_CATEGORY.OPERATIONAL] = 4;
+RW2_SEVERITY_RANK[RW2_CATEGORY.ENRICHMENT] = 5;
+RW2_SEVERITY_RANK[RW2_CATEGORY.METADATA] = 6;
+RW2_SEVERITY_RANK[RW2_CATEGORY.RELOCATED_PENDING_REVIEW] = 7;
+
+// ── rw2GenerateFindings() ────────────────────────────────────────────────
+// Pure function (reads S.products/S.sales/S.stock via generateReviewTasks()
+// and S.products directly for currentValue; mutates nothing). Reuses the
+// existing, unmodified generateReviewTasks() as the detection engine, then
+// transforms its flat task array into the V2 Finding[] shape, merging the
+// confirmed cost_price/cost_price_ns duplicate into one finding per
+// product (missing_cost_price), per the V2 design specification Part 3.
+function rw2GenerateFindings(){
+  var rawTasks=generateReviewTasks();
+  var findings=[];
+  var costPriceHandled={}; // pid -> true, so the merged finding is only emitted once per product even though generateReviewTasks() can emit up to two source tasks (cost_price + cost_price_ns) for it
+
+  rawTasks.forEach(function(t){
+    if(t.type==='cost_price'||t.type==='cost_price_ns'){
+      var pidKey=String(t.pid);
+      if(costPriceHandled[pidKey])return;
+      costPriceHandled[pidKey]=true;
+      var prod=S.products.find(function(x){return String(x.id)===pidKey;});
+      // hasSales is already computed once per product inside
+      // generateReviewTasks() and carried on every task it emits — reused
+      // here rather than recomputed.
+      var hasSalesForThis=!!t.hasSales;
+      findings.push({
+        id:t.pid+'::missing_cost_price',
+        productId:t.pid,
+        field:'costPrice',
+        category:hasSalesForThis?RW2_CATEGORY.SALE_CRITICAL_ADJACENT:RW2_CATEGORY.ENRICHMENT,
+        severity:hasSalesForThis?RW2_CATEGORY.SALE_CRITICAL_ADJACENT:RW2_CATEGORY.ENRICHMENT,
+        actionable:true,
+        description:hasSalesForThis
+          ?'No cost price — margin tracking unavailable (has sales)'
+          :'No cost price — set when product is next received',
+        currentValue:prod?prod.costPrice:undefined,
+        suggestedAction:'Enter the cost price for this product.',
+        deferKey:t.pid+'_missing_cost_price'
+      });
+      return;
+    }
+    var cat=RW2_LEGACY_TYPE_TO_CATEGORY[t.type]||RW2_CATEGORY.ENRICHMENT;
+    var field=RW2_TYPE_TO_FIELD.hasOwnProperty(t.type)?RW2_TYPE_TO_FIELD[t.type]:null;
+    var prodForField=field?S.products.find(function(x){return String(x.id)===String(t.pid);}):null;
+    findings.push({
+      id:t.pid+'::'+t.type,
+      productId:t.pid,
+      field:field,
+      category:cat,
+      severity:cat,
+      actionable:RW2_NON_ACTIONABLE_TYPES.indexOf(t.type)===-1,
+      description:t.desc,
+      currentValue:(prodForField&&field)?prodForField[field]:undefined,
+      suggestedAction:t.desc,
+      deferKey:t.pid+'_'+t.type
+    });
+  });
+
+  return findings;
+}
+
+// Findings for exactly one product (used by whatever later phase builds
+// the single-product screen — not calling this from any UI yet). Still
+// runs the full detection engine internally (generateReviewTasks() has
+// already been measured cheap, 2-18ms even at large catalog sizes) and
+// filters — a materialized per-product index is intentionally not built
+// here per the instruction not to over-engineer ahead of need.
+function rw2FindingsForProduct(pid){
+  return rw2GenerateFindings().filter(function(f){return String(f.productId)===String(pid);});
+}
+
+// ── rw2ComputeOverallSeverity() ──────────────────────────────────────────
+// The most urgent category present among a set of findings, by
+// RW2_SEVERITY_RANK. null for an empty findings array.
+function rw2ComputeOverallSeverity(productFindings){
+  if(!productFindings||!productFindings.length)return null;
+  var best=productFindings[0].category;
+  productFindings.forEach(function(f){
+    if((RW2_SEVERITY_RANK[f.category]||99)<(RW2_SEVERITY_RANK[best]||99))best=f.category;
+  });
+  return best;
+}
+
+// ── rw2DeriveStatus() ─────────────────────────────────────────────────────
+// Status is derived, not stored (per V2 design spec Part 1). deferSet
+// defaults to the existing session-scoped rwSkipped map (unchanged,
+// reused as-is) but accepts an explicit map so this stays a pure,
+// independently testable function. Semantics:
+//   RESOLVED            — zero open findings (the underlying data was
+//                          actually fixed for all of them)
+//   OPEN                — findings exist, none deferred yet
+//   DEFERRED             — findings exist, ALL of them are deferred
+//   PARTIALLY_RESOLVED   — findings exist, SOME (not all) are deferred
+// This is a Phase 1 design decision, not an assumption drawn from existing
+// code (rwSkipped currently only gates visibility in the flat queue, it
+// has no product-level status concept today) — flagged in the final
+// report's open questions for confirmation.
+function rw2DeriveStatus(productFindings,deferSet){
+  deferSet=deferSet||(typeof rwSkipped!=='undefined'?rwSkipped:{});
+  if(!productFindings||!productFindings.length)return RW2_STATUS.RESOLVED;
+  var deferredCount=productFindings.filter(function(f){return !!deferSet[f.deferKey];}).length;
+  if(deferredCount===0)return RW2_STATUS.OPEN;
+  if(deferredCount===productFindings.length)return RW2_STATUS.DEFERRED;
+  return RW2_STATUS.PARTIALLY_RESOLVED;
+}
+
+// ── rw2GroupByProduct() ───────────────────────────────────────────────────
+// Groups a flat Finding[] into one ProductReviewCase per distinct
+// productId. Pure function; does not mutate findings, S.products, or any
+// other state.
+function rw2GroupByProduct(findings,deferSet){
+  var byPid={};
+  var order=[]; // preserves first-seen product order for deterministic output
+  (findings||[]).forEach(function(f){
+    var key=String(f.productId);
+    if(!byPid[key]){byPid[key]=[];order.push(key);}
+    byPid[key].push(f);
+  });
+  return order.map(function(pid){
+    var productFindings=byPid[pid];
+    var product=S.products.find(function(x){return String(x.id)===pid;})||null;
+    return {
+      product:product,
+      productId:pid,
+      findings:productFindings,
+      overallSeverity:rw2ComputeOverallSeverity(productFindings),
+      status:rw2DeriveStatus(productFindings,deferSet)
+    };
+  });
+}
+
+// Convenience: the full set of ProductReviewCases for the current catalog
+// state. Not called from any UI in this phase.
+function rw2BuildProductReviewCases(){
+  return rw2GroupByProduct(rw2GenerateFindings());
+}
+// ════════════════════════════════════════════════════════════════════════════
+// END REVIEW WORKSPACE V2 — PHASE 1
+// ════════════════════════════════════════════════════════════════════════════
+
 // ── Queue renderer (extended in RC3, preserves original structure) ─────────
 function renderReviewWorkspace(){
   var qPanel=document.getElementById('rwQueuePanel');

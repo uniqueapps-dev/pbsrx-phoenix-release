@@ -330,6 +330,11 @@ body{background:var(--bg);}
 <div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v7.6.7-RC3.9.4A</div>
 <div style="display:flex;align-items:center;gap:10px;">
 <div class="hrole" id="hrole">ADMIN</div>
+<!-- PHASE 3A TEMPORARY TEST ENTRY POINT — Review Workspace V2 Product
+     Review Case. Does not replace the existing Review nav item; opens a
+     separate, isolated screen (pg12) reachable from anywhere in the app.
+     Intended to be removed once a real V2 opening screen exists. -->
+<button class="hso" id="rw2TestEntryBtn" onclick="rw2OpenTestEntry()" style="background:var(--amb);color:#000;font-weight:800;border-radius:8px;padding:5px 9px;font-size:10px;" title="Review Workspace V2 (Phase 3A) — temporary test entry point">&#9889; V2 Test</button>
 <button class="hso" onclick="signOut()">Sign out</button>
 </div>
 </div>
@@ -1975,6 +1980,31 @@ body{background:var(--bg);}
 <div id="rwActPanel" style="display:none;"><div id="rwActContent"></div></div>
 </div><!-- end pg11 -->
 
+<!-- ════════════════════════════════ pg12: REVIEW WORKSPACE V2 — PRODUCT REVIEW CASE (Phase 3A) ═══ -->
+<!-- TEMPORARY test surface, reached only via the "⚡ V2 Test" header
+     button (see .hdr above) or programmatically via rw2OpenTestEntry()/
+     rw2ShowCase(pid). Intentionally NOT part of the main bottom nav
+     (#mainNav) — this does not replace the existing Review Workspace,
+     which remains fully available at its usual nav entry. All content
+     below is populated exclusively by the Phase 3A rw2* functions using
+     the Phase 2 engine; nothing here is generated from
+     generateReviewTasks() directly. -->
+<div class="pg" id="pg12">
+<div class="pgt">Product Review</div>
+<div class="pgs" id="rw2CaseSub">&mdash;</div>
+
+<button onclick="rw2ExitCaseScreen()" style="display:flex;align-items:center;gap:6px;background:none;border:1px solid var(--bdr);color:var(--mut);border-radius:10px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;margin-bottom:14px;">&larr; Back to Review Workspace</button>
+
+<div id="rw2CaseHeader"></div>
+<div id="rw2CaseFindings"></div>
+<div id="rw2CaseEmpty" style="display:none;"></div>
+
+<div style="display:flex;gap:8px;margin-top:18px;padding-bottom:20px;">
+<button id="rw2PrevBtn" onclick="rw2GoPrevious()" style="flex:1;padding:14px;background:var(--surf);border:1px solid var(--bdr);color:var(--mut);border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;touch-action:manipulation;">&larr; Previous</button>
+<button id="rw2NextBtn" onclick="rw2GoNext()" style="flex:1;padding:14px;background:var(--amb);color:#000;border:none;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;touch-action:manipulation;">Next &rarr;</button>
+</div>
+</div><!-- end pg12 -->
+
 
 <nav class="nav" id="mainNav">
 <button type="button" class="nb on" onclick="goTo(0,this)" id="nb0"><span class="nbi">&#128202;</span><span class="nbl">Dashboard</span></button>
@@ -3028,16 +3058,27 @@ function rwLog(productId,productName,field,oldVal,newVal,source){
 }
 
 // ── Inline save (RC3 core — saves single field without leaving pg11) ──────
-function rwSaveInline(pid,field,value){
+// ── Field persistence ─────────────────────────────────────────────────────
+// Extracted from rwSaveInline() (pure extraction, byte-identical behavior
+// for every existing caller — same precedent as rwBuildFieldEditorHtml()
+// above and rwBuildTaskCardHtml() from the task-card local-update
+// experiment). Validates, mutates the ONE product field, logs it, and
+// calls the existing save() — nothing else. Any validation failure shows
+// the same toast as before and returns null, exactly as rwSaveInline()
+// already did inline. Both the legacy rwSaveInline() (full Review
+// Workspace refresh) and the V2 rw2SaveField() (single-product refresh,
+// Phase 3A) call this SAME function, so there is exactly one place this
+// validation/mutation/persistence logic lives.
+function rwPersistFieldChange(pid,field,value){
   // Compare as-is: migrated product ids are strings like "pid123abc"
   var p=S.products.find(function(x){return String(x.id)===String(pid);});
-  if(!p){toast('Product not found');return;}
+  if(!p){toast('Product not found');return null;}
   var oldVal=p[field];
   // Field-specific validation
   if(field==='sellPrice'){
     var v=Number(value);
-    if(v===0){toast('Use blank instead of \u20a60 \u2014 leave empty if price unknown');return;}
-    if(v<0){toast('Price cannot be negative');return;}
+    if(v===0){toast('Use blank instead of \u20a60 \u2014 leave empty if price unknown');return null;}
+    if(v<0){toast('Price cannot be negative');return null;}
     if(p.costPrice&&p.costPrice>0&&v<p.costPrice){
       toast('\u26a0\ufe0f Sell price is below cost \u2014 saved with warning',2500);
     }
@@ -3053,7 +3094,7 @@ function rwSaveInline(pid,field,value){
     if(p.units&&p.units[0])p.units[0].price=v;
   } else if(field==='costPrice'){
     var cv2=Number(value);
-    if(cv2<0){toast('Cost cannot be negative');return;}
+    if(cv2<0){toast('Cost cannot be negative');return null;}
     if(!S.priceHistory)S.priceHistory=[];
     S.priceHistory.unshift({pid:p.id,name:p.genericName,date:td(),
       oldCost:p.costPrice,newCost:cv2,oldPrice:p.sellPrice,newPrice:p.sellPrice});
@@ -3071,7 +3112,7 @@ function rwSaveInline(pid,field,value){
   } else if(field==='barcode'){
     // Uniqueness check
     var dup=S.products.find(function(x){return x.id!==pid&&x.barcode&&x.barcode===value;});
-    if(dup){toast('\u26a0\ufe0f Barcode already belongs to: '+escH(dup.genericName));return;}
+    if(dup){toast('\u26a0\ufe0f Barcode already belongs to: '+escH(dup.genericName));return null;}
     p.barcode=value;
   } else if(field==='nafdac'){
     p.nafdac=value;
@@ -3093,6 +3134,14 @@ function rwSaveInline(pid,field,value){
   }
   rwLog(pid,p.genericName,field,oldVal,value,'ReviewWorkspace');
   save();
+  return p;
+}
+
+// Legacy caller — preserves the exact prior rwSaveInline() behavior
+// (full Dashboard + Queue refresh) for the existing task-card UI.
+function rwSaveInline(pid,field,value){
+  var p=rwPersistFieldChange(pid,field,value);
+  if(!p)return;
   updReviewBadge();
   renderRwDashboard();
   // Close inline panel and re-render queue
@@ -3190,15 +3239,22 @@ function rwScrollInlinePanelIntoView(){
   },80);
 }
 
-function renderRwInlinePanel(p,type,allTasksForPid){
+// ── Field editor HTML builder ────────────────────────────────────────────
+// Extracted from renderRwInlinePanel() (pure extraction, byte-identical
+// output, no behavior change — same precedent as rwBuildTaskCardHtml's
+// extraction from renderReviewWorkspace() in the task-card local-update
+// experiment) so the V2 Product Review Case screen (Phase 3A) can reuse
+// the exact same, single, validated per-type editor markup instead of
+// duplicating it. Every generated control still uses the existing
+// data-rwaction/data-rwpid attributes handled by the existing delegated
+// listener (rwRegisterQueueDelegates() Delegate 2 -> rwSaveInline()) — no
+// new or duplicate persistence path.
+function rwBuildFieldEditorHtml(p,type){
   var cats=['Analgesics','Antibiotics','Controlled Medicines','Dermatology',
     'Eye Care & Men\'s Health','GI & Deworming','General','Supplements & GI',
     'Women\'s Health & Chronic Care'];
   var units=['Tablet','Card','Pack','Bottle','Tube','Vial','Ampoule','Box','Needle'];
-  var score=computeCompleteness(p);
-  var scoreColor=score>=80?'var(--grn)':score>=50?'var(--ora)':'var(--red)';
   var id=p.id;
-
   var fieldHtml='';
   if(type==='sell_price'||type==='price_inversion'){
     var warnHtml='';
@@ -3269,6 +3325,14 @@ function renderRwInlinePanel(p,type,allTasksForPid){
   } else {
     fieldHtml='<div style="font-size:12px;color:var(--mut);">Tap Edit Full Product to complete this field.</div>';
   }
+  return fieldHtml;
+}
+
+function renderRwInlinePanel(p,type,allTasksForPid){
+  var score=computeCompleteness(p);
+  var scoreColor=score>=80?'var(--grn)':score>=50?'var(--ora)':'var(--red)';
+  var id=p.id;
+  var fieldHtml=rwBuildFieldEditorHtml(p,type);
 
   // Other tasks on this product
   var otherTasks=allTasksForPid.filter(function(t){return t.type!==type;});
@@ -3888,6 +3952,405 @@ function rw2GetNextCase(excludePid){
 }
 // ════════════════════════════════════════════════════════════════════════════
 // END REVIEW WORKSPACE V2 — PHASE 2
+// ════════════════════════════════════════════════════════════════════════════
+
+// ════════════════════════════════════════════════════════════════════════════
+// REVIEW WORKSPACE V2 — PHASE 3A: Product Review Case UI
+// ════════════════════════════════════════════════════════════════════════════
+// The first real V2 human-facing screen: one product, its findings, fix,
+// save, next. Consumes ONLY the Phase 2 engine (rw2GetCase/
+// rw2GetOrderedCases/rw2GetNextCase/rw2RecomputeProductCase) — no direct
+// generateReviewTasks() calls anywhere in this block, and no second
+// finding-classification system (reuses RW2_CATEGORY exactly as Phase 1/2
+// defined it). Reuses rwBuildFieldEditorHtml() for editors and
+// rwPersistFieldChange()/rwSkipped for the actual save/defer mechanics —
+// no duplicate persistence or defer logic.
+//
+// This is a TEMPORARY, separately-reached test surface (entered only via
+// the "⚡ V2 Test" header button, or programmatically). It does not
+// replace, modify, or interfere with the existing legacy Review Workspace
+// (Dashboard/Queue/filters/sort/task cards), which remains fully
+// available and completely unmodified in behavior.
+
+// Temporary, in-session-only state — not persisted, per Phase 3A's "a
+// temporary in-session current product is acceptable for this phase."
+var rw2CurrentPid=null;
+var rw2PreviousStack=[]; // simple LIFO for "Previous" — small, bounded, session-only, not history/undo state
+
+// Presentation-only grouping of the Phase 1/2 V2 categories into the four
+// display buckets from the Phase 3A spec (Critical / Operational / Data
+// Cleanup / Special). Reuses the exact category values already
+// established — this is NOT a second classification system, just how
+// those existing categories are grouped on screen.
+var RW2_UI_GROUPS=[
+  {label:'Critical',categories:[RW2_CATEGORY.SALE_CRITICAL,RW2_CATEGORY.SALE_CRITICAL_ADJACENT],color:'var(--red)'},
+  {label:'Operational',categories:[RW2_CATEGORY.OPERATIONAL],color:'var(--ora)'},
+  {label:'Data Cleanup',categories:[RW2_CATEGORY.ENRICHMENT,RW2_CATEGORY.METADATA,RW2_CATEGORY.RELOCATED_PENDING_REVIEW],color:'var(--mut)'},
+  {label:'Special',categories:[RW2_CATEGORY.SPECIAL_REVIEW],color:'var(--blu)'}
+];
+
+// ── Entry / exit ──────────────────────────────────────────────────────────
+// Temporary test entry point (see the header button). Picks the first
+// case from the Phase 2 deterministic ordering.
+function rw2OpenTestEntry(){
+  rw2CaseCacheStale=true; // ensure fresh data on manual test entry
+  rw2PreviousStack=[];
+  var first=rw2GetNextCase();
+  if(!first){
+    toast('No products currently need review (V2 test).',2500);
+    return;
+  }
+  rw2ShowCase(first.productId);
+}
+
+function rw2ShowCase(pid){
+  rw2CurrentPid=pid;
+  goToNoHistory(12);
+  rw2RegisterCaseDelegates();
+  rw2RenderCaseScreen();
+}
+
+function rw2ExitCaseScreen(){
+  rw2CurrentPid=null;
+  goToNoHistory(11);
+}
+
+// ── Navigation ────────────────────────────────────────────────────────────
+function rw2GoNext(){
+  var next=rw2GetNextCase(rw2CurrentPid);
+  if(rw2CurrentPid!=null)rw2PreviousStack.push(rw2CurrentPid);
+  rw2CurrentPid=next?next.productId:null;
+  rw2RenderCaseScreen();
+}
+
+function rw2GoPrevious(){
+  if(!rw2PreviousStack.length)return;
+  rw2CurrentPid=rw2PreviousStack.pop();
+  rw2RenderCaseScreen();
+}
+
+// ── Core render ───────────────────────────────────────────────────────────
+// Renders ONLY the current product's header + its own (bounded) findings.
+// Never touches #rwTaskList, #rwDashContent, or any other legacy Review
+// Workspace element — writes exclusively into #rw2CaseHeader/
+// #rw2CaseFindings/#rw2CaseEmpty/#rw2CaseSub inside #pg12. Catalog size
+// has no bearing on this function's cost: it reads exactly one
+// ProductReviewCase (via rw2GetCase, O(1) once the Phase 2 cache is warm).
+function rw2RenderCaseScreen(){
+  var subEl=document.getElementById('rw2CaseSub');
+  var headerEl=document.getElementById('rw2CaseHeader');
+  var findingsEl=document.getElementById('rw2CaseFindings');
+  var emptyEl=document.getElementById('rw2CaseEmpty');
+  if(!subEl||!headerEl||!findingsEl||!emptyEl)return;
+
+  var pid=rw2CurrentPid;
+  var product=pid!=null?S.products.find(function(p){return String(p.id)===String(pid);}):null;
+
+  if(!product){
+    subEl.textContent='All done';
+    headerEl.innerHTML='';
+    findingsEl.innerHTML='';
+    emptyEl.style.display='block';
+    emptyEl.innerHTML=rw2BuildEmptyStateHtml('&#127881; No products currently need review','Nice work — there is nothing waiting in this queue right now.');
+    rw2UpdateNavButtons();
+    return;
+  }
+
+  var reviewCase=rw2GetCase(pid);
+  var findings=reviewCase?reviewCase.findings:[];
+  var status=reviewCase?reviewCase.status:RW2_STATUS.RESOLVED;
+
+  subEl.textContent=product.genericName+(product.strength?' '+product.strength:'');
+  headerEl.innerHTML=rw2BuildProductHeaderHtml(product,status);
+
+  if(status===RW2_STATUS.RESOLVED){
+    findingsEl.innerHTML='';
+    var specialFindings=findings.filter(function(f){return !f.actionable;});
+    var msg=findings.length
+      ?'All actionable findings for this product are handled.'
+      :'No open findings for this product.';
+    emptyEl.style.display='block';
+    emptyEl.innerHTML=rw2BuildEmptyStateHtml('&#9989; Resolved',msg)+
+      (specialFindings.length?rw2BuildFindingsGroupHtml('Notes (not editable here)',specialFindings,true):'');
+  } else {
+    emptyEl.style.display='none';
+    emptyEl.innerHTML='';
+    findingsEl.innerHTML=rw2BuildFindingsSectionsHtml(findings);
+  }
+
+  rw2UpdateNavButtons();
+}
+
+function rw2UpdateNavButtons(){
+  var prevBtn=document.getElementById('rw2PrevBtn');
+  if(prevBtn){
+    prevBtn.disabled=!rw2PreviousStack.length;
+    prevBtn.style.opacity=rw2PreviousStack.length?'1':'0.4';
+  }
+}
+
+// ── HTML builders ─────────────────────────────────────────────────────────
+function rw2BuildEmptyStateHtml(title,subtitle){
+  return '<div style="text-align:center;color:var(--mut);padding:48px 16px;background:var(--card);border:1px solid var(--bdr);border-radius:14px;">'+
+    '<div style="font-size:16px;font-weight:800;color:var(--txt);">'+title+'</div>'+
+    (subtitle?'<div style="font-size:12px;margin-top:6px;">'+escH(subtitle)+'</div>':'')+
+  '</div>';
+}
+
+function rw2BuildProductHeaderHtml(product,status){
+  var statusMeta={};
+  statusMeta[RW2_STATUS.RESOLVED]={label:'Resolved',icon:'&#9989;',color:'var(--grn)'};
+  statusMeta[RW2_STATUS.OPEN]={label:'Needs attention',icon:'&#9888;&#65039;',color:'var(--red)'};
+  statusMeta[RW2_STATUS.PARTIALLY_RESOLVED]={label:'Partially resolved',icon:'&#9203;',color:'var(--ora)'};
+  statusMeta[RW2_STATUS.DEFERRED]={label:'Deferred',icon:'&#128336;',color:'var(--mut)'};
+  var meta=statusMeta[status]||statusMeta[RW2_STATUS.OPEN];
+
+  var idBits=[];
+  if(product.form)idBits.push(escH(product.form));
+  if(product.category)idBits.push(escH(product.category));
+  if(product.shelfLocation)idBits.push('Shelf '+escH(product.shelfLocation));
+
+  var metrics=[];
+  metrics.push('<div>Sell: <b style="color:var(--txt);">'+(product.sellPrice?N(product.sellPrice):'—')+'</b></div>');
+  metrics.push('<div>Cost: <b style="color:var(--txt);">'+(product.costPrice?N(product.costPrice):'—')+'</b></div>');
+  if(typeof getCurStock==='function'){
+    metrics.push('<div>Stock: <b style="color:var(--txt);">'+getCurStock(product.id)+'</b></div>');
+  }
+  if(product.ownership){
+    metrics.push('<div>Ownership: <b style="color:var(--txt);">'+(product.isConsignment?'Consignment':'Owner Stock')+'</b></div>');
+  }
+
+  return '<div style="background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:16px;margin-bottom:16px;">'+
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">'+
+      '<div style="min-width:0;">'+
+        '<div style="font-size:17px;font-weight:900;color:var(--txt);">'+escH(product.genericName||'Unknown')+
+          (product.strength?' <span style="font-size:13px;color:var(--mut);font-weight:700;">'+escH(product.strength)+'</span>':'')+
+        '</div>'+
+        (idBits.length?'<div style="font-size:12px;color:var(--mut);margin-top:3px;">'+idBits.join(' · ')+'</div>':'')+
+      '</div>'+
+      '<span style="flex-shrink:0;font-size:11px;font-weight:800;color:'+meta.color+';white-space:nowrap;">'+meta.icon+' '+meta.label+'</span>'+
+    '</div>'+
+    '<div style="display:flex;gap:14px;margin-top:10px;font-size:12px;color:var(--mut);flex-wrap:wrap;">'+
+      metrics.join('')+
+    '</div>'+
+  '</div>';
+}
+
+function rw2BuildFindingsSectionsHtml(findings){
+  var html='';
+  RW2_UI_GROUPS.forEach(function(group){
+    var groupFindings=findings.filter(function(f){return group.categories.indexOf(f.category)>=0;});
+    if(!groupFindings.length)return;
+    html+=rw2BuildFindingsGroupHtml(group.label,groupFindings,false,group.color);
+  });
+  return html;
+}
+
+function rw2BuildFindingsGroupHtml(label,findings,readOnly,color){
+  color=color||'var(--mut)';
+  var html='<div style="margin-bottom:16px;">'+
+    '<div style="font-size:11px;font-weight:800;color:'+color+';letter-spacing:0.5px;margin-bottom:8px;text-transform:uppercase;">'+escH(label)+'</div>';
+  findings.forEach(function(f){
+    html+=rw2BuildFindingCardHtml(f,readOnly);
+  });
+  html+='</div>';
+  return html;
+}
+
+// The legacy task-type string this finding was derived from — needed to
+// call the reused rwBuildFieldEditorHtml()/rwSkipped, both of which are
+// keyed by that legacy type string, not by the V2 finding id. Findings
+// from the merged missing_cost_price case use 'cost_price_ns' as their
+// legacy type (rwBuildFieldEditorHtml() branches identically for
+// 'cost_price'/'cost_price_ns' — same cost-only editor either way).
+function rw2LegacyTypeOf(finding){
+  return finding.id.indexOf('::missing_cost_price')>=0?'cost_price_ns':finding.id.split('::')[1];
+}
+
+function rw2BuildFindingCardHtml(finding,readOnly){
+  var legacyType=rw2LegacyTypeOf(finding);
+  var deferKey=finding.deferKey;
+  var deferred=!!rwSkipped[deferKey];
+  var cardStyle='background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:12px 14px;margin-bottom:8px;';
+
+  var body='<div style="font-size:13px;font-weight:700;color:var(--txt);">'+escH(finding.description)+'</div>';
+
+  if(deferred){
+    body+='<div style="font-size:11px;color:var(--mut);margin-top:6px;">&#128336; Deferred this session</div>';
+    return '<div style="'+cardStyle+'opacity:0.6;">'+body+'</div>';
+  }
+
+  if(readOnly||!finding.actionable){
+    // duplicate_name / expiry — no editor invented, no destructive action.
+    var note=finding.category===RW2_CATEGORY.SPECIAL_REVIEW
+      ?'Requires manual review — not editable from this screen. Use Edit Full Product for full context.'
+      :'Not editable from this screen.';
+    body+='<div style="font-size:11px;color:var(--mut);margin-top:6px;line-height:1.5;">'+note+'</div>'+
+      '<button data-rwaction="editfull" data-rwpid="'+finding.productId+'" style="margin-top:8px;font-size:10px;font-weight:700;background:none;border:1px solid var(--bdr);color:var(--mut);border-radius:8px;padding:6px 10px;cursor:pointer;touch-action:manipulation;">Edit Full Product &#8599;</button>';
+    return '<div style="'+cardStyle+'">'+body+'</div>';
+  }
+
+  // Actionable: reuse the SAME editor markup + data-rwaction attributes
+  // the legacy inline panel uses (rwBuildFieldEditorHtml() extracted
+  // above) — handled here by rw2RegisterCaseDelegates(), scoped to #pg12,
+  // not by the legacy #rwQueuePanel delegates.
+  var product=S.products.find(function(p){return String(p.id)===String(finding.productId);});
+  var editorHtml=product?rwBuildFieldEditorHtml(product,legacyType):'';
+
+  body+='<div style="margin-top:10px;">'+editorHtml+'</div>'+
+    '<button data-rwaction="resolvelater" data-rwpid="'+finding.productId+'" data-rwtype="'+legacyType+'" style="width:100%;margin-top:8px;padding:9px;background:none;border:1px solid var(--bdr);color:var(--mut);border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;">&#128336; Resolve Later</button>';
+
+  return '<div style="'+cardStyle+'">'+body+'</div>';
+}
+
+// ── Save / defer handlers ─────────────────────────────────────────────────
+// Both call rwPersistFieldChange()/rwSkipped (the SAME persistence/defer
+// mechanisms the legacy UI uses) then recompute ONLY the current product
+// via rw2RecomputeProductCase() and re-render ONLY the current case screen
+// — never the legacy Dashboard or Queue. This is the "EDIT -> SAVE ->
+// existing save() path -> recompute THIS product -> update the current
+// ProductReviewCase UI" flow Phase 3A specifies.
+function rw2SaveField(pid,field,value){
+  var p=rwPersistFieldChange(pid,field,value);
+  if(!p)return;
+  rw2RecomputeProductCase(pid);
+  var _toastMsg='✓ '+escH(p.genericName)+' — ';
+  if(field==='sellPrice'||field==='costPrice'){
+    _toastMsg+='Cost: '+N(p.costPrice||0)+' · Sell: '+N(p.sellPrice||0);
+  } else {
+    _toastMsg+='updated';
+  }
+  toast(_toastMsg,3000);
+  if(rw2CurrentPid!=null&&String(rw2CurrentPid)===String(pid)){
+    rw2RenderCaseScreen();
+  }
+}
+
+function rw2DeferFinding(pid,deferKey){
+  rwSkipped[deferKey]=true;
+  toast('Skipped — will return next session',1800);
+  rw2RecomputeProductCase(pid);
+  if(rw2CurrentPid!=null&&String(rw2CurrentPid)===String(pid)){
+    rw2RenderCaseScreen();
+  }
+}
+
+// ── Event delegation (scoped to #pg12) ───────────────────────────────────
+// Mirrors the legacy Delegate 2 in rwRegisterQueueDelegates() (same
+// data-rwaction vocabulary, same rwin_* editor element ids, since
+// rwBuildFieldEditorHtml() is shared) but MUST be its own listener, scoped
+// to #pg12: the legacy delegates are bound to #rwQueuePanel and never fire
+// here, AND the legacy Queue panel can be left with an expanded card (and
+// therefore the same rwin_* element ids) present-but-hidden elsewhere in
+// the DOM at the same time (.pg panels are hidden via CSS, not removed).
+// Every lookup below is scoped via panel.querySelector(), never
+// document.getElementById(), specifically to avoid resolving to that
+// other, hidden element by mistake.
+var _rw2DelegatesRegistered=false;
+function rw2RegisterCaseDelegates(){
+  if(_rw2DelegatesRegistered)return;
+  var panel=document.getElementById('pg12');
+  if(!panel)return;
+  _rw2DelegatesRegistered=true;
+
+  panel.addEventListener('touchend',function(e){
+    var el=e.target;
+    while(el&&el!==panel){
+      if(el.dataset&&el.dataset.rwaction){
+        e.preventDefault();
+        rw2HandleFieldAction(el,panel);
+        return;
+      }
+      el=el.parentElement;
+    }
+  },{passive:false});
+}
+
+function rw2Input(panel,id){
+  var el=panel.querySelector('#'+id);
+  return el?el.value:undefined;
+}
+
+function rw2HandleFieldAction(el,panel){
+  var action=el.dataset.rwaction;
+  var pid=el.dataset.rwpid;
+  var type=el.dataset.rwtype;
+
+  if(action==='resolvelater'){
+    rw2DeferFinding(pid,pid+'_'+type);
+    return;
+  }
+  if(action==='editfull'){
+    openProdEdit(pid);
+    return;
+  }
+
+  var val=null;
+  if(action==='saveprice'){
+    var s=Number(rw2Input(panel,'rwin_sell')||0);
+    var c=Number(rw2Input(panel,'rwin_cost')||0);
+    var origCost=Number(el.dataset.rwcost||0);
+    if(c&&c!==origCost)rw2SaveField(pid,'costPrice',c);
+    if(s)rw2SaveField(pid,'sellPrice',s);
+    return;
+  }
+  if(action==='savecost'){
+    val=Number(rw2Input(panel,'rwin_cost2')||0);
+    if(val)rw2SaveField(pid,'costPrice',val);
+    return;
+  }
+  if(action==='savecat'){
+    val=rw2Input(panel,'rwin_cat')||'';
+    if(val)rw2SaveField(pid,'category',val);
+    return;
+  }
+  if(action==='saveshelf'){
+    val=(rw2Input(panel,'rwin_shelf')||'').trim();
+    if(val)rw2SaveField(pid,'shelfLocation',val);
+    return;
+  }
+  if(action==='saveunit'){
+    val=rw2Input(panel,'rwin_unit')||'';
+    if(val)rw2SaveField(pid,'sellUnit',val);
+    return;
+  }
+  if(action==='savesup'){
+    val=rw2Input(panel,'rwin_sup')||'';
+    if(val)rw2SaveField(pid,'supplier',val);
+    return;
+  }
+  if(action==='savebarcode'){
+    val=(rw2Input(panel,'rwin_bc')||'').trim();
+    if(val)rw2SaveField(pid,'barcode',val);
+    return;
+  }
+  if(action==='savenafdac'){
+    val=(rw2Input(panel,'rwin_nf')||'').trim();
+    if(val)rw2SaveField(pid,'nafdac',val);
+    return;
+  }
+  if(action==='saveminstock'){
+    val=Number(rw2Input(panel,'rwin_mn')||0);
+    if(val)rw2SaveField(pid,'minStock',val);
+    return;
+  }
+  if(action==='savereorderqty'){
+    val=Number(rw2Input(panel,'rwin_rq')||0);
+    if(val)rw2SaveField(pid,'reorderQty',val);
+    return;
+  }
+  if(action==='saveownership'){
+    var chk=panel.querySelector('input[name=rwin_own]:checked');
+    if(chk)rw2SaveField(pid,'ownership',chk.value);
+    return;
+  }
+  if(action==='savefastmover'){
+    rw2SaveField(pid,'isFastMover',true);
+    return;
+  }
+}
+// ════════════════════════════════════════════════════════════════════════════
+// END REVIEW WORKSPACE V2 — PHASE 3A
 // ════════════════════════════════════════════════════════════════════════════
 
 // ── Queue renderer (extended in RC3, preserves original structure) ─────────

@@ -2289,28 +2289,6 @@ var PID_MIGRATION_BATCH = 'PID-v1.0';
 var PID_SNAPSHOT_KEY = 'pbsrx_pid_snapshot';
 var pidParsedData = null;  // Holds parsed file data between phases
 
-// ── PRODUCT COMPLETENESS SCORE ───────────────────────────────────────────────
-// Computed — never stored. Called on demand.
-function computeCompleteness(p){
-  // RC3: implementation moved to Review Workspace Engine below
-  var score=0;var max=10.5;
-  if(p.genericName&&p.genericName.length>0)score+=2;
-  if(p.strength&&p.strength.length>0)score+=0.5;
-  if(p.form&&p.form.length>0)score+=0.5;
-  if(p.sellPrice&&p.sellPrice>0)score+=2;
-  if(p.costPrice&&p.costPrice>0)score+=0.5;
-  if(p.shelfLocation&&p.shelfLocation.length>0)score+=1;
-  if(p.category&&p.category!=='General'&&p.category!=='Other'&&p.category.length>0)score+=0.5;
-  if(p.sellUnit&&p.sellUnit!=='unit'&&p.sellUnit!=='Unit')score+=0.5;
-  if(p.isFastMover)score+=0.5;
-  if((p.supplier||p.primarySupplier||'').length>0)score+=0.5;
-  if(p.barcode&&p.barcode.length>0)score+=0.5;
-  if(p.nafdac&&p.nafdac.length>0)score+=0.5;
-  if(p.reorderQty&&p.reorderQty>0)score+=0.5;
-  if(p.minStock&&p.minStock!==10)score+=0.5;
-  return Math.round((score/max)*100);
-}
-
 // ── PRE-MIGRATION SNAPSHOT ───────────────────────────────────────────────────
 function pidTakeSnapshot(){
   try{
@@ -3039,6 +3017,19 @@ function setRwFilter(f,el){
   rwExpandedPid=null;
   renderReviewWorkspace();
 }
+
+// ════════════════════════════════════════════════════════════════════════════
+// SHARED REVIEW INFRASTRUCTURE — used by BOTH the legacy Review UI and V2.
+// Established by the Phase 3C forensic audit: rwLog()/S.reviewLog,
+// rwPersistFieldChange(), rwBuildFieldEditorHtml() (and the
+// rwInlineMarginUpdate() it wires up via oninput= for sell_price/
+// price_inversion editors), rwSkipped{}, and save() (below, in the
+// persistence block) are NOT legacy-only despite their "rw" names — V2's
+// rw2SaveField()/rw2DeferFinding()/rw2BuildFindingTileInnerHtml() call
+// them directly. Do not remove, rename, or relocate anything in this
+// cluster when retiring legacy UI (renderReviewWorkspace(), task cards,
+// filters/sort, rwSaveInline(), rwResolveLater()) in a later phase.
+// ════════════════════════════════════════════════════════════════════════════
 
 // ── Review log helper ─────────────────────────────────────────────────────
 function rwLog(productId,productName,field,oldVal,newVal,source){
